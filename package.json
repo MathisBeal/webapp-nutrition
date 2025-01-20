@@ -3,15 +3,38 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "nuxt build",
+    "check-type": "tsc --noEmit",
+    "build": "nuxi build",
+    "clean": "rimraf .output",
     "dev": "nuxt dev",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
+    "lint": "eslint components/ composables/",
+    "lint:fix": "npm run lint --fix",
+    "lint:build": "npm run lint --max-warnings=0",
+    "format": "pretty-quick --no-restage",
+    "format-check": "pretty-quick --check",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxt/eslint": "^0.7.5",
     "nuxt": "^3.15.2",
     "vue": "latest",
     "vue-router": "latest"
+  },
+  "devDependencies": {
+    "@nuxt/test-utils": "^3.15.4",
+    "@nuxt/types": "^2.18.1",
+    "@nuxt/typescript-build": "^3.0.2",
+    "@nuxtjs/eslint-config-typescript": "^12.1.0",
+    "@vitest/coverage-v8": "^3.0.2",
+    "eslint": "^8.57.1",
+    "jsdom": "^26.0.0",
+    "pretty-quick": "^4.0.0",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.2",
+    "vue-tsc": "^2.1.10"
   }
 }
