@@ -1,9 +1,10 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+import { defineNuxtConfig } from 'nuxt/config';
+
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
 
-  //Environment Variables
+  // Environment Variables
   runtimeConfig: {
     DB_HOST: process.env.DB_HOST,
     DB_PORT: process.env.DB_PORT,
