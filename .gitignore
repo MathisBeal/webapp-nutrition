@@ -1,4 +1,4 @@
-#Default GitIgnore from Nuxt :
+# Default GitIgnore from Nuxt :
 # Nuxt dev/build outputs
 .output
 .data
@@ -22,3 +22,6 @@ coverage
 .env
 .env.*
 !.env.example
+
+# IntelliJ IDEA files
+.idea
