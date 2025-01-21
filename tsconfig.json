@@ -31,5 +31,5 @@
     "**/*.ts",
     "**/*.vue"
   ],
-  "exclude": ["node_modules", ".nuxt", ".output"]
+  "exclude": ["node_modules", ".nuxt", ".output", "nuxt.config.ts", "app.config.ts"]
 }
