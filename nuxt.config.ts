@@ -1,4 +1,7 @@
 import { defineNuxtConfig } from 'nuxt/config';
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
@@ -14,4 +17,5 @@ export default defineNuxtConfig({
   },
 
   modules: ["@nuxt/test-utils/module", "@nuxt/eslint"],
+  css: ['@/assets/styles/global.css'],
 });

@@ -1,0 +1,17 @@
+services:
+  db-nutrition:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: webapp_nutrition
+      TZ: Europe/Paris
+      LANG: en_US.UTF-8
+      LC_ALL: en_US.UTF-8
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker/db/dump.sql:/docker-entrypoint-initdb.d/dump.sql # Initialise le containeur avec le dump
+      - ./docker/db/volume:/var/lib/mysql # Résilience des modifications

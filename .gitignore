@@ -1,4 +1,4 @@
-#Default GitIgnore from Nuxt :
+# Default GitIgnore from Nuxt :
 # Nuxt dev/build outputs
 .output
 .data
@@ -6,6 +6,9 @@
 .nitro
 .cache
 dist
+
+# Database
+docker/db/volume
 
 # Node dependencies
 node_modules
@@ -22,3 +25,6 @@ coverage
 .env
 .env.*
 !.env.example
+
+# IntelliJ IDEA files
+.idea
