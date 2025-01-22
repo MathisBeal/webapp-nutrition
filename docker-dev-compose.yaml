@@ -2,8 +2,10 @@ services:
   db-nutrition:
     image: mysql:latest
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: nutritiondb
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: webapp_nutrition
+    ports:
+      - "3307:3306"
     volumes:
       - ./docker/db/dump.sql:/docker-entrypoint-initdb.d/dump.sql # Initialise le containeur avec le dump
       - ./docker/db/volume:/var/lib/mysql # Résilience des modifications
