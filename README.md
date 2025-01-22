@@ -157,3 +157,92 @@ DB_NAME=webapp_nutrition
 DB_USER=root
 DB_PASSWORD=root
 ```
+
+## Utilisation de Docker Compose
+
+Pour gérer votre projet avec Docker Compose, utilisez le fichier `docker-dev-compose.yaml` pour la version de développement. Voici les commandes principales et leur utilité :
+
+### Build
+
+```sh
+docker-compose -f docker-dev-compose.yaml build
+```
+
+Cette commande construit les images Docker définies dans le fichier `docker-dev-compose.yaml`. Utilisez-la lorsque vous modifiez le `Dockerfile` ou les dépendances de votre projet.
+
+### Up
+
+```sh
+docker-compose -f docker-dev-compose.yaml up
+```
+
+Lance les conteneurs définis dans le fichier `docker-dev-compose.yaml`. Utilisez cette commande pour démarrer l'application et ses services associés.
+
+### Down
+
+```sh
+docker-compose -f docker-dev-compose.yaml down
+```
+
+Arrête et supprime les conteneurs, réseaux et volumes créés par `docker-compose up`. Utilisez cette commande si vous devez réinitialiser l'état des conteneurs, par exemple, après avoir modifié le dump de la base de données. Pensez également à supprimer le dossier `docker/db/volume` pour une réinitialisation complète.
+
+### Start
+
+```sh
+docker-compose -f docker-dev-compose.yaml start
+```
+
+Démarre les conteneurs existants sans les recréer. Utilisez cette commande pour redémarrer rapidement les services après un arrêt.
+
+### Stop
+
+```sh
+docker-compose -f docker-dev-compose.yaml stop
+```
+
+Arrête les conteneurs sans les supprimer. Utilisez cette commande pour arrêter temporairement les services sans perdre leur état.
+
+### Exemple de workflow
+
+1. **Modification du Dockerfile** :
+
+```sh
+docker-compose -f docker-dev-compose.yaml build
+docker-compose -f docker-dev-compose.yaml up
+```
+
+2. **Changement du dump de la base de données** :
+
+```sh
+docker-compose -f docker-dev-compose.yaml down
+rm -rf docker/db/volume
+docker-compose -f docker-dev-compose.yaml up
+```
+
+3. **Démarrage rapide des services** :
+
+```sh
+docker-compose -f docker-dev-compose.yaml start
+```
+
+4. **Arrêt temporaire des services** :
+
+```sh
+docker-compose -f docker-dev-compose.yaml stop
+```
+
+## Point sur la base de données avec Docker Compose
+
+Quand le containeur importe la base de données il peut être très long (15min). Pour s'assurer que la base de données est prête, regardez les logs du container MySql.
+
+1. **Début de l'importation** :
+
+```sh
+[Note] [Entrypoint]: /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/dump.sql
+```
+
+2. **Confirmation du statut "prêt"** :
+
+```sh
+0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '9.1.0'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server - GPL.
+```
