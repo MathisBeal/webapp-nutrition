@@ -17,4 +17,5 @@ export default defineNuxtConfig({
   },
 
   modules: ["@nuxt/test-utils/module", "@nuxt/eslint"],
+  css: ['@/assets/styles/global.css'],
 });

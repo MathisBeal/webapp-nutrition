@@ -1,7 +1,6 @@
 <template>
-  <div>
-    Hello World
-  </div>
+  <Accueil />
+  
 </template>
 
 <script lang="ts" setup>
