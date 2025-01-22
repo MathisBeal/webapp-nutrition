@@ -3,7 +3,7 @@ import { defineVitestConfig } from "@nuxt/test-utils/config";
 export default defineVitestConfig({
   test: {
     globals: true, // Pas besoin d'importer describe, it, etc.
-    environment: "jsdom",
+    environment: "nuxt",
     include: ["test/**/*.test.{ts,vue}"],
     exclude: ["node_modules", ".output", "coverage", ".nuxt"],
     coverage: {
