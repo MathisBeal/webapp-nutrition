@@ -1,9 +1,9 @@
-import connectDB from '../server/db/index'
+import { check_connectDB } from '../server/db/connection'
 
 describe('Database Connection', () => {
   it('should connect to the database successfully', async () => {
-    const connection = await connectDB()
+    const connection = await check_connectDB()
     expect(connection).toBeDefined()
-    await connection.end()
+    await connection.release()
   })
 })
