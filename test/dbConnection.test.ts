@@ -4,6 +4,6 @@ describe('Database Connection', () => {
   it('should connect to the database successfully', async () => {
     const connection = await check_connectDB()
     expect(connection).toBeDefined()
-    await connection.release()
+    connection.release()
   })
 })

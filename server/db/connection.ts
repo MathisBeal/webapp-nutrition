@@ -3,7 +3,7 @@ import mysql from 'mysql2/promise'
 const config = useRuntimeConfig()
 
 // Objet à utiliser pour accéder à la DB
-const pool = await mysql.createPool({
+const pool = mysql.createPool({
       host: config.DB_HOST,
       port: Number(config.DB_PORT),
       user: config.DB_USER,
