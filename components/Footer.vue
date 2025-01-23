@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import icon_home from "assets/icon_home.png";
-import icon_search from "assets/icon_search.png";
-import icon_stats from "assets/icon_stats.png";
-import icon_user from "assets/icon_user.png";
+import icon_home from "assets/icons/icon_home.png";
+import icon_search from "assets/icons/icon_search.png";
+import icon_stats from "assets/icons/icon_stats.png";
+import icon_user from "assets/icons/icon_user.png";
 </script>
 
 <template>

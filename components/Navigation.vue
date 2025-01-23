@@ -23,7 +23,7 @@ const toggleNav = () => {
   <!-- Barre de navigation, visible uniquement si 'isNavVisible' est true -->
   <nav v-if="isNavVisible">
     <img
-      src="/assets/img/SettingsButton.jpg"
+      src="/assets/icons/icon_list-white.png"
       alt="Settings Button"
       @click="toggleNav"
       class="settings-button"
@@ -42,7 +42,7 @@ const toggleNav = () => {
   <!-- Affiche uniquement l'image pour réactiver la navigation -->
   <img
     v-else
-    src="/assets/img/SettingsButton.jpg"
+    src="/assets/icons/icon_list.png"
     alt="Settings Button"
     @click="toggleNav"
     class="settings-button-hidden"
