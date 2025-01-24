@@ -3,7 +3,7 @@ services:
     image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: webapp_nutrition
+      MYSQL_DATABASE: nutrition_webapp
       TZ: Europe/Paris
       LANG: en_US.UTF-8
       LC_ALL: en_US.UTF-8
