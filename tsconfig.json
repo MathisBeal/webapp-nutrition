@@ -3,33 +3,15 @@
   "extends": "./.nuxt/tsconfig.json",
 
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "ESNext",
     "lib": ["esnext", "DOM", "DOM.Iterable"],
-    "skipLibCheck": true,
-    "allowJs": true,
     "sourceMap": true,
-    "forceConsistentCasingInFileNames": true,
 
     /* Bundler mode */
-    "moduleResolution": "Bundler",
     "allowImportingTsExtensions": true,
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "noEmit": true,
 
     /* Linting */
-    "strict": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
     "strictNullChecks": true,
-    "types": ["@nuxt/types", "@nuxt/typescript-build", "vitest/globals"]
+    "types": ["vitest/globals"]
   },
-  "include": [
-    "nuxt.config.ts",
-    "node_modules/@nuxt/types/**/*.d.ts",
-    "**/*.ts",
-    "**/*.vue"
-  ],
-  "exclude": ["node_modules", ".nuxt", ".output", "nuxt.config.ts", "app.config.ts"]
 }
