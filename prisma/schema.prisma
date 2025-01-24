@@ -11,13 +11,13 @@ model Aliments {
   ID_aliment            Int                     @id @default(autoincrement())
   nom                   String                  @db.VarChar(255)
   quantite_base         Int
-  calories              Decimal                 @db.Decimal(10, 2)
-  glucides              Decimal                 @db.Decimal(10, 2)
-  lipides               Decimal                 @db.Decimal(10, 2)
-  proteines             Decimal                 @db.Decimal(10, 2)
+  calories_kcal_        Decimal                 @map("calories(kcal)") @db.Decimal(10, 2)
+  glucides_g_           Decimal                 @map("glucides(g)") @db.Decimal(10, 2)
+  lipides_g_            Decimal                 @map("lipides(g)") @db.Decimal(10, 2)
   image                 String?                 @db.Text
-  Ingredients_Recettes  Ingredients_Recettes[]
-  Restrictions_aliments Restrictions_aliments[]
+  Prot_ines_g_          Decimal                 @map("Protéines(g)") @db.Decimal(10, 2)
+  Ingredients_Recettes  Ingredients_Recettes[]  @ignore
+  Restrictions_aliments Restrictions_aliments[] @ignore
   Users_Alimentations   Users_Alimentations[]
   Users_Favoris         Users_Favoris[]
 }
@@ -28,6 +28,7 @@ model Day_Sections {
   Users_Alimentations Users_Alimentations[]
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model IMC_apports {
   imc_min   Decimal @db.Decimal(10, 2)
   imc_max   Decimal @db.Decimal(10, 2)
@@ -37,9 +38,10 @@ model IMC_apports {
   lipides   Decimal @db.Decimal(10, 2)
   proteines Decimal @db.Decimal(10, 2)
 
-  @@id([imc_min, imc_max])
+  @@ignore
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model Ingredients_Recettes {
   ID_plat                 Int
   ID_aliment              Int
@@ -48,25 +50,24 @@ model Ingredients_Recettes {
   Aliments                Aliments @relation(fields: [ID_aliment], references: [ID_aliment], onDelete: NoAction, onUpdate: NoAction, map: "fk_ingredient_de_recette_aliment")
   Plats                   Plats    @relation(fields: [ID_plat], references: [ID_plat], onDelete: NoAction, onUpdate: NoAction, map: "fk_ingredient_de_recette_plat")
 
-  @@id([ID_plat, ID_aliment])
   @@index([ID_aliment], map: "fk_ingredient_de_recette_aliment")
   @@index([ID_plat], map: "fk_ingredient_de_recette_plat")
+  @@ignore
 }
 
 model Plats {
   ID_plat              Int                    @id @default(autoincrement())
-  duree                String                 @db.VarChar(255)
+  dur_e                String                 @map("durée") @db.VarChar(255)
   description          String                 @db.Text
   etapes               String                 @db.Text
   images               String?                @db.VarChar(255)
   ID_categorie         Int
-  Ingredients_Recettes Ingredients_Recettes[]
+  Ingredients_Recettes Ingredients_Recettes[] @ignore
   Plats_Categories     Plats_Categories       @relation(fields: [ID_categorie], references: [ID_categorie], onDelete: NoAction, onUpdate: NoAction, map: "fk_plat_categorie")
   Users_Alimentations  Users_Alimentations[]
   Users_Favoris        Users_Favoris[]
 
   @@index([ID_categorie], map: "fk_plat_categorie")
-  @@index([duree])
 }
 
 model Plats_Categories {
@@ -78,26 +79,27 @@ model Plats_Categories {
 model Restriction_Types {
   ID_restriction        Int                     @id @default(autoincrement())
   nom                   String                  @db.VarChar(255)
-  Restrictions_aliments Restrictions_aliments[]
-  Users_restrictions    Users_restrictions[]
+  Restrictions_aliments Restrictions_aliments[] @ignore
+  Users_restrictions    Users_restrictions[]    @ignore
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model Restrictions_aliments {
   ID_restriction    Int
   ID_aliment        Int
   Aliments          Aliments          @relation(fields: [ID_aliment], references: [ID_aliment], onDelete: NoAction, onUpdate: NoAction, map: "fk_restriction_aliment")
   Restriction_Types Restriction_Types @relation(fields: [ID_restriction], references: [ID_restriction], onDelete: NoAction, onUpdate: NoAction, map: "fk_restriction_restriction")
 
-  @@id([ID_restriction, ID_aliment])
   @@index([ID_aliment], map: "fk_restriction_aliment")
   @@index([ID_restriction], map: "fk_restriction_restriction")
+  @@ignore
 }
 
 model Users {
   ID_user             Int                   @id @default(autoincrement())
   nom                 String                @db.VarChar(255)
   prenom              String                @db.VarChar(255)
-  mail                String                @unique(map: "mail_UNIQUE") @db.VarChar(255)
+  mail                String                @db.VarChar(255)
   password            String                @db.VarChar(255)
   age                 Int
   taille              Int
@@ -106,8 +108,8 @@ model Users {
   imc                 Decimal               @db.Decimal(10, 2)
   Users_Alimentations Users_Alimentations[]
   Users_Favoris       Users_Favoris[]
-  Users_Hydratations  Users_Hydratations[]
-  Users_restrictions  Users_restrictions[]
+  Users_Hydratations  Users_Hydratations[]  @ignore
+  Users_restrictions  Users_restrictions[]  @ignore
 }
 
 model Users_Alimentations {
@@ -115,7 +117,7 @@ model Users_Alimentations {
   ID_user         Int
   ID_plat         Int?
   ID_aliment      Int?
-  date            DateTime     @default(now())
+  date            DateTime     @db.Timestamp(0)
   ID_moment       Int
   Aliments        Aliments?    @relation(fields: [ID_aliment], references: [ID_aliment], onDelete: NoAction, onUpdate: NoAction, map: "fk_alimentation_aliment")
   Day_Sections    Day_Sections @relation(fields: [ID_moment], references: [ID_moments], onDelete: NoAction, onUpdate: NoAction, map: "fk_alimentation_moment")
@@ -142,23 +144,25 @@ model Users_Favoris {
   @@index([ID_user], map: "fk_favoris_user")
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model Users_Hydratations {
   ID_user Int
-  date    DateTime @default(now())
+  date    DateTime @db.Timestamp(0)
   volume  Int
   Users   Users    @relation(fields: [ID_user], references: [ID_user], onDelete: NoAction, onUpdate: NoAction, map: "fk_hydratation_user")
 
-  @@id([ID_user, date])
   @@index([ID_user], map: "fk_hydratation_user")
+  @@ignore
 }
 
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model Users_restrictions {
   ID_user           Int
   ID_restriction    Int
   Restriction_Types Restriction_Types @relation(fields: [ID_restriction], references: [ID_restriction], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_restriction_restriction")
   Users             Users             @relation(fields: [ID_user], references: [ID_user], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_restriction_user")
 
-  @@id([ID_user, ID_restriction])
   @@index([ID_restriction], map: "fk_user_restriction_restriction")
   @@index([ID_user], map: "fk_user_restriction_user")
+  @@ignore
 }
