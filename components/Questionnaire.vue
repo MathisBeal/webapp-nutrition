@@ -1,4 +1,5 @@
 <template>
+  <h1 class="questionnaire-title">Veuillez remplir ce bref questionnaire</h1>
   <div class="questionnaire-container">
     <div class="question-box">
       <!-- Affichage de la question actuelle et du total -->
@@ -106,6 +107,10 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router'; // Importer le composable useRouter
+
+// Instance du routeur
+const router = useRouter();
 
 // Questions du formulaire
 const questions = ref([
@@ -209,14 +214,19 @@ const previousQuestion = () => {
 
 // Soumission des réponses
 const submitAnswers = () => {
-  console.log('Réponses :', selectedOption.value, 'Âge :', age.value, 'Taille :', height.value, 'Poids :', weight.value);
   alert('Questionnaire soumis avec succès !');
+  router.push('/login');
 };
 </script>
 
-
 <style scoped>
-/* Styles principaux */
+.questionnaire-title {
+  text-align: center;
+  font-size: 50px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
 .questionnaire-container {
   max-width: 600px;
   margin: 50px auto;
@@ -224,7 +234,7 @@ const submitAnswers = () => {
   border: 1px solid #ccc;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
+  background-color: #ffbbbb;
 }
 
 .question-box {

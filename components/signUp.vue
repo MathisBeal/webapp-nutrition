@@ -1,56 +1,10 @@
-
-<script lang="ts" setup>
-// Importation de Vue et de Nuxt composables
-import { ref } from 'vue'
-import { useRouter } from 'nuxt/app'
-
-// Variables réactives pour les champs et messages
-const name = ref('')
-const email = ref('')
-const password = ref('')
-const confirmPassword = ref('')
-const errorMessage = ref('')
-const successMessage = ref('')
-const router = useRouter()
-
-// Fonction de gestion de l'inscription
-const handleSignup = async () => {
-  // Réinitialiser les messages
-  errorMessage.value = ''
-  successMessage.value = ''
-
-  // Vérifier les champs obligatoires
-  if (!name.value || !email.value || !password.value || !confirmPassword.value) {
-    errorMessage.value = 'Veuillez remplir tous les champs.'
-    return
-  }
-
-  // Vérifier que les mots de passe correspondent
-  if (password.value !== confirmPassword.value) {
-    errorMessage.value = 'Les mots de passe ne correspondent pas.'
-    return
-  }
-
-  // Simuler une requête API pour l'inscription
-  try {
-    successMessage.value = 'Compte créé avec succès ! Redirection...'
-    // Redirection vers la page de connexion après succès
-    setTimeout(() => router.push('/login'), 1000)
-  } catch (error) {
-    errorMessage.value = "Une erreur s'est produite lors de l'inscription."
-  }
-}
-</script>
-
 <template>
   <div class="signup-page">
     <h1 class="title">Créer un compte</h1>
     <form @submit.prevent="handleSignup" class="signup-form">
-      <!-- Message d'erreur ou succès -->
       <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
       <p v-if="successMessage" class="success">{{ successMessage }}</p>
 
-      <!-- Champ Nom -->
       <div class="form-group">
         <label for="name">Nom</label>
         <input
@@ -62,7 +16,6 @@ const handleSignup = async () => {
         />
       </div>
 
-      <!-- Champ Email -->
       <div class="form-group">
         <label for="email">Email</label>
         <input
@@ -74,7 +27,6 @@ const handleSignup = async () => {
         />
       </div>
 
-      <!-- Champ Mot de passe -->
       <div class="form-group">
         <label for="password">Mot de passe</label>
         <input
@@ -86,7 +38,6 @@ const handleSignup = async () => {
         />
       </div>
 
-      <!-- Champ Confirmation du mot de passe -->
       <div class="form-group">
         <label for="confirmPassword">Confirmez le mot de passe</label>
         <input
@@ -97,18 +48,49 @@ const handleSignup = async () => {
           class="input"
         />
       </div>
-
-      <!-- Bouton de soumission -->
       <button type="submit" class="btn">S'inscrire</button>
     </form>
-
-    <!-- Lien vers la page de connexion -->
     <p class="login-link">
       Vous avez déjà un compte ?
       <a href="/login">Connectez-vous <span class="highlight">ici</span>.</a>
     </p>
   </div>
 </template>
+
+<script lang="ts" setup>
+import { ref } from 'vue';
+
+const name = ref('');
+const email = ref('');
+const password = ref('');
+const confirmPassword = ref('');
+const errorMessage = ref('');
+const successMessage = ref('');
+
+// Émettre un événement au succès
+const emit = defineEmits(['signupSuccess']);
+
+const handleSignup = () => {
+  errorMessage.value = '';
+  successMessage.value = '';
+
+  if (!name.value || !email.value || !password.value || !confirmPassword.value) {
+    errorMessage.value = 'Veuillez remplir tous les champs.';
+    return;
+  }
+
+  if (password.value !== confirmPassword.value) {
+    errorMessage.value = 'Les mots de passe ne correspondent pas.';
+    return;
+  }
+
+  successMessage.value = 'Compte créé avec succès !';
+  setTimeout(() => {
+    emit('signupSuccess');
+  }, 500);
+};
+</script>
+
 
 <style scoped>
 .signup-page {
