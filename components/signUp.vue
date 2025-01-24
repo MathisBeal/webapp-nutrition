@@ -1,3 +1,4 @@
+
 <script lang="ts" setup>
 // Importation de Vue et de Nuxt composables
 import { ref } from 'vue'
