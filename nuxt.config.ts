@@ -20,6 +20,10 @@ export default defineNuxtConfig({
     DB_PASSWORD: process.env.DB_PASSWORD,
   },
 
-  modules: ["@nuxt/test-utils/module", "@nuxt/eslint"],
+  modules: [
+    "@nuxt/test-utils/module",
+    "@nuxt/eslint",
+    "nuxt-auth-utils",
+  ],
   css: ['@/assets/styles/global.css'],
 });

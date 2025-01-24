@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useRouter } from 'nuxt/app'
 import { isAuthenticated, setAuthenticationStatus } from '@/composables/useAuth'
 
+const { user } = useUserSession()
 const router = useRouter()
 
 // Variable pour contrôler la visibilité de la barre de navigation
@@ -35,6 +36,7 @@ const toggleNav = () => {
     </ul>
 
     <li class="bouton" v-if="isAuthenticated">
+      <p v-if="user" class="user-info">Bienvenue, {{ user.name }} !</p>
       <button @click="logout">Se déconnecter</button>
     </li>
   </nav>
@@ -66,7 +68,6 @@ nav {
 }
 
 ul {
-  list-style: none;
   padding: 0;
   width: 100%;
   text-align: center;
@@ -74,6 +75,7 @@ ul {
 }
 
 li {
+  list-style: none;
   margin: 1rem 0;
 }
 
@@ -114,5 +116,10 @@ li:last-child {
   position: fixed;
   top: 20px;
   left: 20px;
+}
+
+.user-info {
+  color: #0055ff;
+  font-weight: bold;
 }
 </style>

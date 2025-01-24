@@ -1,34 +1,44 @@
-<script lang="ts" setup>
-// Importations nécessaires
+<script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'nuxt/app'
 import { setAuthenticationStatus } from '@/composables/useAuth'
 
-
-// Variables et gestion de la logique
-const email = ref('')
-const password = ref('')
+const { fetch: refreshSession } = useUserSession()
 const errorMessage = ref('')
-const router = useRouter()
 
-const handleLogin = () => {
-  // Validation basique des champs
-  if (!email.value || !password.value) {
+const credentials = reactive({
+  email: '',
+  password: '',
+})
+async function login() {
+  if (!credentials.email || !credentials.password) {
     errorMessage.value = 'Veuillez remplir tous les champs.'
     return
   }
-  // Simulation de la logique de connexion (remplacer par un appel API)
   errorMessage.value = ''
-  setAuthenticationStatus(true)
-  router.push('/home')
+  try {
+    await $fetch('/api/login', { //envoie requete API a api/login
+      method: 'POST',
+      body: credentials,
+    })
+
+    await refreshSession() // Met à jour la session utilisateur
+    await navigateTo('/home')
+    setAuthenticationStatus(true)
+  } catch (error: any) {
+    if (error?.data?.message) {
+      errorMessage.value = error.data.message
+    } else {
+      errorMessage.value = 'Une erreur est survenue.'
+    }
+  }
 }
 </script>
 
 <template>
   <div class="login-page">
     <h1 class="title">Connexion</h1>
-    <form @submit.prevent="handleLogin" class="login-form">
-      <!-- Message d'erreur général -->
+    <form @submit.prevent="login" class="login-form">
+
       <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
 
       <!-- Champ Email -->
@@ -37,7 +47,7 @@ const handleLogin = () => {
         <input
           type="email"
           id="email"
-          v-model="email"
+          v-model="credentials.email"
           placeholder="Entrez votre email"
           class="input"
         />
@@ -49,7 +59,7 @@ const handleLogin = () => {
         <input
           type="password"
           id="password"
-          v-model="password"
+          v-model="credentials.password"
           placeholder="Entrez votre mot de passe"
           class="input"
         />
