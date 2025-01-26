@@ -69,6 +69,7 @@ onMounted(() => {
 
 
 
+
 <style>
 .plat-list {
   height: 600px;
