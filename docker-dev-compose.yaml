@@ -6,6 +6,7 @@ services:
       MYSQL_DATABASE: nutrition_webapp
       TZ: Europe/Paris
       LANG: en_US.UTF-8
+      LC_ALL: en_US.UTF-8
     ports:
       - "3306:3306"
     volumes:

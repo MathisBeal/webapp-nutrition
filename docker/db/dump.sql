@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: nutrition_webapp
 -- ------------------------------------------------------
--- Server version	9.1.0
+-- Server version	9.2.0
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -25,13 +25,20 @@ DROP TABLE IF EXISTS `Aliments`;
 CREATE TABLE `Aliments` (
   `ID_aliment` int NOT NULL AUTO_INCREMENT,
   `nom` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nom` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `quantite_base` int NOT NULL,
   `calories` decimal(10,2) NOT NULL,
   `glucides` decimal(10,2) NOT NULL,
   `lipides` decimal(10,2) NOT NULL,
   `proteines` decimal(10,2) NOT NULL,
   `image` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `calories` decimal(10,2) NOT NULL,
+  `glucides` decimal(10,2) NOT NULL,
+  `lipides` decimal(10,2) NOT NULL,
+  `proteines` decimal(10,2) NOT NULL,
+  `image` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`ID_aliment`)
+) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -41,6 +48,7 @@ CREATE TABLE `Aliments` (
 
 LOCK TABLES `Aliments` WRITE;
 /*!40000 ALTER TABLE `Aliments` DISABLE KEYS */;
+INSERT INTO `Aliments` VALUES (1,'Pomme',1,52.00,14.00,0.20,0.30,'image_pomme.jpg'),(2,'Banane',1,96.00,22.00,0.30,1.20,'image_banane.jpg'),(3,'Orange',1,47.00,12.00,0.10,0.90,'image_orange.jpg'),(4,'Carotte',100,41.00,10.00,0.20,0.90,'image_carotte.jpg'),(5,'Tomate',100,18.00,3.90,0.20,0.90,'image_tomate.jpg'),(6,'Brocoli',100,55.00,6.00,0.60,4.00,'image_brocoli.jpg'),(7,'Lait (entier)',100,64.00,4.80,3.60,3.30,'image_lait.jpg'),(8,'Yaourt nature',100,63.00,4.00,3.50,5.00,'image_yaourt.jpg'),(9,'Pâtes (crues)',100,350.00,72.00,1.50,12.00,'image_pates.jpg'),(10,'Riz (basmati)',100,365.00,80.00,0.50,7.10,'image_riz.jpg'),(11,'Riz (complet)',100,370.00,77.00,2.90,7.90,'image_riz_complet.jpg'),(12,'Huile d\'olive',10,90.00,0.00,10.00,0.00,'image_huile_olive.jpg'),(13,'Beurre',10,75.00,0.00,8.00,0.10,'image_beurre.jpg'),(14,'Sel',1,0.00,0.00,0.00,0.00,'image_sel.jpg'),(15,'Poivre',1,251.00,64.00,3.30,10.00,'image_poivre.jpg'),(16,'Poulet (cuit)',100,165.00,0.00,3.60,31.00,'image_poulet.jpg'),(17,'Saumon (cru)',100,206.00,0.00,13.00,20.00,'image_saumon.jpg'),(18,'Bœuf (haché)',100,250.00,0.00,18.00,26.00,'image_boeuf.jpg'),(19,'Pain (blanc)',100,265.00,49.00,3.20,9.00,'image_pain_blanc.jpg'),(20,'Pain (complet)',100,250.00,45.00,3.00,9.50,'image_pain_complet.jpg'),(21,'Oeuf',1,68.00,0.60,4.80,5.50,'image_oeuf.jpg'),(22,'Lentilles (cuites)',100,116.00,20.00,0.40,9.00,'image_lentilles.jpg'),(23,'Pois chiches (cuits)',100,164.00,27.00,2.60,8.90,'image_pois_chiches.jpg'),(24,'Avoine (flocons)',100,389.00,66.00,7.00,16.00,'image_avoine.jpg'),(25,'Pomme de terre (cuite)',100,77.00,17.00,0.10,2.00,'image_pomme_de_terre.jpg'),(26,'Courgette',100,17.00,3.10,0.10,1.20,'image_courgette.jpg'),(27,'Épinards (cuits)',100,23.00,3.60,0.30,2.90,'image_epinards.jpg'),(28,'Chou-fleur (cuit)',100,23.00,4.10,0.30,1.80,'image_chou_fleur.jpg'),(29,'Fromage (emmental)',100,402.00,1.50,33.00,29.00,'image_fromage_emmental.jpg'),(30,'Fromage (chèvre)',100,364.00,2.00,30.00,21.00,'image_fromage_chevre.jpg'),(31,'Thon (en conserve)',100,116.00,0.00,1.00,26.00,'image_thon.jpg'),(32,'Crevettes (crues)',100,99.00,0.00,0.30,24.00,'image_crevettes.jpg'),(33,'Chocolat noir (70%)',100,598.00,45.00,42.00,7.50,'image_chocolat_noir.jpg'),(34,'Sucre blanc',100,400.00,100.00,0.00,0.00,'image_sucre_blanc.jpg'),(35,'Miel',100,304.00,82.00,0.00,0.30,'image_miel.jpg'),(36,'Jus d\'orange',100,45.00,10.00,0.20,0.70,'image_jus_orange.jpg'),(37,'Noix (crues)',100,654.00,13.70,65.00,15.00,'image_noix.jpg'),(38,'Amandes (crues)',100,576.00,21.60,49.90,21.20,'image_amandes.jpg'),(39,'Pistaches (crues)',100,562.00,27.00,45.00,20.00,'image_pistaches.jpg'),(40,'Avocat',100,160.00,9.00,15.00,2.00,'image_avocat.jpg'),(41,'Courge (1 tranche)',1,50.00,12.00,0.20,1.10,'image_courge.jpg'),(42,'Haricots verts (100 g)',100,31.00,7.00,0.20,1.80,'image_haricots_verts.jpg'),(43,'Betterave (1 pièce)',1,43.00,10.00,0.10,1.20,'image_betterave.jpg'),(44,'Radis (1 pièce)',1,16.00,3.40,0.10,0.70,'image_radis.jpg'),(45,'Poireau (1 pièce)',1,61.00,14.00,0.30,1.50,'image_poireau.jpg'),(46,'Fenouil (1 bulbe)',1,31.00,7.30,0.20,1.20,'image_fenouil.jpg'),(47,'Patate douce (100 g)',100,86.00,20.00,0.10,1.60,'image_patate_douce.jpg'),(48,'Aubergine (1 pièce)',1,25.00,5.90,0.20,1.00,'image_aubergine.jpg'),(49,'Poivron rouge (1 pièce)',1,31.00,6.00,0.30,1.00,'image_poivron_rouge.jpg'),(50,'Céleri branche (1 branche)',1,7.00,1.50,0.05,0.30,'image_celeri.jpg'),(51,'Champignon (1 pièce)',1,3.00,0.50,0.05,0.40,'image_champignon.jpg'),(52,'Pois cassés (100 g)',100,117.00,21.00,0.40,8.00,'image_pois_casses.jpg'),(53,'Tapioca (100 g)',100,358.00,88.00,0.10,0.20,'image_tapioca.jpg'),(54,'Quinoa (100 g)',100,120.00,21.30,1.90,4.10,'image_quinoa.jpg'),(55,'Blé (100 g)',100,121.00,25.00,0.50,3.60,'image_ble.jpg'),(56,'Fromage (parmesan, 100 g)',100,431.00,4.10,29.00,38.00,'image_parmesan.jpg'),(57,'Fromage (roquefort, 100 g)',100,369.00,2.00,31.00,21.00,'image_roquefort.jpg'),(58,'Fromage blanc 0% (100 g)',100,46.00,4.00,0.20,8.00,'image_fromage_blanc.jpg'),(59,'Sardines (100 g)',100,208.00,0.00,11.00,25.00,'image_sardines.jpg'),(60,'Maquereau (100 g)',100,205.00,0.00,13.80,19.00,'image_maquereau.jpg'),(61,'Crabe (100 g)',100,82.00,0.00,1.10,17.00,'image_crabe.jpg'),(62,'Dinde (100 g)',100,155.00,0.00,2.00,29.00,'image_dinde.jpg'),(63,'Porc (100 g)',100,143.00,0.00,5.00,21.00,'image_porc.jpg'),(64,'Agneau (100 g)',100,230.00,0.00,16.00,20.00,'image_agneau.jpg'),(65,'Pintade (100 g)',100,162.00,0.00,7.50,22.00,'image_pintade.jpg'),(66,'Céréales (muesli, 100 g)',100,389.00,65.00,6.00,10.00,'image_muesli.jpg'),(67,'Compote de pommes (100 g)',100,68.00,16.00,0.10,0.30,'image_compote_pommes.jpg'),(68,'Gelée de fruits (100 g)',100,252.00,62.00,0.00,0.00,'image_gelee_fruits.jpg'),(69,'Sorbet (100 g)',100,120.00,30.00,0.10,0.20,'image_sorbet_citron.jpg'),(70,'Chips (100 g)',100,536.00,50.00,35.00,6.30,'image_chips.jpg'),(71,'Biscottes (100 g)',100,421.00,70.00,8.50,11.00,'image_biscottes.jpg'),(72,'Confiture de fraises (100 g)',100,250.00,65.00,0.10,0.40,'image_confiture_fraises.jpg'),(73,'Beurre de cacahuète (100 g)',100,589.00,19.60,50.00,25.00,'image_beurre_cacahuete.jpg'),(74,'Crème fraîche (100 g)',100,292.00,3.00,30.00,2.40,'image_creme_fraiche.jpg'),(75,'Lait d\'amande (100 ml)',100,17.00,0.30,1.00,0.60,'image_lait_amande.jpg'),(76,'Lait de coco (100 ml)',100,230.00,6.00,24.00,2.30,'image_lait_coco.jpg'),(77,'Tofu (100 g)',100,144.00,1.90,8.00,15.00,'image_tofu.jpg'),(78,'Seitan (100 g)',100,120.00,6.00,1.00,21.00,'image_seitan.jpg'),(79,'Tempeh (100 g)',100,195.00,9.40,11.00,20.00,'image_tempeh.jpg'),(80,'Laitue (1 feuille)',1,5.00,1.00,0.05,0.30,'image_laitue.jpg');
 INSERT INTO `Aliments` VALUES (1,'Pomme',1,52.00,14.00,0.20,0.30,'image_pomme.jpg'),(2,'Banane',1,96.00,22.00,0.30,1.20,'image_banane.jpg'),(3,'Orange',1,47.00,12.00,0.10,0.90,'image_orange.jpg'),(4,'Carotte',100,41.00,10.00,0.20,0.90,'image_carotte.jpg'),(5,'Tomate',100,18.00,3.90,0.20,0.90,'image_tomate.jpg'),(6,'Brocoli',100,55.00,6.00,0.60,4.00,'image_brocoli.jpg'),(7,'Lait (entier)',100,64.00,4.80,3.60,3.30,'image_lait.jpg'),(8,'Yaourt nature',100,63.00,4.00,3.50,5.00,'image_yaourt.jpg'),(9,'Pâtes (crues)',100,350.00,72.00,1.50,12.00,'image_pates.jpg'),(10,'Riz (basmati)',100,365.00,80.00,0.50,7.10,'image_riz.jpg'),(11,'Riz (complet)',100,370.00,77.00,2.90,7.90,'image_riz_complet.jpg'),(12,'Huile d\'olive',10,90.00,0.00,10.00,0.00,'image_huile_olive.jpg'),(13,'Beurre',10,75.00,0.00,8.00,0.10,'image_beurre.jpg'),(14,'Sel',1,0.00,0.00,0.00,0.00,'image_sel.jpg'),(15,'Poivre',1,251.00,64.00,3.30,10.00,'image_poivre.jpg'),(16,'Poulet (cuit)',100,165.00,0.00,3.60,31.00,'image_poulet.jpg'),(17,'Saumon (cru)',100,206.00,0.00,13.00,20.00,'image_saumon.jpg'),(18,'Bœuf (haché)',100,250.00,0.00,18.00,26.00,'image_boeuf.jpg'),(19,'Pain (blanc)',100,265.00,49.00,3.20,9.00,'image_pain_blanc.jpg'),(20,'Pain (complet)',100,250.00,45.00,3.00,9.50,'image_pain_complet.jpg'),(21,'Oeuf',1,68.00,0.60,4.80,5.50,'image_oeuf.jpg'),(22,'Lentilles (cuites)',100,116.00,20.00,0.40,9.00,'image_lentilles.jpg'),(23,'Pois chiches (cuits)',100,164.00,27.00,2.60,8.90,'image_pois_chiches.jpg'),(24,'Avoine (flocons)',100,389.00,66.00,7.00,16.00,'image_avoine.jpg'),(25,'Pomme de terre (cuite)',100,77.00,17.00,0.10,2.00,'image_pomme_de_terre.jpg'),(26,'Courgette',100,17.00,3.10,0.10,1.20,'image_courgette.jpg'),(27,'Épinards (cuits)',100,23.00,3.60,0.30,2.90,'image_epinards.jpg'),(28,'Chou-fleur (cuit)',100,23.00,4.10,0.30,1.80,'image_chou_fleur.jpg'),(29,'Fromage (emmental)',100,402.00,1.50,33.00,29.00,'image_fromage_emmental.jpg'),(30,'Fromage (chèvre)',100,364.00,2.00,30.00,21.00,'image_fromage_chevre.jpg'),(31,'Thon (en conserve)',100,116.00,0.00,1.00,26.00,'image_thon.jpg'),(32,'Crevettes (crues)',100,99.00,0.00,0.30,24.00,'image_crevettes.jpg'),(33,'Chocolat noir (70%)',100,598.00,45.00,42.00,7.50,'image_chocolat_noir.jpg'),(34,'Sucre blanc',100,400.00,100.00,0.00,0.00,'image_sucre_blanc.jpg'),(35,'Miel',100,304.00,82.00,0.00,0.30,'image_miel.jpg'),(36,'Jus d\'orange',100,45.00,10.00,0.20,0.70,'image_jus_orange.jpg'),(37,'Noix (crues)',100,654.00,13.70,65.00,15.00,'image_noix.jpg'),(38,'Amandes (crues)',100,576.00,21.60,49.90,21.20,'image_amandes.jpg'),(39,'Pistaches (crues)',100,562.00,27.00,45.00,20.00,'image_pistaches.jpg'),(40,'Avocat',100,160.00,9.00,15.00,2.00,'image_avocat.jpg'),(41,'Courge (1 tranche)',1,50.00,12.00,0.20,1.10,'image_courge.jpg'),(42,'Haricots verts (100 g)',100,31.00,7.00,0.20,1.80,'image_haricots_verts.jpg'),(43,'Betterave (1 pièce)',1,43.00,10.00,0.10,1.20,'image_betterave.jpg'),(44,'Radis (1 pièce)',1,16.00,3.40,0.10,0.70,'image_radis.jpg'),(45,'Poireau (1 pièce)',1,61.00,14.00,0.30,1.50,'image_poireau.jpg'),(46,'Fenouil (1 bulbe)',1,31.00,7.30,0.20,1.20,'image_fenouil.jpg'),(47,'Patate douce (100 g)',100,86.00,20.00,0.10,1.60,'image_patate_douce.jpg'),(48,'Aubergine (1 pièce)',1,25.00,5.90,0.20,1.00,'image_aubergine.jpg'),(49,'Poivron rouge (1 pièce)',1,31.00,6.00,0.30,1.00,'image_poivron_rouge.jpg'),(50,'Céleri branche (1 branche)',1,7.00,1.50,0.05,0.30,'image_celeri.jpg'),(51,'Champignon (1 pièce)',1,3.00,0.50,0.05,0.40,'image_champignon.jpg'),(52,'Pois cassés (100 g)',100,117.00,21.00,0.40,8.00,'image_pois_casses.jpg'),(53,'Tapioca (100 g)',100,358.00,88.00,0.10,0.20,'image_tapioca.jpg'),(54,'Quinoa (100 g)',100,120.00,21.30,1.90,4.10,'image_quinoa.jpg'),(55,'Blé (100 g)',100,121.00,25.00,0.50,3.60,'image_ble.jpg'),(56,'Fromage (parmesan, 100 g)',100,431.00,4.10,29.00,38.00,'image_parmesan.jpg'),(57,'Fromage (roquefort, 100 g)',100,369.00,2.00,31.00,21.00,'image_roquefort.jpg'),(58,'Fromage blanc 0% (100 g)',100,46.00,4.00,0.20,8.00,'image_fromage_blanc.jpg'),(59,'Sardines (100 g)',100,208.00,0.00,11.00,25.00,'image_sardines.jpg'),(60,'Maquereau (100 g)',100,205.00,0.00,13.80,19.00,'image_maquereau.jpg'),(61,'Crabe (100 g)',100,82.00,0.00,1.10,17.00,'image_crabe.jpg'),(62,'Dinde (100 g)',100,155.00,0.00,2.00,29.00,'image_dinde.jpg'),(63,'Porc (100 g)',100,143.00,0.00,5.00,21.00,'image_porc.jpg'),(64,'Agneau (100 g)',100,230.00,0.00,16.00,20.00,'image_agneau.jpg'),(65,'Pintade (100 g)',100,162.00,0.00,7.50,22.00,'image_pintade.jpg'),(66,'Céréales (muesli, 100 g)',100,389.00,65.00,6.00,10.00,'image_muesli.jpg'),(67,'Compote de pommes (100 g)',100,68.00,16.00,0.10,0.30,'image_compote_pommes.jpg'),(68,'Gelée de fruits (100 g)',100,252.00,62.00,0.00,0.00,'image_gelee_fruits.jpg'),(69,'Sorbet (100 g)',100,120.00,30.00,0.10,0.20,'image_sorbet_citron.jpg'),(70,'Chips (100 g)',100,536.00,50.00,35.00,6.30,'image_chips.jpg'),(71,'Biscottes (100 g)',100,421.00,70.00,8.50,11.00,'image_biscottes.jpg'),(72,'Confiture de fraises (100 g)',100,250.00,65.00,0.10,0.40,'image_confiture_fraises.jpg'),(73,'Beurre de cacahuète (100 g)',100,589.00,19.60,50.00,25.00,'image_beurre_cacahuete.jpg'),(74,'Crème fraîche (100 g)',100,292.00,3.00,30.00,2.40,'image_creme_fraiche.jpg'),(75,'Lait d\'amande (100 ml)',100,17.00,0.30,1.00,0.60,'image_lait_amande.jpg'),(76,'Lait de coco (100 ml)',100,230.00,6.00,24.00,2.30,'image_lait_coco.jpg'),(77,'Tofu (100 g)',100,144.00,1.90,8.00,15.00,'image_tofu.jpg'),(78,'Seitan (100 g)',100,120.00,6.00,1.00,21.00,'image_seitan.jpg'),(79,'Tempeh (100 g)',100,195.00,9.40,11.00,20.00,'image_tempeh.jpg'),(80,'Laitue (1 feuille)',1,5.00,1.00,0.05,0.30,'image_laitue.jpg');
 /*!40000 ALTER TABLE `Aliments` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -55,7 +63,9 @@ DROP TABLE IF EXISTS `Day_Sections`;
 CREATE TABLE `Day_Sections` (
   `ID_moments` int NOT NULL AUTO_INCREMENT,
   `nom` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nom` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`ID_moments`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -86,6 +96,9 @@ CREATE TABLE `IMC_apports` (
   `proteines` decimal(10,2) NOT NULL,
   PRIMARY KEY (`imc_min`,`imc_max`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `proteines` decimal(10,2) NOT NULL,
+  PRIMARY KEY (`imc_min`,`imc_max`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -111,10 +124,14 @@ CREATE TABLE `Ingredients_Recettes` (
   `multiplicateur_quantite` decimal(10,2) NOT NULL,
   `unite` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`ID_plat`,`ID_aliment`),
+  `unite` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`ID_plat`,`ID_aliment`),
   KEY `fk_ingredient_de_recette_aliment` (`ID_aliment`),
+  KEY `fk_ingredient_de_recette_plat` (`ID_plat`),
   KEY `fk_ingredient_de_recette_plat` (`ID_plat`),
   CONSTRAINT `fk_ingredient_de_recette_aliment` FOREIGN KEY (`ID_aliment`) REFERENCES `Aliments` (`ID_aliment`),
   CONSTRAINT `fk_ingredient_de_recette_plat` FOREIGN KEY (`ID_plat`) REFERENCES `Plats` (`ID_plat`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -124,7 +141,7 @@ CREATE TABLE `Ingredients_Recettes` (
 
 LOCK TABLES `Ingredients_Recettes` WRITE;
 /*!40000 ALTER TABLE `Ingredients_Recettes` DISABLE KEYS */;
-INSERT INTO `Ingredients_Recettes` VALUES (1,3,1.00,'pièce'),(1,5,2.00,'g'),(1,26,2.00,'g'),(1,28,2.00,'g'),(1,49,1.00,'pièce'),(2,16,2.00,'g'),(2,19,1.00,'g'),(2,29,1.00,'g'),(2,74,1.00,'g'),(2,80,5.00,'piè'),(3,12,1.00,'ml'),(3,15,1.00,'g'),(3,16,3.00,'g'),(3,45,1.00,'piè'),(3,76,1.00,'ml'),(4,5,3.00,'g'),(4,9,1.00,'g'),(4,12,1.00,'ml'),(4,15,1.00,'g'),(4,18,2.00,'g'),(5,20,1.00,'g'),(5,26,2.00,'g'),(5,28,1.00,'g'),(5,40,1.00,'g'),(5,74,1.00,'g'),(6,3,3.00,'g'),(6,9,3.00,'g'),(6,26,3.00,'g'),(6,29,2.00,'g'),(6,74,2.00,'g'),(7,5,2.00,'g'),(7,12,1.00,'ml'),(7,15,1.00,'g'),(7,41,1.00,'tranche'),(7,74,1.00,'g'),(8,1,1.00,'pièce'),(8,2,1.00,'pièce'),(8,34,1.00,'g'),(8,35,1.00,'g'),(8,75,100.00,'ml'),(9,1,3.00,'pièce'),(9,9,1.00,'g'),(9,19,2.00,'g'),(9,35,1.00,'g'),(9,74,2.00,'g'),(10,17,1.00,'g'),(10,19,1.00,'g'),(10,26,2.00,'g'),(10,77,2.00,'g'),(10,80,2.00,'pièce');
+INSERT INTO `Ingredients_Recettes` VALUES (1,3,1.00,'piè'),(1,5,2.00,'g'),(1,26,2.00,'g'),(1,28,2.00,'g'),(1,49,1.00,'pièce'),(2,16,2.00,'g'),(2,19,1.00,'g'),(2,29,1.00,'g'),(2,74,1.00,'g'),(2,80,5.00,'piè'),(3,12,1.00,'ml'),(3,15,1.00,'g'),(3,16,3.00,'g'),(3,45,1.00,'piè'),(3,76,1.00,'ml'),(4,5,3.00,'g'),(4,9,1.00,'g'),(4,12,1.00,'ml'),(4,15,1.00,'g'),(4,18,2.00,'g'),(5,20,1.00,'g'),(5,26,2.00,'g'),(5,28,1.00,'g'),(5,40,1.00,'g'),(5,74,1.00,'g');
 /*!40000 ALTER TABLE `Ingredients_Recettes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -141,12 +158,17 @@ CREATE TABLE `Plats` (
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `etapes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `images` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `duree` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `etapes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `images` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `ID_categorie` int NOT NULL,
   PRIMARY KEY (`ID_plat`),
   KEY `fk_plat_categorie` (`ID_categorie`),
   KEY `Plats_duree_idx` (`duree`),
+  KEY `Plats_duree_idx` (`duree`),
   CONSTRAINT `fk_plat_categorie` FOREIGN KEY (`ID_categorie`) REFERENCES `Plats_Categories` (`ID_categorie`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -169,7 +191,9 @@ DROP TABLE IF EXISTS `Plats_Categories`;
 CREATE TABLE `Plats_Categories` (
   `ID_categorie` int NOT NULL AUTO_INCREMENT,
   `nom` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nom` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`ID_categorie`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -193,7 +217,9 @@ DROP TABLE IF EXISTS `Restriction_Types`;
 CREATE TABLE `Restriction_Types` (
   `ID_restriction` int NOT NULL AUTO_INCREMENT,
   `nom` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nom` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`ID_restriction`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -219,9 +245,12 @@ CREATE TABLE `Restrictions_aliments` (
   `ID_aliment` int NOT NULL,
   PRIMARY KEY (`ID_restriction`,`ID_aliment`),
   KEY `fk_restriction_aliment` (`ID_aliment`),
+  PRIMARY KEY (`ID_restriction`,`ID_aliment`),
+  KEY `fk_restriction_aliment` (`ID_aliment`),
   KEY `fk_restriction_restriction` (`ID_restriction`),
   CONSTRAINT `fk_restriction_aliment` FOREIGN KEY (`ID_aliment`) REFERENCES `Aliments` (`ID_aliment`),
   CONSTRAINT `fk_restriction_restriction` FOREIGN KEY (`ID_restriction`) REFERENCES `Restriction_Types` (`ID_restriction`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -231,6 +260,7 @@ CREATE TABLE `Restrictions_aliments` (
 
 LOCK TABLES `Restrictions_aliments` WRITE;
 /*!40000 ALTER TABLE `Restrictions_aliments` DISABLE KEYS */;
+INSERT INTO `Restrictions_aliments` VALUES (1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(2,7),(8,7),(9,7),(1,8),(2,8),(9,8),(1,9),(2,9),(8,9),(1,10),(2,10),(1,11),(2,11),(8,11),(9,11),(1,12),(2,12),(13,12),(1,13),(2,13),(8,13),(1,14),(2,14),(1,15),(1,16),(1,17),(14,17),(15,17),(1,18),(1,19),(2,19),(1,20),(2,20),(1,21),(2,21),(8,21),(1,22),(2,22),(1,23),(2,23),(1,24),(2,24),(1,25),(2,25),(1,26),(2,26),(1,27),(2,27),(1,28),(2,28),(1,29),(2,29),(9,29),(1,30),(2,30),(9,30),(1,31),(14,31),(1,32),(14,32),(15,32),(1,33),(2,33),(1,34),(2,34),(1,35),(2,35),(1,36),(2,36),(1,37),(2,37),(12,37),(13,37),(1,38),(2,38),(12,38),(13,38),(1,39),(2,39),(12,39),(13,39),(1,40),(2,40),(1,41),(2,41),(1,42),(2,42),(1,43),(2,43),(1,44),(2,44),(1,45),(2,45),(1,46),(2,46),(1,47),(2,47),(1,48),(2,48),(1,49),(2,49),(1,50),(2,50),(1,51),(2,51),(1,52),(2,52),(1,53),(2,53),(1,54),(2,54),(1,55),(2,55),(1,56),(2,56),(1,57),(2,57),(1,58),(2,58),(1,59),(14,59),(1,60),(14,60),(1,61),(14,61),(15,61),(1,62),(10,62),(1,63),(10,63),(1,64),(1,65),(1,66),(2,66),(1,67),(2,67),(1,68),(2,68),(1,69),(2,69),(1,70),(1,71),(2,71),(1,72),(2,72),(1,73),(12,73),(1,74),(2,74),(1,75),(2,75),(1,76),(2,76),(1,77),(2,77),(10,77),(1,78),(2,78),(10,78),(1,79),(2,79),(10,79),(1,80),(2,80);
 INSERT INTO `Restrictions_aliments` VALUES (1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(2,7),(8,7),(9,7),(1,8),(2,8),(9,8),(1,9),(2,9),(8,9),(1,10),(2,10),(1,11),(2,11),(8,11),(9,11),(1,12),(2,12),(13,12),(1,13),(2,13),(8,13),(1,14),(2,14),(1,15),(1,16),(1,17),(14,17),(15,17),(1,18),(1,19),(2,19),(1,20),(2,20),(1,21),(2,21),(8,21),(1,22),(2,22),(1,23),(2,23),(1,24),(2,24),(1,25),(2,25),(1,26),(2,26),(1,27),(2,27),(1,28),(2,28),(1,29),(2,29),(9,29),(1,30),(2,30),(9,30),(1,31),(14,31),(1,32),(14,32),(15,32),(1,33),(2,33),(1,34),(2,34),(1,35),(2,35),(1,36),(2,36),(1,37),(2,37),(12,37),(13,37),(1,38),(2,38),(12,38),(13,38),(1,39),(2,39),(12,39),(13,39),(1,40),(2,40),(1,41),(2,41),(1,42),(2,42),(1,43),(2,43),(1,44),(2,44),(1,45),(2,45),(1,46),(2,46),(1,47),(2,47),(1,48),(2,48),(1,49),(2,49),(1,50),(2,50),(1,51),(2,51),(1,52),(2,52),(1,53),(2,53),(1,54),(2,54),(1,55),(2,55),(1,56),(2,56),(1,57),(2,57),(1,58),(2,58),(1,59),(14,59),(1,60),(14,60),(1,61),(14,61),(15,61),(1,62),(10,62),(1,63),(10,63),(1,64),(1,65),(1,66),(2,66),(1,67),(2,67),(1,68),(2,68),(1,69),(2,69),(1,70),(1,71),(2,71),(1,72),(2,72),(1,73),(12,73),(1,74),(2,74),(1,75),(2,75),(1,76),(2,76),(1,77),(2,77),(10,77),(1,78),(2,78),(10,78),(1,79),(2,79),(10,79),(1,80),(2,80);
 /*!40000 ALTER TABLE `Restrictions_aliments` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -248,13 +278,17 @@ CREATE TABLE `Users` (
   `prenom` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `mail` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nom` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `prenom` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `mail` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `age` int NOT NULL,
   `taille` int NOT NULL,
   `poids` decimal(10,2) NOT NULL,
   `sexe` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `sexe` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `imc` decimal(10,2) NOT NULL,
-  PRIMARY KEY (`ID_user`),
-  UNIQUE KEY `mail_UNIQUE` (`mail`)
+  PRIMARY KEY (`ID_user`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -276,6 +310,7 @@ UNLOCK TABLES;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `update_imc_trigger_insert` BEFORE INSERT ON `users` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `update_imc_trigger_insert` BEFORE INSERT ON `users` FOR EACH ROW BEGIN
     -- Appeler la procédure pour calculer l'IMC
     CALL calculate_imc(NEW.poids, NEW.taille, @calculated_imc);
     SET NEW.imc = @calculated_imc;
@@ -294,6 +329,8 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `update_imc_trigger_update` BEFORE UPDATE ON `users` FOR EACH ROW BEGIN
+    -- Appeler la procédure pour recalculer l'IMC
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `update_imc_trigger_update` BEFORE UPDATE ON `users` FOR EACH ROW BEGIN
     -- Appeler la procédure pour recalculer l'IMC
     CALL calculate_imc(NEW.poids, NEW.taille, @calculated_imc);
@@ -318,16 +355,20 @@ CREATE TABLE `Users_Alimentations` (
   `ID_plat` int DEFAULT NULL,
   `ID_aliment` int DEFAULT NULL,
   `date` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `date` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   `ID_moment` int NOT NULL,
   PRIMARY KEY (`ID_alimentation`),
   KEY `fk_alimentation_aliment` (`ID_aliment`),
   KEY `fk_alimentation_moment` (`ID_moment`),
   KEY `fk_alimentation_plat` (`ID_plat`),
   KEY `fk_alimentation_user` (`ID_user`),
+  KEY `fk_alimentation_plat` (`ID_plat`),
+  KEY `fk_alimentation_user` (`ID_user`),
   CONSTRAINT `fk_alimentation_aliment` FOREIGN KEY (`ID_aliment`) REFERENCES `Aliments` (`ID_aliment`),
   CONSTRAINT `fk_alimentation_moment` FOREIGN KEY (`ID_moment`) REFERENCES `Day_Sections` (`ID_moments`),
   CONSTRAINT `fk_alimentation_plat` FOREIGN KEY (`ID_plat`) REFERENCES `Plats` (`ID_plat`),
   CONSTRAINT `fk_alimentation_user` FOREIGN KEY (`ID_user`) REFERENCES `Users` (`ID_user`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -356,9 +397,12 @@ CREATE TABLE `Users_Favoris` (
   KEY `fk_favoris_aliment` (`ID_aliment`),
   KEY `fk_favoris_plat` (`ID_plat`),
   KEY `fk_favoris_user` (`ID_user`),
+  KEY `fk_favoris_plat` (`ID_plat`),
+  KEY `fk_favoris_user` (`ID_user`),
   CONSTRAINT `fk_favoris_aliment` FOREIGN KEY (`ID_aliment`) REFERENCES `Aliments` (`ID_aliment`),
   CONSTRAINT `fk_favoris_plat` FOREIGN KEY (`ID_plat`) REFERENCES `Plats` (`ID_plat`),
   CONSTRAINT `fk_favoris_user` FOREIGN KEY (`ID_user`) REFERENCES `Users` (`ID_user`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -381,10 +425,13 @@ DROP TABLE IF EXISTS `Users_Hydratations`;
 CREATE TABLE `Users_Hydratations` (
   `ID_user` int NOT NULL,
   `date` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `date` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   `volume` int NOT NULL,
+  PRIMARY KEY (`ID_user`,`date`),
   PRIMARY KEY (`ID_user`,`date`),
   KEY `fk_hydratation_user` (`ID_user`),
   CONSTRAINT `fk_hydratation_user` FOREIGN KEY (`ID_user`) REFERENCES `Users` (`ID_user`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -408,10 +455,13 @@ CREATE TABLE `Users_restrictions` (
   `ID_user` int NOT NULL,
   `ID_restriction` int NOT NULL,
   PRIMARY KEY (`ID_user`,`ID_restriction`),
+  PRIMARY KEY (`ID_user`,`ID_restriction`),
   KEY `fk_user_restriction_restriction` (`ID_restriction`),
+  KEY `fk_user_restriction_user` (`ID_user`),
   KEY `fk_user_restriction_user` (`ID_user`),
   CONSTRAINT `fk_user_restriction_restriction` FOREIGN KEY (`ID_restriction`) REFERENCES `Restriction_Types` (`ID_restriction`),
   CONSTRAINT `fk_user_restriction_user` FOREIGN KEY (`ID_user`) REFERENCES `Users` (`ID_user`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -446,6 +496,11 @@ CREATE DEFINER=`root`@`%` PROCEDURE `calculate_imc`(
     IN taille DOUBLE,
     OUT imc DOUBLE
 )
+CREATE DEFINER=`root`@`%` PROCEDURE `calculate_imc`(
+    IN poids DOUBLE,
+    IN taille DOUBLE,
+    OUT imc DOUBLE
+)
 BEGIN
     -- Vérifier que la taille est valide (supérieure à 0)
     IF taille > 0 THEN
@@ -470,4 +525,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-27 10:11:02
+-- Dump completed on 2025-01-26 18:16:39
