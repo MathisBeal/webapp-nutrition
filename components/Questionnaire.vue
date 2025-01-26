@@ -155,27 +155,6 @@ const questions = ref([
       'Sésame',
     ],
   },
-  {
-    question: 'Combien d’eau buvez-vous en moyenne par jour ?',
-    options: [
-      'Moins de 0.5 litres',
-      '0.5-1 litres',
-      '1-2 litres',
-      '2-3 litres',
-      'Plus de 3 litres',
-    ],
-  },
-  {
-    question:
-      'Quels sont vos objectifs principaux en matière de santé et de nutrition ?',
-    options: [
-      'Perdre du poids',
-      'Améliorer ma santé générale',
-      'Gagner du muscle',
-      'Maintenir mon poids',
-      'Améliorer mes habitudes alimentaires',
-    ],
-  },
 ]);
 
 // Variables de suivi
