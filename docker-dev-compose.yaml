@@ -1,4 +1,22 @@
 services:
+  webapp:
+    image: nutrition_webapp
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=mysql://root:root@db-nutrition:3306/nutrition_webapp
+    depends_on:
+      - db-nutrition
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.nuxt
+      - /app/docker/db
+    command: ["npm", "run", "test:watch"]
+
   db-nutrition:
     image: mysql:latest
     environment:
