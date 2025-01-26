@@ -151,11 +151,7 @@ Pour ajouter de nouveaux alias ou modifier ceux existants, éditez le fichier `.
 Pour se connecter à la base de données, vous devez créer un fichier `.env` à la racine du projet avec les paramètres de connexion appropriés. Voici un exemple de fichier `.env` :
 
 ```properties
-DB_HOST=localhost
-DB_PORT=3306
-DB_NAME=webapp_nutrition
-DB_USER=root
-DB_PASSWORD=root
+DATABASE_URL="mysql://root:root@localhost:3306/nutrition_webapp"
 ```
 
 ## Utilisation de Docker Compose
