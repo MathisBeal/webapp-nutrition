@@ -228,17 +228,8 @@ const submitAnswers = () => {
 }
 
 .questionnaire-container {
-  max-width: 600px;
   margin: 50px auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  background-color: #ffbbbb;
-}
-
-.question-box {
-  margin-bottom: 20px;
+  background-color: #ffffff;
 }
 
 .progress-info {
