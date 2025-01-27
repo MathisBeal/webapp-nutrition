@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: nutrition_webapp
 -- ------------------------------------------------------
--- Server version	9.2.0
+-- Server version	9.1.0
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -124,7 +124,7 @@ CREATE TABLE `Ingredients_Recettes` (
 
 LOCK TABLES `Ingredients_Recettes` WRITE;
 /*!40000 ALTER TABLE `Ingredients_Recettes` DISABLE KEYS */;
-INSERT INTO `Ingredients_Recettes` VALUES (1,3,1.00,'piè'),(1,5,2.00,'g'),(1,26,2.00,'g'),(1,28,2.00,'g'),(1,49,1.00,'pièce'),(2,16,2.00,'g'),(2,19,1.00,'g'),(2,29,1.00,'g'),(2,74,1.00,'g'),(2,80,5.00,'piè'),(3,12,1.00,'ml'),(3,15,1.00,'g'),(3,16,3.00,'g'),(3,45,1.00,'piè'),(3,76,1.00,'ml'),(4,5,3.00,'g'),(4,9,1.00,'g'),(4,12,1.00,'ml'),(4,15,1.00,'g'),(4,18,2.00,'g'),(5,20,1.00,'g'),(5,26,2.00,'g'),(5,28,1.00,'g'),(5,40,1.00,'g'),(5,74,1.00,'g');
+INSERT INTO `Ingredients_Recettes` VALUES (1,3,1.00,'pièce'),(1,5,2.00,'g'),(1,26,2.00,'g'),(1,28,2.00,'g'),(1,49,1.00,'pièce'),(2,16,2.00,'g'),(2,19,1.00,'g'),(2,29,1.00,'g'),(2,74,1.00,'g'),(2,80,5.00,'piè'),(3,12,1.00,'ml'),(3,15,1.00,'g'),(3,16,3.00,'g'),(3,45,1.00,'piè'),(3,76,1.00,'ml'),(4,5,3.00,'g'),(4,9,1.00,'g'),(4,12,1.00,'ml'),(4,15,1.00,'g'),(4,18,2.00,'g'),(5,20,1.00,'g'),(5,26,2.00,'g'),(5,28,1.00,'g'),(5,40,1.00,'g'),(5,74,1.00,'g'),(6,3,3.00,'g'),(6,9,3.00,'g'),(6,26,3.00,'g'),(6,29,2.00,'g'),(6,74,2.00,'g'),(7,5,2.00,'g'),(7,12,1.00,'ml'),(7,15,1.00,'g'),(7,41,1.00,'tranche'),(7,74,1.00,'g'),(8,1,1.00,'pièce'),(8,2,1.00,'pièce'),(8,34,1.00,'g'),(8,35,1.00,'g'),(8,75,100.00,'ml'),(9,1,3.00,'pièce'),(9,9,1.00,'g'),(9,19,2.00,'g'),(9,35,1.00,'g'),(9,74,2.00,'g'),(10,17,1.00,'g'),(10,19,1.00,'g'),(10,26,2.00,'g'),(10,77,2.00,'g'),(10,80,2.00,'pièce');
 /*!40000 ALTER TABLE `Ingredients_Recettes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -146,7 +146,7 @@ CREATE TABLE `Plats` (
   KEY `fk_plat_categorie` (`ID_categorie`),
   KEY `Plats_duree_idx` (`duree`),
   CONSTRAINT `fk_plat_categorie` FOREIGN KEY (`ID_categorie`) REFERENCES `Plats_Categories` (`ID_categorie`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -155,7 +155,7 @@ CREATE TABLE `Plats` (
 
 LOCK TABLES `Plats` WRITE;
 /*!40000 ALTER TABLE `Plats` DISABLE KEYS */;
-INSERT INTO `Plats` VALUES (1,'45 minutes','Ratatouille maison','1. Coupez les légumes en morceaux. 2. Faites revenir l’oignon dans une poêle. 3. Ajoutez les légumes et laissez mijoter.','ratatouille.jpg',3),(2,'30 minutes','Salade César','1. Préparez la sauce César. 2. Coupez le poulet en morceaux et faites-le griller. 3. Mélangez avec la laitue, les croûtons et le parmesan.','salade_cesar.jpg',2),(3,'60 minutes','Poulet curry coco','1. Faites revenir les morceaux de poulet. 2. Ajoutez les épices et le lait de coco. 3. Laissez mijoter.','poulet_curry.jpg',3),(4,'25 minutes','Spaghetti bolognaise','1. Préparez la sauce bolognaise avec le bœuf haché. 2. Faites cuire les pâtes. 3. Mélangez et servez.','spaghetti_bolognaise.jpg',3),(5,'40 minutes','Quiche aux légumes','1. Préparez la pâte brisée. 2. Mélangez les légumes et la crème. 3. Versez sur la pâte et enfournez.','quiche_legumes.jpg',3);
+INSERT INTO `Plats` VALUES (1,'45 minutes','Ratatouille maison','1. Coupez les légumes en morceaux. 2. Faites revenir l’oignon dans une poêle. 3. Ajoutez les légumes et laissez mijoter.','ratatouille.jpg',3),(2,'30 minutes','Salade César','1. Préparez la sauce César. 2. Coupez le poulet en morceaux et faites-le griller. 3. Mélangez avec la laitue, les croûtons et le parmesan.','salade_cesar.jpg',2),(3,'60 minutes','Poulet curry coco','1. Faites revenir les morceaux de poulet. 2. Ajoutez les épices et le lait de coco. 3. Laissez mijoter.','poulet_curry.jpg',3),(4,'25 minutes','Spaghetti bolognaise','1. Préparez la sauce bolognaise avec le bœuf haché. 2. Faites cuire les pâtes. 3. Mélangez et servez.','spaghetti_bolognaise.jpg',3),(5,'40 minutes','Quiche aux légumes','1. Préparez la pâte brisée. 2. Mélangez les légumes et la crème. 3. Versez sur la pâte et enfournez.','quiche_legumes.jpg',3),(6,'50 minutes','Lasagnes végétariennes','1. Préparez la sauce tomate avec les légumes. 2. Disposez des couches de pâtes et de sauce. 3. Enfournez et laissez gratiner.','lasagnes_vegetariennes.jpg',3),(7,'35 minutes','Soupe de potimarron','1. Épluchez et coupez le potimarron en morceaux. 2. Faites-le cuire avec des épices. 3. Mixez et servez chaud.','soupe_potimarron.jpg',3),(8,'25 minutes','Smoothie énergisant','1. Mixez les fruits avec le lait d’amande et le miel. 2. Ajoutez les graines de chia et mélangez. 3. Servez frais.','smoothie_energisant.jpg',2),(9,'1h 10 minutes','Tarte aux pommes','1. Préparez une pâte brisée. 2. Disposez les pommes tranchées sur la pâte. 3. Enfournez jusqu’à ce que les pommes soient dorées.','tarte_pommes.jpg',3),(10,'20 minutes','Wrap au saumon','1. Étalez le fromage frais sur la tortilla. 2. Ajoutez le saumon, les légumes et enroulez. 3. Coupez en morceaux et servez.','wrap_saumon.jpg',2);
 /*!40000 ALTER TABLE `Plats` ENABLE KEYS */;
 UNLOCK TABLES;
 
