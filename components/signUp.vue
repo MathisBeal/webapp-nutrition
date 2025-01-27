@@ -72,14 +72,12 @@
 import { ref } from 'vue';
 import { defineProps, defineEmits } from 'vue';
 
-// // Définir les props reçues
-// const props = defineProps({
-//   userData: {
-//     type: Object,
-//     required: true,
-//   },
-// });
-const { userData } = useUserData();
+const props = defineProps({
+  userData: {
+    type: Object,
+    required: true,
+  },
+});
 
 const name = ref('');
 const lastName = ref('');
@@ -89,7 +87,6 @@ const confirmPassword = ref('');
 const errorMessage = ref('');
 const successMessage = ref('');
 
-// Émettre un événement au succès
 const emit = defineEmits(['signupSuccess']);
 
 const handleSignup = async () => {
@@ -108,10 +105,10 @@ const handleSignup = async () => {
 
   successMessage.value = 'Compte créé avec succès !';
 
-  userData.value.prenom = name.value
-  userData.value.nom = lastName.value
-  userData.value.mail = email.value
-  userData.value.password = password.value
+  props.userData.prenom = name.value;
+  props.userData.nom = lastName.value;
+  props.userData.mail = email.value;
+  props.userData.password = password.value;
 
   setTimeout(() => {
     emit('signupSuccess');

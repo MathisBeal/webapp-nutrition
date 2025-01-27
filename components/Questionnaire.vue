@@ -2,14 +2,12 @@
   <h1 class="questionnaire-title">Veuillez remplir ce bref questionnaire</h1>
   <div class="questionnaire-container">
     <div class="question-box">
-      <!-- Affichage de la question actuelle et du total -->
       <h2>{{ questions[currentQuestionIndex].question }}</h2>
       <p class="progress-info">
         Question {{ currentQuestionIndex + 1 }} sur {{ questions.length }}
       </p>
 
       <form>
-        <!-- Question spécifique pour l'âge -->
         <template v-if="currentQuestionIndex === 0">
           <div class="option">
             <label for="age">Votre âge :</label>
@@ -25,7 +23,6 @@
           </div>
         </template>
 
-        <!-- Question spécifique pour la taille -->
         <template v-if="currentQuestionIndex === 2">
           <div class="option">
             <label for="height">Votre taille (cm) :</label>
@@ -41,7 +38,6 @@
           </div>
         </template>
 
-        <!-- Question spécifique pour le poids -->
         <template v-else-if="currentQuestionIndex === 3">
           <div class="option">
             <label for="weight">Votre poids (kg) :</label>
@@ -57,7 +53,6 @@
           </div>
         </template>
 
-        <!-- Options pour les autres questions -->
         <template v-else>
           <div
             v-for="(option, index) in questions[currentQuestionIndex].options"
@@ -108,22 +103,19 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router'; // Importer le composable useRouter
-import { useFetch } from '#app'; // Pour effectuer la requête API
-import { defineProps, defineEmits } from 'vue';
+import { useRouter } from 'vue-router';
+import { useFetch } from '#app';
+import { defineProps } from 'vue';
 
-// Définir les props reçues
-// const props = defineProps({
-//   userData: {
-//     type: Object,
-//     required: true,
-//   },
-// });
-// Instance du routeur
+const props = defineProps({
+  userData: {
+    type: Object,
+    required: true,
+  },
+});
+
 const router = useRouter();
-const { userData } = useUserData();
 
-// Questions du formulaire
 const questions = ref([
   { question: 'Quel est votre âge ?', options: [] },
   { question: 'Quel est votre sexe ?', options: ['Homme', 'Femme', 'Autre'] },
@@ -168,15 +160,12 @@ const questions = ref([
   },
 ]);
 
-// Variables de suivi
 const selectedOption = ref<(string | null)[]>(questions.value.map(() => null));
 const currentQuestionIndex = ref(0);
 const height = ref<number | null>(null);
 const weight = ref<number | null>(null);
 const age = ref<number | null>(null);
-const sex = ref<string | null>(null);
 
-// Validation pour activer le bouton "Suivant"
 const isNextEnabled = computed(() => {
   if (currentQuestionIndex.value === 0) {
     return age.value !== null && age.value > 0 && age.value <= 100;
@@ -190,33 +179,30 @@ const isNextEnabled = computed(() => {
   return selectedOption.value[currentQuestionIndex.value] !== null;
 });
 
-// Calcul de l'IMC
 const calculateIMC = (height: number | null, weight: number | null): number | null => {
   if (height && weight) {
-    const heightInMeters = height / 100; // Conversion de la taille en mètres
-    return weight / (heightInMeters * heightInMeters); // Formule de l'IMC
+    const heightInMeters = height / 100;
+    return weight / (heightInMeters * heightInMeters);
   }
   return null;
 };
 
-// Fonction de soumission
 const submitAnswers = async () => {
-  userData.value.age = age.value
-  userData.value.sexe = selectedOption.value[1];
-  userData.value.taille = height.value
-  userData.value.poids = weight.value
-  userData.value.imc = calculateIMC(height.value, weight.value)
+  props.userData.age = age.value;
+  props.userData.sexe = selectedOption.value[1];
+  props.userData.taille = height.value;
+  props.userData.poids = weight.value;
+  props.userData.imc = calculateIMC(height.value, weight.value);
 
   try {
-    // Envoi des données combinées au backend via useFetch
     const { data: response } = await useFetch('/api/signup', {
       method: 'POST',
-      body: userData,
+      body: props.userData,
     });
 
     if (response) {
       alert('Questionnaire soumis avec succès !');
-      router.push('/login'); // Rediriger l'utilisateur après la soumission
+      router.push('/login');
     }
   } catch (error) {
     console.error('Erreur lors de l\'envoi des données :', error);
@@ -224,9 +210,6 @@ const submitAnswers = async () => {
   }
 };
 
-
-
-// Navigation entre les questions
 const nextQuestion = () => {
   if (currentQuestionIndex.value < questions.value.length - 1) {
     currentQuestionIndex.value++;
@@ -238,7 +221,6 @@ const previousQuestion = () => {
     currentQuestionIndex.value--;
   }
 };
-
 </script>
 
 <style scoped>
