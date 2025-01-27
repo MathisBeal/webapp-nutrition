@@ -1,15 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { PrismaClient } from '@prisma/client'
 
-const config = useRuntimeConfig()
-
-const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: config.DATABASE_URL,
-    },
-  },
-})
+const prisma = new PrismaClient();
 
 const check_connectDB = async () => {
   try {
