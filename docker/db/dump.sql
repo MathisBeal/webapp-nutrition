@@ -679,16 +679,14 @@ CREATE TABLE `Users`
   `prenom`   varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `mail`     varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `age`      int                                                           NOT NULL,
-  `taille`   int                                                           NOT NULL,
-  `poids`    decimal(10, 2)                                                NOT NULL,
-  `sexe`     varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `imc`      decimal(10, 2)                                                NOT NULL,
+  `age` int NOT NULL,
+  `taille` int NOT NULL,
+  `poids` decimal(10,2) NOT NULL,
+  `sexe` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `imc` decimal(10,2) NOT NULL,
   PRIMARY KEY (`ID_user`),
   UNIQUE KEY `mail_UNIQUE` (`mail`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -942,4 +940,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION = @OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES = @OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-27 14:09:50
+-- Dump completed on 2025-01-27 10:11:02
