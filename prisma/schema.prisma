@@ -97,7 +97,7 @@ model Users {
   ID_user             Int                   @id @default(autoincrement())
   nom                 String                @db.VarChar(255)
   prenom              String                @db.VarChar(255)
-  mail                String                @db.VarChar(255)
+  mail                String                @unique(map: "mail_UNIQUE") @db.VarChar(255)
   password            String                @db.VarChar(255)
   age                 Int
   taille              Int

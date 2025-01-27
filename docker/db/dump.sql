@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: nutrition_webapp
 -- ------------------------------------------------------
--- Server version	9.2.0
+-- Server version	9.1.0
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -141,7 +141,7 @@ CREATE TABLE `Ingredients_Recettes` (
 
 LOCK TABLES `Ingredients_Recettes` WRITE;
 /*!40000 ALTER TABLE `Ingredients_Recettes` DISABLE KEYS */;
-INSERT INTO `Ingredients_Recettes` VALUES (1,3,1.00,'piè'),(1,5,2.00,'g'),(1,26,2.00,'g'),(1,28,2.00,'g'),(1,49,1.00,'pièce'),(2,16,2.00,'g'),(2,19,1.00,'g'),(2,29,1.00,'g'),(2,74,1.00,'g'),(2,80,5.00,'piè'),(3,12,1.00,'ml'),(3,15,1.00,'g'),(3,16,3.00,'g'),(3,45,1.00,'piè'),(3,76,1.00,'ml'),(4,5,3.00,'g'),(4,9,1.00,'g'),(4,12,1.00,'ml'),(4,15,1.00,'g'),(4,18,2.00,'g'),(5,20,1.00,'g'),(5,26,2.00,'g'),(5,28,1.00,'g'),(5,40,1.00,'g'),(5,74,1.00,'g');
+INSERT INTO `Ingredients_Recettes` VALUES (1,3,1.00,'pièce'),(1,5,2.00,'g'),(1,26,2.00,'g'),(1,28,2.00,'g'),(1,49,1.00,'pièce'),(2,16,2.00,'g'),(2,19,1.00,'g'),(2,29,1.00,'g'),(2,74,1.00,'g'),(2,80,5.00,'piè'),(3,12,1.00,'ml'),(3,15,1.00,'g'),(3,16,3.00,'g'),(3,45,1.00,'piè'),(3,76,1.00,'ml'),(4,5,3.00,'g'),(4,9,1.00,'g'),(4,12,1.00,'ml'),(4,15,1.00,'g'),(4,18,2.00,'g'),(5,20,1.00,'g'),(5,26,2.00,'g'),(5,28,1.00,'g'),(5,40,1.00,'g'),(5,74,1.00,'g'),(6,3,3.00,'g'),(6,9,3.00,'g'),(6,26,3.00,'g'),(6,29,2.00,'g'),(6,74,2.00,'g'),(7,5,2.00,'g'),(7,12,1.00,'ml'),(7,15,1.00,'g'),(7,41,1.00,'tranche'),(7,74,1.00,'g'),(8,1,1.00,'pièce'),(8,2,1.00,'pièce'),(8,34,1.00,'g'),(8,35,1.00,'g'),(8,75,100.00,'ml'),(9,1,3.00,'pièce'),(9,9,1.00,'g'),(9,19,2.00,'g'),(9,35,1.00,'g'),(9,74,2.00,'g'),(10,17,1.00,'g'),(10,19,1.00,'g'),(10,26,2.00,'g'),(10,77,2.00,'g'),(10,80,2.00,'pièce');
 /*!40000 ALTER TABLE `Ingredients_Recettes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -168,7 +168,7 @@ CREATE TABLE `Plats` (
   KEY `Plats_duree_idx` (`duree`),
   KEY `Plats_duree_idx` (`duree`),
   CONSTRAINT `fk_plat_categorie` FOREIGN KEY (`ID_categorie`) REFERENCES `Plats_Categories` (`ID_categorie`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -288,7 +288,8 @@ CREATE TABLE `Users` (
   `sexe` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `sexe` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `imc` decimal(10,2) NOT NULL,
-  PRIMARY KEY (`ID_user`)
+  PRIMARY KEY (`ID_user`),
+  UNIQUE KEY `mail_UNIQUE` (`mail`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -525,4 +526,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-26 18:16:39
+-- Dump completed on 2025-01-27 14:09:50
