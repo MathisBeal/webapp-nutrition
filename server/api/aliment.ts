@@ -1,8 +1,8 @@
 import { defineEventHandler } from 'h3';
-import { pool } from '../db/connection';
+import { prisma } from '../db/connection';
 
 export default defineEventHandler(async () => {
-  const [rows] = await pool.query('SELECT * FROM aliment');
+  const aliments = await prisma.aliments.findMany();
 
-  return rows;
+  return aliments;
 });

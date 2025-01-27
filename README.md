@@ -151,12 +151,33 @@ Pour ajouter de nouveaux alias ou modifier ceux existants, éditez le fichier `.
 Pour se connecter à la base de données, vous devez créer un fichier `.env` à la racine du projet avec les paramètres de connexion appropriés. Voici un exemple de fichier `.env` :
 
 ```properties
-DB_HOST=localhost
-DB_PORT=3306
-DB_NAME=webapp_nutrition
-DB_USER=root
-DB_PASSWORD=root
+DATABASE_URL="mysql://root:root@localhost:3306/nutrition_webapp"
 ```
+
+Une fois que vous avez ce fichier, vous devez :
+
+1. Lancer le container MySQL
+2. Faire cette commande pour générer le client Prisma (permet d'intéragir avec la base de données):
+
+```sh
+npx prisma generate
+```
+
+3. Lancer un `npm run test` pour vérifier que la connexion à la DB fonctionne
+
+## Modification de la base de données
+
+En cas de modification de la base de données. Faites ces étapes :
+
+1. Update la db avec mysql workbench (de préférence)
+2. Executer cette commande pour mettre à jour `schema.prisma`:
+
+```sh
+npx prisma db pull
+```
+
+3. Exporter un fichier `dump.sql` de la nouvelle version de la db et remplacer l'ancien fichier dans le dossier **docker/db**
+4. Commit les changements
 
 ## Utilisation de Docker Compose
 

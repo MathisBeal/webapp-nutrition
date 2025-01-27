@@ -1,27 +1,24 @@
-import mysql from 'mysql2/promise'
+import { PrismaClient } from '@prisma/client'
 
 const config = useRuntimeConfig()
 
-// Objet à utiliser pour accéder à la DB
-const pool = mysql.createPool({
-      host: config.DB_HOST,
-      port: Number(config.DB_PORT),
-      user: config.DB_USER,
-      password: config.DB_PASSWORD,
-      database: config.DB_NAME,
-      charset: 'utf8mb4',
-    });
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: config.DATABASE_URL,
+    },
+  },
+})
 
-// Fonction pour vérifier la connexion à la DB
 const check_connectDB = async () => {
   try {
-    const connection = await pool.getConnection()
-    console.log('MySQL connected')
-    return connection
+    await prisma.$connect()
+    console.log('Prisma connected to MySQL')
+    return prisma;
   } catch (err) {
-    console.error('MySQL connection error:', err)
+    console.error('Prisma connection error:', err)
     process.exit(1)
   }
 }
 
-export {check_connectDB, pool}
+export { prisma, check_connectDB }

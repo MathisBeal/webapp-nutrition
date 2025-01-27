@@ -1,0 +1,164 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Aliments {
+  ID_aliment            Int                     @id @default(autoincrement())
+  nom                   String                  @db.VarChar(255)
+  quantite_base         Int
+  calories              Decimal                 @db.Decimal(10, 2)
+  glucides              Decimal                 @db.Decimal(10, 2)
+  lipides               Decimal                 @db.Decimal(10, 2)
+  proteines             Decimal                 @db.Decimal(10, 2)
+  image                 String?                 @db.Text
+  Ingredients_Recettes  Ingredients_Recettes[]
+  Restrictions_aliments Restrictions_aliments[]
+  Users_Alimentations   Users_Alimentations[]
+  Users_Favoris         Users_Favoris[]
+}
+
+model Day_Sections {
+  ID_moments          Int                   @id @default(autoincrement())
+  nom                 String                @db.VarChar(255)
+  Users_Alimentations Users_Alimentations[]
+}
+
+model IMC_apports {
+  imc_min   Decimal @db.Decimal(10, 2)
+  imc_max   Decimal @db.Decimal(10, 2)
+  calories  Decimal @db.Decimal(10, 2)
+  eau       Decimal @db.Decimal(10, 2)
+  glucides  Decimal @db.Decimal(10, 2)
+  lipides   Decimal @db.Decimal(10, 2)
+  proteines Decimal @db.Decimal(10, 2)
+
+  @@id([imc_min, imc_max])
+}
+
+model Ingredients_Recettes {
+  ID_plat                 Int
+  ID_aliment              Int
+  multiplicateur_quantite Decimal  @db.Decimal(10, 2)
+  unite                   String   @db.VarChar(15)
+  Aliments                Aliments @relation(fields: [ID_aliment], references: [ID_aliment], onDelete: NoAction, onUpdate: NoAction, map: "fk_ingredient_de_recette_aliment")
+  Plats                   Plats    @relation(fields: [ID_plat], references: [ID_plat], onDelete: NoAction, onUpdate: NoAction, map: "fk_ingredient_de_recette_plat")
+
+  @@id([ID_plat, ID_aliment])
+  @@index([ID_aliment], map: "fk_ingredient_de_recette_aliment")
+  @@index([ID_plat], map: "fk_ingredient_de_recette_plat")
+}
+
+model Plats {
+  ID_plat              Int                    @id @default(autoincrement())
+  duree                String                 @db.VarChar(255)
+  description          String                 @db.Text
+  etapes               String                 @db.Text
+  images               String?                @db.VarChar(255)
+  ID_categorie         Int
+  Ingredients_Recettes Ingredients_Recettes[]
+  Plats_Categories     Plats_Categories       @relation(fields: [ID_categorie], references: [ID_categorie], onDelete: NoAction, onUpdate: NoAction, map: "fk_plat_categorie")
+  Users_Alimentations  Users_Alimentations[]
+  Users_Favoris        Users_Favoris[]
+
+  @@index([ID_categorie], map: "fk_plat_categorie")
+  @@index([duree])
+}
+
+model Plats_Categories {
+  ID_categorie Int     @id @default(autoincrement())
+  nom          String  @db.VarChar(255)
+  Plats        Plats[]
+}
+
+model Restriction_Types {
+  ID_restriction        Int                     @id @default(autoincrement())
+  nom                   String                  @db.VarChar(255)
+  Restrictions_aliments Restrictions_aliments[]
+  Users_restrictions    Users_restrictions[]
+}
+
+model Restrictions_aliments {
+  ID_restriction    Int
+  ID_aliment        Int
+  Aliments          Aliments          @relation(fields: [ID_aliment], references: [ID_aliment], onDelete: NoAction, onUpdate: NoAction, map: "fk_restriction_aliment")
+  Restriction_Types Restriction_Types @relation(fields: [ID_restriction], references: [ID_restriction], onDelete: NoAction, onUpdate: NoAction, map: "fk_restriction_restriction")
+
+  @@id([ID_restriction, ID_aliment])
+  @@index([ID_aliment], map: "fk_restriction_aliment")
+  @@index([ID_restriction], map: "fk_restriction_restriction")
+}
+
+model Users {
+  ID_user             Int                   @id @default(autoincrement())
+  nom                 String                @db.VarChar(255)
+  prenom              String                @db.VarChar(255)
+  mail                String                @unique(map: "mail_UNIQUE") @db.VarChar(255)
+  password            String                @db.VarChar(255)
+  age                 Int
+  taille              Int
+  poids               Decimal               @db.Decimal(10, 2)
+  sexe                String                @db.VarChar(255)
+  imc                 Decimal               @db.Decimal(10, 2)
+  Users_Alimentations Users_Alimentations[]
+  Users_Favoris       Users_Favoris[]
+  Users_Hydratations  Users_Hydratations[]
+  Users_restrictions  Users_restrictions[]
+}
+
+model Users_Alimentations {
+  ID_alimentation Int          @id @default(autoincrement())
+  ID_user         Int
+  ID_plat         Int?
+  ID_aliment      Int?
+  date            DateTime     @default(now())
+  ID_moment       Int
+  Aliments        Aliments?    @relation(fields: [ID_aliment], references: [ID_aliment], onDelete: NoAction, onUpdate: NoAction, map: "fk_alimentation_aliment")
+  Day_Sections    Day_Sections @relation(fields: [ID_moment], references: [ID_moments], onDelete: NoAction, onUpdate: NoAction, map: "fk_alimentation_moment")
+  Plats           Plats?       @relation(fields: [ID_plat], references: [ID_plat], onDelete: NoAction, onUpdate: NoAction, map: "fk_alimentation_plat")
+  Users           Users        @relation(fields: [ID_user], references: [ID_user], onDelete: NoAction, onUpdate: NoAction, map: "fk_alimentation_user")
+
+  @@index([ID_aliment], map: "fk_alimentation_aliment")
+  @@index([ID_moment], map: "fk_alimentation_moment")
+  @@index([ID_plat], map: "fk_alimentation_plat")
+  @@index([ID_user], map: "fk_alimentation_user")
+}
+
+model Users_Favoris {
+  ID_favoris Int       @id @default(autoincrement())
+  ID_user    Int
+  ID_plat    Int?
+  ID_aliment Int?
+  Aliments   Aliments? @relation(fields: [ID_aliment], references: [ID_aliment], onDelete: NoAction, onUpdate: NoAction, map: "fk_favoris_aliment")
+  Plats      Plats?    @relation(fields: [ID_plat], references: [ID_plat], onDelete: NoAction, onUpdate: NoAction, map: "fk_favoris_plat")
+  Users      Users     @relation(fields: [ID_user], references: [ID_user], onDelete: NoAction, onUpdate: NoAction, map: "fk_favoris_user")
+
+  @@index([ID_aliment], map: "fk_favoris_aliment")
+  @@index([ID_plat], map: "fk_favoris_plat")
+  @@index([ID_user], map: "fk_favoris_user")
+}
+
+model Users_Hydratations {
+  ID_user Int
+  date    DateTime @default(now())
+  volume  Int
+  Users   Users    @relation(fields: [ID_user], references: [ID_user], onDelete: NoAction, onUpdate: NoAction, map: "fk_hydratation_user")
+
+  @@id([ID_user, date])
+  @@index([ID_user], map: "fk_hydratation_user")
+}
+
+model Users_restrictions {
+  ID_user           Int
+  ID_restriction    Int
+  Restriction_Types Restriction_Types @relation(fields: [ID_restriction], references: [ID_restriction], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_restriction_restriction")
+  Users             Users             @relation(fields: [ID_user], references: [ID_user], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_restriction_user")
+
+  @@id([ID_user, ID_restriction])
+  @@index([ID_restriction], map: "fk_user_restriction_restriction")
+  @@index([ID_user], map: "fk_user_restriction_user")
+}
