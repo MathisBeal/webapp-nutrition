@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     typeCheck: true
   },
 
-
+ 
 
   modules: [
     "@nuxt/test-utils/module",
