@@ -16,6 +16,10 @@ export default defineNuxtConfig({
     DATABASE_URL: process.env.DATABASE_URL,
   },
 
-  modules: ["@nuxt/test-utils/module", "@nuxt/eslint"],
+  modules: [
+    "@nuxt/test-utils/module",
+    "@nuxt/eslint",
+    "nuxt-auth-utils",
+  ],
   css: ['@/assets/styles/global.css'],
 });
