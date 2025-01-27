@@ -3,6 +3,7 @@
 -- Host: localhost    Database: nutrition_webapp
 -- ------------------------------------------------------
 -- Server version	9.1.0
+-- Server version	9.1.0
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT = @@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS = @@CHARACTER_SET_RESULTS */;
