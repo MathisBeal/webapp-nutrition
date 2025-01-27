@@ -2,12 +2,14 @@
   <h1 class="questionnaire-title">Veuillez remplir ce bref questionnaire</h1>
   <div class="questionnaire-container">
     <div class="question-box">
+      <!-- Affichage de la question actuelle et du total -->
       <h2>{{ questions[currentQuestionIndex].question }}</h2>
       <p class="progress-info">
         Question {{ currentQuestionIndex + 1 }} sur {{ questions.length }}
       </p>
 
-      <form @keydown.enter.prevent="handleEnterKey">
+      <form>
+        <!-- Question spécifique pour l'âge -->
         <template v-if="currentQuestionIndex === 0">
           <div class="option">
             <label for="age">Votre âge :</label>
@@ -23,6 +25,7 @@
           </div>
         </template>
 
+        <!-- Question spécifique pour la taille -->
         <template v-if="currentQuestionIndex === 2">
           <div class="option">
             <label for="height">Votre taille (cm) :</label>
@@ -38,6 +41,7 @@
           </div>
         </template>
 
+        <!-- Question spécifique pour le poids -->
         <template v-else-if="currentQuestionIndex === 3">
           <div class="option">
             <label for="weight">Votre poids (kg) :</label>
@@ -48,11 +52,12 @@
               placeholder="Entrez votre poids en kg"
             />
             <p v-if="weight !== null && (weight <= 20 || weight > 300)" class="error">
-              Votre poids semble incorrecte, veuillez vérifier votre saisie.
+              Votre poids semble incorrect, veuillez vérifier votre saisie.
             </p>
           </div>
         </template>
 
+        <!-- Options pour les autres questions -->
         <template v-else>
           <div
             v-for="(option, index) in questions[currentQuestionIndex].options"
@@ -70,7 +75,6 @@
           </div>
         </template>
       </form>
-
       <div class="navigation-buttons">
         <button
           v-if="currentQuestionIndex > 0"
@@ -102,15 +106,13 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
-  userData: {
-    type: Object,
-    required: true,
-  },
-});
+import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router'; // Importer le composable useRouter
 
-const emit = defineEmits(['submitQuestionnaire']);
+// Instance du routeur
+const router = useRouter();
 
+// Questions du formulaire
 const questions = ref([
   { question: 'Quel est votre âge ?', options: [] },
   { question: 'Quel est votre sexe ?', options: ['Homme', 'Femme', 'Autre'] },
@@ -118,7 +120,16 @@ const questions = ref([
   { question: 'Quel est votre poids (en kg) ?', options: [] },
   {
     question: 'Suivez-vous un régime alimentaire spécifique ?',
-    options: [],
+    options: [
+      'Général',
+      'Végétarien',
+      'Vesco Végétarien',
+      'Végan',
+      'Sans gluten',
+      'Sans lactose',
+      'Cétogène',
+      'Paléo',
+    ],
   },
   {
     question:
@@ -132,16 +143,28 @@ const questions = ref([
   },
   {
     question: 'Êtes-vous allergique à un de ces aliments ?',
-    options: [],
+    options: [
+      'Aucun',
+      'Arachides',
+      'Fruits à coque',
+      'Lait et produits laitiers',
+      'Gluten',
+      'Fruits de mer',
+      'Œufs',
+      'Soja',
+      'Sésame',
+    ],
   },
 ]);
 
+// Variables de suivi
 const selectedOption = ref<(string | null)[]>(questions.value.map(() => null));
 const currentQuestionIndex = ref(0);
 const height = ref<number | null>(null);
 const weight = ref<number | null>(null);
 const age = ref<number | null>(null);
 
+// Validation pour activer le bouton "Suivant"
 const isNextEnabled = computed(() => {
   if (currentQuestionIndex.value === 0) {
     return age.value !== null && age.value > 0 && age.value <= 100;
@@ -155,24 +178,7 @@ const isNextEnabled = computed(() => {
   return selectedOption.value[currentQuestionIndex.value] !== null;
 });
 
-const calculateIMC = (height: number | null, weight: number | null): number | null => {
-  if (height && weight) {
-    const heightInMeters = height / 100;
-    return weight / (heightInMeters * heightInMeters);
-  }
-  return null;
-};
-
-const submitAnswers = () => {
-  props.userData.age = age.value;
-  props.userData.sexe = selectedOption.value[1];
-  props.userData.taille = height.value;
-  props.userData.poids = weight.value;
-  props.userData.imc = calculateIMC(height.value, weight.value);
-
-  emit('submitQuestionnaire');
-};
-
+// Navigation
 const nextQuestion = () => {
   if (currentQuestionIndex.value < questions.value.length - 1) {
     currentQuestionIndex.value++;
@@ -185,42 +191,11 @@ const previousQuestion = () => {
   }
 };
 
-// Récupérer les options dynamiques pour les questions
-const fetchOptions = async () => {
-  try {
-    const response = await fetch('/api/user/restrictionType');
-    const data = await response.json();
-
-    if (data.success) {
-      const dietOptions = data.data.slice(0, 11);
-      const allergyOptions = data.data.slice(11);
-
-      const dietQuestion = questions.value.find(q => q.question === 'Suivez-vous un régime alimentaire spécifique ?');
-      if (dietQuestion) {
-        dietQuestion.options = dietOptions;
-      }
-
-      const allergyQuestion = questions.value.find(q => q.question === 'Êtes-vous allergique à un de ces aliments ?');
-      if (allergyQuestion) {
-        allergyQuestion.options = allergyOptions;
-      }
-    } else {
-      console.error('Erreur lors de la récupération des options:', data.message);
-    }
-  } catch (error) {
-    console.error('Erreur lors de la récupération des options:', error);
-  }
+// Soumission des réponses
+const submitAnswers = () => {
+  alert('Questionnaire soumis avec succès !');
+  router.push('/login');
 };
-
-const handleEnterKey = () => {
-  if (isNextEnabled.value) {
-    nextQuestion();
-  }
-};
-
-onMounted(() => {
-  fetchOptions();
-});
 </script>
 
 <style scoped>
