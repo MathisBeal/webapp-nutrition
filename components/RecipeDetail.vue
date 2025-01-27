@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {ref} from 'vue';
+import { ref } from 'vue';
 
 // Define props for the component
 const props = defineProps({
@@ -35,7 +35,7 @@ const steps = ref(
     .filter((step) => step.trim() !== '') // Remove empty strings caused by splitting
     .map((step) => step.trim()) // Trim any extra spaces
 );
-console.log(steps)
+// console.log(steps)
 
 
 </script>
@@ -43,24 +43,27 @@ console.log(steps)
 <template>
   <div class="container">
     <h1 class="recipe_name">{{ title }}</h1>
+    <img :alt="'Image de ' + recipe_data[0]?.description" class="recipe_image" src="assets/img/default_recipe.jpeg" />
 
+    <div class="recipe_text">
     <!-- Ingredients List -->
-    <div class="ingredients">
-      <h2>Ingrédients</h2>
-      <ul>
-        <li v-for="(ingredient, index) in ingredients" :key="index" class="ingredient">
-          <img :alt="ingredient.name" :src="ingredient.image"/>
-          <p><strong>{{ ingredient.name }}</strong>: {{ ingredient.quantity }} {{ ingredient.unit }}</p>
-        </li>
-      </ul>
-    </div>
+      <div class="ingredients">
+        <h2>Ingrédients</h2>
+        <ul>
+          <li v-for="(ingredient, index) in ingredients" :key="index" class="ingredient">
+            <img :alt="'Image de ' + ingredient.name" src="assets/img/default_ingredient.jpg" />
+            <p><strong>{{ ingredient.name }}</strong>: {{ ingredient.quantity }} {{ ingredient.unit }}</p>
+          </li>
+        </ul>
+      </div>
 
-    <!-- Recipe Steps -->
-    <div class="steps">
-      <h2>Étapes :</h2>
-      <ol>
-        <li v-for="(step, index) in steps" :key="index">{{ step }}</li>
-      </ol>
+      <!-- Recipe Steps -->
+      <div class="steps">
+        <h2>Étapes :</h2>
+        <ol>
+          <li v-for="(step, index) in steps" :key="index">{{ step }}</li>
+        </ol>
+      </div>
     </div>
 
   </div>
@@ -68,15 +71,30 @@ console.log(steps)
 
 <style scoped>
 .container {
-  margin-inline: 11em;
-  padding: 2em 3em;
+  width: 50vw;
+  min-height: 100vh;
+  margin: 0 auto;
+  /* padding: 1.5em 0 0 0; */
   background: #f8f9fa;
-  border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  /* font-family: "Roboto", serif; */
 }
 
 .recipe_name {
   text-align: center;
+  margin: 0 0 0.7em 0;
+  padding: 0.7em 0 0 0;
+}
+
+.recipe_image {
+  width: 100%;
+  height: 100%;
+  max-height: 35vh;
+  object-fit: cover;
+}
+
+.recipe_text {
+  margin-inline: 1.7em;
 }
 
 .steps {

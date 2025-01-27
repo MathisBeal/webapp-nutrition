@@ -4,7 +4,6 @@
 
   if (params && params.id_recipe) {
     rows.value = await $fetch(`/api/recipes/${params.id_recipe}`);
-    console.log(rows.value)
   }
 </script>
 
