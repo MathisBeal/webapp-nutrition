@@ -9,10 +9,7 @@
 </script>
 
 <template>
-  <h1>
-    HEEHEE
-  </h1>
-  <RecipeDetail v-if="rows" :data_recipe="rows"/>
+  <RecipeDetail v-if="rows" :recipe_data="rows"/>
   <div v-else>
     Could not fetch recipe from database
   </div>
