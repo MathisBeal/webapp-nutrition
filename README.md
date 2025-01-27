@@ -154,6 +154,31 @@ Pour se connecter à la base de données, vous devez créer un fichier `.env` à
 DATABASE_URL="mysql://root:root@localhost:3306/nutrition_webapp"
 ```
 
+Une fois que vous avez ce fichier, vous devez :
+
+1. Lancer le container MySQL
+2. Faire cette commande pour générer le client Prisma (permet d'intéragir avec la base de données):
+
+```sh
+npx prisma generate
+```
+
+3. Lancer un `npm run test` pour vérifier que la connexion à la DB fonctionne
+
+## Modification de la base de données
+
+En cas de modification de la base de données. Faites ces étapes :
+
+1. Update la db avec mysql workbench (de préférence)
+2. Executer cette commande pour mettre à jour `schema.prisma`:
+
+```sh
+npx prisma db pull
+```
+
+3. Exporter un fichier `dump.sql` de la nouvelle version de la db et remplacer l'ancien fichier dans le dossier **docker/db**
+4. Commit les changements
+
 ## Utilisation de Docker Compose
 
 Pour gérer votre projet avec Docker Compose, utilisez le fichier `docker-dev-compose.yaml` pour la version de développement. Voici les commandes principales et leur utilité :
