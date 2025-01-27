@@ -9,9 +9,20 @@
         <label for="name">Nom</label>
         <input
           type="text"
+          id="lastName"
+          v-model="lastName"
+          placeholder="Entrez votre nom"
+          class="input"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="name">prenom</label>
+        <input
+          type="text"
           id="name"
           v-model="name"
-          placeholder="Entrez votre nom"
+          placeholder="Entrez votre prenom"
           class="input"
         />
       </div>
@@ -59,8 +70,19 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { defineProps, defineEmits } from 'vue';
+
+// // Définir les props reçues
+// const props = defineProps({
+//   userData: {
+//     type: Object,
+//     required: true,
+//   },
+// });
+const { userData } = useUserData();
 
 const name = ref('');
+const lastName = ref('');
 const email = ref('');
 const password = ref('');
 const confirmPassword = ref('');
@@ -70,11 +92,11 @@ const successMessage = ref('');
 // Émettre un événement au succès
 const emit = defineEmits(['signupSuccess']);
 
-const handleSignup = () => {
+const handleSignup = async () => {
   errorMessage.value = '';
   successMessage.value = '';
 
-  if (!name.value || !email.value || !password.value || !confirmPassword.value) {
+  if (!name.value || !lastName.value || !email.value || !password.value || !confirmPassword.value) {
     errorMessage.value = 'Veuillez remplir tous les champs.';
     return;
   }
@@ -85,6 +107,12 @@ const handleSignup = () => {
   }
 
   successMessage.value = 'Compte créé avec succès !';
+
+  userData.value.prenom = name.value
+  userData.value.nom = lastName.value
+  userData.value.mail = email.value
+  userData.value.password = password.value
+
   setTimeout(() => {
     emit('signupSuccess');
   }, 500);

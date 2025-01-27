@@ -52,7 +52,7 @@
               placeholder="Entrez votre poids en kg"
             />
             <p v-if="weight !== null && (weight <= 20 || weight > 300)" class="error">
-              Votre poids semble incorrect, veuillez vérifier votre saisie.
+              Votre poids semble incorrecte, veuillez vérifier votre saisie.
             </p>
           </div>
         </template>
@@ -75,6 +75,7 @@
           </div>
         </template>
       </form>
+
       <div class="navigation-buttons">
         <button
           v-if="currentQuestionIndex > 0"
@@ -108,9 +109,19 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router'; // Importer le composable useRouter
+import { useFetch } from '#app'; // Pour effectuer la requête API
+import { defineProps, defineEmits } from 'vue';
 
+// Définir les props reçues
+// const props = defineProps({
+//   userData: {
+//     type: Object,
+//     required: true,
+//   },
+// });
 // Instance du routeur
 const router = useRouter();
+const { userData } = useUserData();
 
 // Questions du formulaire
 const questions = ref([
@@ -163,6 +174,7 @@ const currentQuestionIndex = ref(0);
 const height = ref<number | null>(null);
 const weight = ref<number | null>(null);
 const age = ref<number | null>(null);
+const sex = ref<string | null>(null);
 
 // Validation pour activer le bouton "Suivant"
 const isNextEnabled = computed(() => {
@@ -178,7 +190,43 @@ const isNextEnabled = computed(() => {
   return selectedOption.value[currentQuestionIndex.value] !== null;
 });
 
-// Navigation
+// Calcul de l'IMC
+const calculateIMC = (height: number | null, weight: number | null): number | null => {
+  if (height && weight) {
+    const heightInMeters = height / 100; // Conversion de la taille en mètres
+    return weight / (heightInMeters * heightInMeters); // Formule de l'IMC
+  }
+  return null;
+};
+
+// Fonction de soumission
+const submitAnswers = async () => {
+  userData.value.age = age.value
+  userData.value.sexe = selectedOption.value[1];
+  userData.value.taille = height.value
+  userData.value.poids = weight.value
+  userData.value.imc = calculateIMC(height.value, weight.value)
+
+  try {
+    // Envoi des données combinées au backend via useFetch
+    const { data: response } = await useFetch('/api/signup', {
+      method: 'POST',
+      body: userData,
+    });
+
+    if (response) {
+      alert('Questionnaire soumis avec succès !');
+      router.push('/login'); // Rediriger l'utilisateur après la soumission
+    }
+  } catch (error) {
+    console.error('Erreur lors de l\'envoi des données :', error);
+    alert('Une erreur est survenue lors de la soumission du formulaire ou du questionnaire.');
+  }
+};
+
+
+
+// Navigation entre les questions
 const nextQuestion = () => {
   if (currentQuestionIndex.value < questions.value.length - 1) {
     currentQuestionIndex.value++;
@@ -191,11 +239,6 @@ const previousQuestion = () => {
   }
 };
 
-// Soumission des réponses
-const submitAnswers = () => {
-  alert('Questionnaire soumis avec succès !');
-  router.push('/login');
-};
 </script>
 
 <style scoped>
