@@ -43,6 +43,7 @@
         <input
           type="password"
           id="password"
+          minlength="4"
           v-model="password"
           placeholder="Entrez votre mot de passe"
           class="input"
@@ -69,8 +70,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { defineProps, defineEmits } from 'vue';
+import { prisma } from '~/server/db/connection';
 
 const props = defineProps({
   userData: {
@@ -95,6 +95,28 @@ const handleSignup = async () => {
 
   if (!name.value || !lastName.value || !email.value || !password.value || !confirmPassword.value) {
     errorMessage.value = 'Veuillez remplir tous les champs.';
+    return;
+  }
+
+  // Vérification de l'existence de l'e-mail
+  try {
+    const response = await fetch('/api/check-email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email: email.value }),
+    });
+
+    const data = await response.json();
+
+    if (data.exists) {
+      errorMessage.value = data.message;
+      return;
+    }
+  } catch (error) {
+    errorMessage.value = 'Erreur lors de la vérification de l’e-mail.';
+    console.error(error);
     return;
   }
 
