@@ -1,6 +1,6 @@
-<script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+<script lang="ts" setup>
+import {onMounted, ref} from 'vue';
+import {useRoute} from 'vue-router';
 
 const params = useRoute().params;
 const recipe_data = ref(null);
@@ -10,6 +10,7 @@ onMounted(async () => {
   if (params && params.id_recipe) {
     try {
       // Fetch the recipe data from the API
+      // @ts-ignore
       recipe_data.value = await $fetch(`/api/recipes/${params.id_recipe}`);
     } catch (err) {
       console.error("Error fetching recipe:", err);
@@ -24,7 +25,7 @@ onMounted(async () => {
 
 <template>
   <div>
-    <RecipeDetail v-if="recipe_data" :recipe_data="recipe_data" />
+    <RecipeDetail v-if="recipe_data" :recipe_data="recipe_data"/>
     <div v-else-if="error">
       Could not fetch recipe from database.
     </div>

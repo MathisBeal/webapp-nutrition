@@ -90,7 +90,7 @@ const steps = computed(() =>
 }
 
 .recipe_text {
-  margin: 1.5em 1em 0 1em;
+  margin: 1.5em 3% 0 3%;
 }
 
 .steps ol {
