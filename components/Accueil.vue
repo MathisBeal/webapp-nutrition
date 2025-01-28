@@ -1,13 +1,14 @@
 <template>
   <div :class="['accueil', { 'with-nav': isNavVisible }]">
     <h1>Plats</h1>
-    <div class="plat-list" @scroll="handleScroll" ref="platList">
+    <div ref="platList" class="plat-list" @scroll="handleScroll">
       <div
         v-for="plat in displayedPlats"
         :key="plat.ID_plat"
         class="plat-item"
+        @click="goToRecipe(plat.ID_plat)"
       >
-        <img src="/assets/img/plat.png" alt="Image du plat" class="plat-image" />
+        <img alt="Image du plat" class="plat-image" src="/assets/img/plat.png"/>
         <div class="plat-text">
           <h2>
             {{ plat.description || 'Description non disponible' }} -
@@ -15,9 +16,9 @@
           </h2>
           <p>
             <img
-              src="/assets/img/horloge.png"
               alt="Icône d'horloge"
               class="icon-horloge"
+              src="/assets/img/horloge.png"
             />
             Durée de préparation : {{ plat.duree || 'Non spécifiée' }}
           </p>
@@ -28,16 +29,15 @@
 </template>
 
 
+<script lang="ts" setup>
+import {onMounted, ref} from 'vue';
+import {useAsyncData} from '#app';
+import {isNavVisible} from '@/composables/useNavState';
 
-<script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { useAsyncData } from '#app';
-import { isNavVisible } from '@/composables/useNavState';
+const {data: plats} = await useAsyncData('plats', () => $fetch('/api/plat'));
 
-const { data: plats } = await useAsyncData('plats', () => $fetch('/api/plat'));
-
-const displayedPlats = ref<any[]>([]); 
-const pageSize = 5; 
+const displayedPlats = ref<any[]>([]);
+const pageSize = 5;
 let currentPage = 1;
 
 
@@ -65,8 +65,12 @@ const handleScroll = (event: Event) => {
 onMounted(() => {
   loadPlats();
 });
-</script>
 
+function goToRecipe(ID_plat: number) {
+  navigateTo("/recipes/" + ID_plat);
+}
+
+</script>
 
 
 <style>
@@ -75,9 +79,9 @@ onMounted(() => {
   overflow-y: hidden;
   display: flex;
   flex-direction: column;
-  gap:20px;
+  gap: 20px;
   padding: 20px;
-  transition: overflow-y 0.3s ease; 
+  transition: overflow-y 0.3s ease;
 }
 
 .plat-list:hover {
@@ -87,7 +91,7 @@ onMounted(() => {
 
 .plat-item {
   display: flex;
-  align-items: flex-start; 
+  align-items: flex-start;
   gap: 15px;
   padding: 20px;
   border-radius: 12px;
@@ -97,9 +101,9 @@ onMounted(() => {
 }
 
 .plat-item:hover {
-  transform: scale(1.01); 
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); 
-  background-color: #f9f9f9; 
+  transform: scale(1.01);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  background-color: #f9f9f9;
 }
 
 .plat-item h2 {
@@ -123,15 +127,15 @@ onMounted(() => {
 .plat-text {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; 
+  align-items: flex-start;
   gap: 5px;
 }
 
 .plat-text h2,
 .plat-text p {
-  margin: 0; 
-  text-align: left; 
-  line-height: 1.2; 
+  margin: 0;
+  text-align: left;
+  line-height: 1.2;
 }
 
 .plat-text span {
