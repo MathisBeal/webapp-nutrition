@@ -62,9 +62,33 @@ watch(isAuthenticated, (newValue) => {
       class="settings-button"
     />
     <ul>
-      <li><a href="/home">Home</a></li>
-      <li><a href="/about">About</a></li>
-      <li><a href="/contact">Contact</a></li>
+      <li>
+        <a href="/home">
+          <img
+            src="/assets/icons/icon_home.png"
+            alt="Home Icon"
+            class="nav-icon"
+          />
+        </a>
+      </li>
+      <li>
+        <a href="/search">
+          <img
+            src="/assets/icons/icon_search.png"
+            alt="Search Icon"
+            class="nva-icon"
+          />
+        </a>
+      </li>
+      <li>
+        <a href="/stats">
+          <img
+            src="/assets/icons/icon_stats.png"
+            alt="Stats Icon"
+            class="nva-icon"
+          />
+        </a>
+      </li>
     </ul>
 
     <!-- Afficher les informations utilisateur uniquement si connecté -->
@@ -151,4 +175,6 @@ li:last-child {
   top: 20px;
   left: 20px;
 }
+
+
 </style>
