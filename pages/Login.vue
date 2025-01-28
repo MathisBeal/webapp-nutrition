@@ -3,7 +3,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'nuxt/app'
 import { setAuthenticationStatus } from '@/composables/useAuth'
-
+import axios from 'axios'
 
 // Variables et gestion de la logique
 const email = ref('')
@@ -11,16 +11,35 @@ const password = ref('')
 const errorMessage = ref('')
 const router = useRouter()
 
-const handleLogin = () => {
+const handleLogin = async () => {
   // Validation basique des champs
   if (!email.value || !password.value) {
     errorMessage.value = 'Veuillez remplir tous les champs.'
     return
   }
-  // Simulation de la logique de connexion (remplacer par un appel API)
-  errorMessage.value = ''
-  setAuthenticationStatus(true)
-  router.push('/home')
+
+  try {
+  // Appel API pour se connecter
+  const response = await axios.post('/api/user/login', {
+    email: email.value,
+    password: password.value,
+  });
+
+
+  // Si connexion réussie
+  if (response.data.success) {
+    errorMessage.value = '';
+    setAuthenticationStatus(true);
+    router.push('/home');
+  }
+  } catch (error) {
+    // Gestion des erreurs (par exemple, mauvais email/mot de passe ou erreur serveur)
+    if (axios.isAxiosError(error) && error.response) {
+      errorMessage.value = error.response.data.message || 'Une erreur est survenue.';
+    } else {
+      errorMessage.value = 'Erreur de connexion. Veuillez réessayer plus tard.';
+    }
+  }
 }
 </script>
 
@@ -150,3 +169,4 @@ label {
   font-weight: bold;
 }
 </style>
+
