@@ -35,7 +35,7 @@ const handleLogin = async () => {
   } catch (error) {
     // Gestion des erreurs (par exemple, mauvais email/mot de passe ou erreur serveur)
     if (axios.isAxiosError(error) && error.response) {
-      errorMessage.value = error.response.data.message || 'Une erreur est survenue.';
+      errorMessage.value = error.response.data.message || 'Email ou mot de passe incorrect.';
     } else {
       errorMessage.value = 'Erreur de connexion. Veuillez réessayer plus tard.';
     }
