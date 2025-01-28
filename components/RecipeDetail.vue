@@ -51,7 +51,9 @@ const steps = computed(() =>
             />
             <p>
               <strong>{{ ingredient.Aliments.nom }}</strong>:
-              {{ ingredient.quantite_base }} {{ ingredient.unite }}
+              {{
+                Number.parseInt(ingredient.Aliments.quantite_base) * Number.parseFloat(ingredient.multiplicateur_quantite)
+              }} {{ ingredient.unite }}
             </p>
           </li>
         </ul>
