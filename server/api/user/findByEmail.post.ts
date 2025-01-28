@@ -17,6 +17,11 @@ export default defineEventHandler(async (event) => {
         exists: true,
         message: "Cet e-mail est déjà utilisé.",
       };
+    } else {
+      return {
+        exists: false,
+        message: "Cet e-mail est disponible.",
+      };
     }
   } catch (error) {
     console.error("Erreur lors de la vérification de l'e-mail :", error);

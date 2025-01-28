@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcrypt';
-
-const prisma = new PrismaClient();
+import { prisma } from '~/server/db/connection';
+import { useCryptage } from '~/composables/cryptage';
 
 export default defineEventHandler(async (event) => {
   // Récupérer les données du corps de la requête
@@ -30,7 +28,8 @@ export default defineEventHandler(async (event) => {
     }
 
     // Hasher le mot de passe
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const { cryptPassword } = useCryptage();
+    const hashedPassword = await cryptPassword(password);
 
     // Créer l'utilisateur
     const user = await prisma.users.create({
