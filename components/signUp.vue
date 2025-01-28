@@ -70,7 +70,6 @@
 </template>
 
 <script lang="ts" setup>
-import { prisma } from '~/server/db/connection';
 
 const props = defineProps({
   userData: {
@@ -100,7 +99,7 @@ const handleSignup = async () => {
 
   // Vérification de l'existence de l'e-mail
   try {
-    const response = await fetch('/api/check-email', {
+    const response = await fetch('/api/user/findByEmail', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -110,10 +109,15 @@ const handleSignup = async () => {
 
     const data = await response.json();
 
-    if (data.exists) {
+    if (response.ok && data.exists) {
       errorMessage.value = data.message;
       return;
+    } else if (!response.ok) {
+      errorMessage.value = 'Erreur lors de la communication avec le serveur.';
+      console.error('Erreur HTTP:', response.statusText);
+      return;
     }
+
   } catch (error) {
     errorMessage.value = 'Erreur lors de la vérification de l’e-mail.';
     console.error(error);

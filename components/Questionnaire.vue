@@ -7,7 +7,7 @@
         Question {{ currentQuestionIndex + 1 }} sur {{ questions.length }}
       </p>
 
-      <form>
+      <form @keydown.enter.prevent="handleEnterKey">
         <template v-if="currentQuestionIndex === 0">
           <div class="option">
             <label for="age">Votre âge :</label>
@@ -102,10 +102,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { useFetch } from '#app';
-import { defineProps } from 'vue';
 
 const props = defineProps({
   userData: {
@@ -113,6 +110,8 @@ const props = defineProps({
     required: true,
   },
 });
+
+const emit = defineEmits(['submitQuestionnaire']);
 
 const router = useRouter();
 
@@ -123,16 +122,7 @@ const questions = ref([
   { question: 'Quel est votre poids (en kg) ?', options: [] },
   {
     question: 'Suivez-vous un régime alimentaire spécifique ?',
-    options: [
-      'Général',
-      'Végétarien',
-      'Vesco Végétarien',
-      'Végan',
-      'Sans gluten',
-      'Sans lactose',
-      'Cétogène',
-      'Paléo',
-    ],
+    options: [],
   },
   {
     question:
@@ -146,17 +136,7 @@ const questions = ref([
   },
   {
     question: 'Êtes-vous allergique à un de ces aliments ?',
-    options: [
-      'Aucun',
-      'Arachides',
-      'Fruits à coque',
-      'Lait et produits laitiers',
-      'Gluten',
-      'Fruits de mer',
-      'Œufs',
-      'Soja',
-      'Sésame',
-    ],
+    options: [],
   },
 ]);
 
@@ -187,27 +167,14 @@ const calculateIMC = (height: number | null, weight: number | null): number | nu
   return null;
 };
 
-const submitAnswers = async () => {
+const submitAnswers = () => {
   props.userData.age = age.value;
   props.userData.sexe = selectedOption.value[1];
   props.userData.taille = height.value;
   props.userData.poids = weight.value;
   props.userData.imc = calculateIMC(height.value, weight.value);
 
-  try {
-    const { data: response } = await useFetch('/api/signup', {
-      method: 'POST',
-      body: props.userData,
-    });
-
-    if (response) {
-      alert('Questionnaire soumis avec succès !');
-      router.push('/login');
-    }
-  } catch (error) {
-    console.error('Erreur lors de l\'envoi des données :', error);
-    alert('Une erreur est survenue lors de la soumission du formulaire ou du questionnaire.');
-  }
+  emit('submitQuestionnaire');
 };
 
 const nextQuestion = () => {
@@ -221,6 +188,43 @@ const previousQuestion = () => {
     currentQuestionIndex.value--;
   }
 };
+
+// Récupérer les options dynamiques pour les questions
+const fetchOptions = async () => {
+  try {
+    const response = await fetch('/api/user/restrictionType');
+    const data = await response.json();
+
+    if (data.success) {
+      const dietOptions = data.data.slice(0, 11);
+      const allergyOptions = data.data.slice(11);
+
+      const dietQuestion = questions.value.find(q => q.question === 'Suivez-vous un régime alimentaire spécifique ?');
+      if (dietQuestion) {
+        dietQuestion.options = dietOptions;
+      }
+
+      const allergyQuestion = questions.value.find(q => q.question === 'Êtes-vous allergique à un de ces aliments ?');
+      if (allergyQuestion) {
+        allergyQuestion.options = allergyOptions;
+      }
+    } else {
+      console.error('Erreur lors de la récupération des options:', data.message);
+    }
+  } catch (error) {
+    console.error('Erreur lors de la récupération des options:', error);
+  }
+};
+
+const handleEnterKey = () => {
+  if (isNextEnabled.value) {
+    nextQuestion();
+  }
+};
+
+onMounted(() => {
+  fetchOptions();
+});
 </script>
 
 <style scoped>
