@@ -27,7 +27,7 @@ CREATE TABLE `Aliments`
   `ID_aliment`    int                                                           NOT NULL AUTO_INCREMENT,
   `nom`           varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `quantite_base` int                                                           NOT NULL,
-  `unite`                   varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `unite`         varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NOT NULL,
   `calories`      decimal(10, 2)                                                NOT NULL,
   `glucides`      decimal(10, 2)                                                NOT NULL,
   `lipides`       decimal(10, 2)                                                NOT NULL,
@@ -127,7 +127,7 @@ VALUES (1, 'Pomme', 1,'pièce', 52.00, 14.00, 0.20, 0.30, 'image_pomme.jpg'),
        (77, 'Tofu (100 g)', 100,'g', 144.00, 1.90, 8.00, 15.00, 'image_tofu.jpg'),
        (78, 'Seitan (100 g)', 100,'g', 120.00, 6.00, 1.00, 21.00, 'image_seitan.jpg'),
        (79, 'Tempeh (100 g)', 100,'g', 195.00, 9.40, 11.00, 20.00, 'image_tempeh.jpg'),
-       (80, 'Laitue (1 feuille)', 1,'g', 5.00, 1.00, 0.05, 0.30, 'image_laitue.jpg');
+       (80, 'Laitue (1 feuille)', 1,'feuille', 5.00, 1.00, 0.05, 0.30, 'image_laitue.jpg');
 /*!40000 ALTER TABLE `Aliments`
   ENABLE KEYS */;
 UNLOCK TABLES;
