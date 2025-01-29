@@ -13,10 +13,6 @@
 
 <script lang="ts" setup>
 const recipes = await $fetch("/api/recipes");
-
-function goToRecipe(page: number) {
-  navigateTo("/recipes/" + page);
-}
 </script>
 
 <style scoped>

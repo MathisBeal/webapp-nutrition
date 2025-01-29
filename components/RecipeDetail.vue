@@ -27,6 +27,7 @@ let url: string;
 let imageFetched: boolean = true;
 try {
   console.log(recipe.value.images);
+  // @ts-ignore
   img = await $fetch(recipe.value.images);
   url = URL.createObjectURL(img);
 } catch (e) {

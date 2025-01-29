@@ -40,52 +40,41 @@ const aliment = computed(() => props.aliment_data || {});
 
 <template>
   <div class="container">
-    <!-- Recipe Title -->
     <h1 class="aliment_name">{{ aliment?.nom || 'Aliment' }}</h1>
-    <img src="assets/img/default_ingredient.jpg" alt="">
-<!--    <h3>Valeurs nutritionelles pour {{aliment.}}</h3>-->
-
-    <!-- Recipe Image -->
-<!--        <img-->
-<!--          :alt="'Image of ' + recipe?.description"-->
-<!--          class="recipe_image"-->
-<!--          :src="recipe?.images"-->
-<!--        >-->
-<!--    <img v-if="imageFetched" :alt="'Image of ' + recipe?.description" class="recipe_image" :src="url">-->
-<!--    <img v-else alt="Default recipe image" class="recipe_image" src="assets/img/plat.png">-->
-
+    <img class="aliment_img" alt="" src="assets/img/default_ingredient.jpg">
     <div class="recipe_text">
-      <!-- Ingredients List -->
-<!--      <div class="ingredients">-->
-<!--        <h2>Ingrédients</h2>-->
-<!--        <ul>-->
-<!--          <li-->
-<!--            v-for="(ingredient, index) in ingredients"-->
-<!--            :key="index"-->
-<!--            class="ingredient"-->
-<!--          >-->
-<!--            <img-->
-<!--              :alt="'Image of ' + ingredient.Aliments.nom"-->
-<!--              src="assets/img/default_ingredient.jpg"-->
-<!--            />-->
-<!--            <p>-->
-<!--              <strong>{{ ingredient.Aliments.nom }}</strong>:-->
-<!--              {{-->
-<!--                Number.parseInt(ingredient.Aliments.quantite_base) * Number.parseFloat(ingredient.multiplicateur_quantite)-->
-<!--              }} {{ ingredient.unite }}-->
-<!--            </p>-->
-<!--          </li>-->
-<!--        </ul>-->
-      </div>
-
-      <!-- Recipe Steps -->
-<!--      <div class="steps">-->
-<!--        <h2>Étapes :</h2>-->
-<!--        <ol>-->
-<!--          <li v-for="(step, index) in steps" :key="index" class="step">{{ step }}</li>-->
-<!--        </ol>-->
-<!--      </div>-->
-<!--    </div>-->
+      <p class="nutri_title">Valeurs nutritionnelles pour {{ aliment.nom }}</p>
+      <table>
+        <thead>
+        <tr>
+          <th>Élement</th>
+          <th>Valeurs</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <th>Quantité</th>
+          <th>{{aliment.quantite_base}} {{aliment.unite}}</th>
+        </tr>
+        <tr>
+          <th>kCalories</th>
+          <th>{{aliment.calories}}</th>
+        </tr>
+        <tr>
+          <th>Glucides</th>
+          <th>{{aliment.glucides}}</th>
+        </tr>
+        <tr>
+          <th>Lipides</th>
+          <th>{{aliment.lipides}}</th>
+        </tr>
+        <tr>
+          <th>Protéines</th>
+          <th>{{aliment.proteines}}</th>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -98,59 +87,50 @@ const aliment = computed(() => props.aliment_data || {});
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.recipe_name {
+.aliment_name {
   text-align: center;
   margin: 0 0 0.5em 0;
   padding: 0.5em 0 0 0;
 }
 
-.recipe_image {
-  width: 100%;
-  max-height: 27vh;
-  object-fit: cover;
+.nutri_title {
+  font-size: 1.2em;
 }
 
 .recipe_text {
   margin: 1.5em 3% 0 3%;
 }
 
-.steps ol {
-  padding-left: 1.5em;
-}
-
-.ingredients ul {
-  list-style: none;
-  padding: 0;
-}
-
-.ingredient {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1em;
-}
-
-.ingredient img {
-  width: 50px;
-  height: 50px;
-  margin-right: 1em;
-  border-radius: 50%;
+.aliment_img {
+  margin: auto;
+  align-self: flex-end;
+  max-width: 25vw;
+  max-height: 25vw;
   object-fit: cover;
+  border-radius: 1vw;
 }
 
-.step {
-  margin-top: 0.5em;
+table {
+  margin: auto;
+  border-collapse: collapse;
+  border: 2px solid rgb(112, 112, 112);
+  font-size: 1em;
 }
 
-h2,
-h3 {
-  color: #333;
+thead th {
+  font-weight: bold;
+  background: rgba(204, 204, 204, 0.5);
 }
 
-p {
-  margin: 0.2em 0;
+tbody th {
+  font-weight: normal;
 }
 
-div {
-  text-align: left;
+th {
+  border-collapse: collapse;
+  border: 1px solid rgb(112, 112, 112);
+  padding: 0.2em 0.2em 0.3em 0.3em;
+  width: 12vw;
+  min-width: fit-content;
 }
 </style>
