@@ -53,14 +53,12 @@ const loadPlats = () => {
   }
 };
 
-
 const handleScroll = (event: Event) => {
   const target = event.target as HTMLElement;
   if (target.scrollTop + target.clientHeight >= target.scrollHeight - 10) {
     loadPlats();
   }
 };
-
 
 onMounted(() => {
   loadPlats();
