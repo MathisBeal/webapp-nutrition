@@ -155,20 +155,12 @@ const isNextEnabled = computed(() => {
   return selectedOption.value[currentQuestionIndex.value] !== null;
 });
 
-const calculateIMC = (height: number | null, weight: number | null): number | null => {
-  if (height && weight) {
-    const heightInMeters = height / 100;
-    return weight / (heightInMeters * heightInMeters);
-  }
-  return null;
-};
-
 const submitAnswers = () => {
   props.userData.age = age.value;
   props.userData.sexe = selectedOption.value[1];
   props.userData.taille = height.value;
   props.userData.poids = weight.value;
-  props.userData.imc = calculateIMC(height.value, weight.value);
+  props.userData.imc = 1; //calculé directement par la BDD
 
   emit('submitQuestionnaire');
 };
