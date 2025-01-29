@@ -1,15 +1,12 @@
 import { prisma } from '../../db/connection';
 import { compare } from 'bcrypt';
-import { createError, sendError } from 'h3';
+import { createError } from 'h3';
 
 export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event);
     const { email, password } = body;
 
-    console.log('body', body);
-
-    // Vérification des champs
     if (!email || !password) {
       throw createError({
         statusCode: 400,
@@ -17,40 +14,30 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    // Recherche de l'utilisateur dans la base de données
     const user = await prisma.users.findUnique({
       where: { mail: email },
     });
 
-    if (!user) {
+    if (!user || !(await compare(password, user.password))) {
       throw createError({
         statusCode: 401,
         message: 'Email ou mot de passe incorrect.',
       });
     }
 
-    // Vérification du mot de passe
-    const isPasswordValid = await compare(password, user.password);
-    if (!isPasswordValid) {
-      throw createError({
-        statusCode: 401,
-        message: 'Email ou mot de passe incorrect.',
-      });
-    }
+    // Créer la session utilisateur
+    const userSession = {
+      userId: user.ID_user,
+      email: user.mail,
+    };
 
-    // Connexion réussie
+    await setUserSession(event, userSession);
+
     return {
       success: true,
       message: 'Connexion réussie.',
     };
-  } catch (error: unknown) {
-    // Gestion des erreurs inconnues
-    if (!(error instanceof Error)) {
-      error = createError({
-        statusCode: 500,
-        message: 'Erreur interne du serveur.',
-      });
-    }
+  } catch (error) {
     return sendError(event, error as Error);
   }
 });

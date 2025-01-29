@@ -1,22 +1,55 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { useRouter } from 'nuxt/app'
-import { isAuthenticated, setAuthenticationStatus } from '@/composables/useAuth'
+import { ref, watch } from 'vue';
+import { useRouter } from 'nuxt/app';
+import { isAuthenticated, setAuthenticationStatus } from '@/composables/useAuth';
+import axios from 'axios';
 
-const router = useRouter()
+const router = useRouter();
 
 // Variable pour contrôler la visibilité de la barre de navigation
-const isNavVisible = ref(true)
+const isNavVisible = ref(true);
 
-const logout = () => {
-  setAuthenticationStatus(false)
-  router.push('/login')
-}
+// Variable réactive pour stocker l'utilisateur
+const userId = ref<string | null>(null);
 
-// Fonction pour masquer ou afficher la barre de navigation
+// Fonction pour récupérer la session utilisateur
+const getSession = async () => {
+  try {
+    const response = await axios.get('/api/auth/session');
+    if (response.data && response.data.userId) {
+      userId.value = response.data.userId;
+      console.log('ID utilisateur récupéré :', userId.value);
+    } else {
+      console.warn('Aucune session utilisateur trouvée.');
+    }
+  } catch (error) {
+    console.error('Erreur lors de la récupération de la session :', error);
+  }
+};
+
+const logout = async () => {
+  try {
+    await axios.post('/api/auth/logout');
+    setAuthenticationStatus(false);
+    userId.value = null;
+    router.push('/login');
+  } catch (error) {
+    console.error('Erreur lors de la déconnexion :', error);
+  }
+};
+
 const toggleNav = () => {
-  isNavVisible.value = !isNavVisible.value
-}
+  isNavVisible.value = !isNavVisible.value;
+};
+
+// Surveiller `isAuthenticated` et charger les données utilisateur uniquement si l'utilisateur est connecté
+watch(isAuthenticated, (newValue) => {
+  if (newValue) {
+    getSession();
+  } else {
+    userId.value = null;
+  }
+});
 </script>
 
 <template>
@@ -34,7 +67,9 @@ const toggleNav = () => {
       <li><a href="/contact">Contact</a></li>
     </ul>
 
-    <li class="bouton" v-if="isAuthenticated">
+    <!-- Afficher les informations utilisateur uniquement si connecté -->
+    <li v-if="isAuthenticated">
+      <p>Utilisateur : {{ userId ? userId : 'ID non trouvé' }}</p>
       <button @click="logout">Se déconnecter</button>
     </li>
   </nav>
@@ -100,6 +135,7 @@ button:hover {
 
 li:last-child {
   margin-top: auto;
+  margin-bottom: 50px;
 }
 
 .settings-button,
