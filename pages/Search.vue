@@ -1,6 +1,5 @@
 <template>
   <div class="search-container">
-    <!-- Barre de recherche -->
     <input
       v-model="searchQuery"
       type="text"
@@ -9,7 +8,6 @@
       @keyup.enter="onSearch"
     />
 
-    <!-- Affichage des résultats avec pagination -->
     <Pagination
       :results="results"
       :itemsPerPage="10"
@@ -72,7 +70,6 @@ const loadFavoris = async () => {
   }
 };
 
-// Recherche de données
 const onSearch = async () => {
   if (!searchQuery.value.trim()) {
     await loadFavoris();
@@ -86,7 +83,6 @@ const onSearch = async () => {
   }
 };
 
-// Ajouter / supprimer un favori
 const toggleFavori = async (item) => {
   if (!userSession.value) return;
   const isFavori = favoris.value.has(item.ID);
@@ -147,8 +143,8 @@ overflow-y: auto;
   gap: 30px;
   padding: 20px;
   border-radius: 12px;
-  border: 1px solid #ddd; /* Ajout de la bordure */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ajout de l'ombre */
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 

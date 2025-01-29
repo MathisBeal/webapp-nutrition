@@ -18,7 +18,7 @@
 import { ref, computed, watch, defineProps, defineEmits, onMounted } from 'vue';
 
 const props = defineProps({
-  results: Array, // Liste complète des résultats
+  results: Array, 
   itemsPerPage: {
     type: Number,
     default: 10
@@ -29,10 +29,8 @@ const emit = defineEmits(['update:results']);
 const currentPage = ref(1);
 const resultList = ref(null);
 
-// Calcul du nombre total de pages
 const totalPages = computed(() => Math.ceil((props.results?.length || 0) / props.itemsPerPage));
 
-// Extraction des résultats paginés
 const paginatedResults = computed(() => {
   const start = (currentPage.value - 1) * props.itemsPerPage;
   return props.results?.slice(start, start + props.itemsPerPage) || [];
@@ -41,24 +39,21 @@ const paginatedResults = computed(() => {
 // Émettre les résultats filtrés au parent
 watch([paginatedResults, currentPage], () => {
   emit('update:results', paginatedResults.value);
-  scrollToTop(); // Remonter la liste en haut après un changement de page
+  scrollToTop();
 });
 
-// Passage à la page suivante
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value++;
   }
 };
 
-// Retour à la page précédente
 const prevPage = () => {
   if (currentPage.value > 1) {
     currentPage.value--;
   }
 };
 
-// Remonter la liste au changement de page
 const scrollToTop = () => {
   if (resultList.value) {
     resultList.value.scrollTop = 0;
@@ -76,11 +71,10 @@ onMounted(scrollToTop);
   width: 100%;
 }
 
-/* Zone scrollable */
 .result-list {
   display: flex;
   flex-direction: column;
-  max-height: 540px; /* Ajuste cette valeur selon la mise en page */
+  max-height: 540px;
   overflow-y: auto;
   width: 1200px;
   gap: 20px;
@@ -89,7 +83,6 @@ onMounted(scrollToTop);
   scroll-behavior: smooth;
 }
 
-/* Pagination */
 .pagination {
   display: flex;
   justify-content: center;
