@@ -1,23 +1,31 @@
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
 import { useRouter } from 'nuxt/app';
-import { isAuthenticated, logout, getSession } from '@/composables/useAuth';
+import { getSession, clearSession, isAuthenticated } from '@/composables/useAuth';
+import axios from 'axios';
 
 
 const router = useRouter();
 
+// Variable pour contrôler la visibilité de la barre de navigation
 const isNavVisible = ref(true);
 
-const logoutRedirection = async () => {
-  logout();
-  router.push('/login');
+// Fonction pour se déconnecter
+const logout = async () => {
+  try {
+    await axios.post('/api/auth/logout');
+    clearSession();
+    router.push('/login');
+  } catch (error) {
+    console.error('Erreur lors de la déconnexion :', error);
+  }
 };
 
+// Fonction pour masquer ou afficher la barre de navigation
 const toggleNav = () => {
   isNavVisible.value = !isNavVisible.value;
 };
 
-// Surveiller `isAuthenticated` et charger les données utilisateur uniquement si l'utilisateur est connecté
+// Récupérer l'ID utilisateur à partir de la session
 watch(isAuthenticated, (newValue) => {
   if (newValue) {
     console.log("Utilisateur connecté, récupération de la session...");
@@ -79,10 +87,10 @@ const checkAuthBeforeNavigation = (page: string) => {
       </li>
     </ul>
 
-    <!-- Afficher les informations utilisateur uniquement si connecté -->
+    <!-- Afficher l'ID utilisateur connecté -->
     <li v-if="isAuthenticated">
       <p>Utilisateur : {{ userId ? userId : 'ID non trouvé' }}</p>
-      <button @click="logoutRedirection">Se déconnecter</button>
+      <button @click="logout">Se déconnecter</button>
     </li>
   </nav>
 
