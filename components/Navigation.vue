@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { useRouter } from 'nuxt/app';
 import { getSession, logout, isAuthenticated, userId } from '@/composables/useAuth';
 
 
