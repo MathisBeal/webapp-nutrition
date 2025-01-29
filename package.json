@@ -23,6 +23,7 @@
     "chart.js": "^4.4.7",
     "dotenv": "^16.4.7",
     "nuxt": "^3.15.2",
+    "nuxt-lucide-icons": "^1.0.5",
     "vue": "latest",
     "vue-router": "latest"
   },

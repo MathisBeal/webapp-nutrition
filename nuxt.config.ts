@@ -12,6 +12,12 @@ export default defineNuxtConfig({
     "@nuxt/test-utils/module",
     "@nuxt/eslint",
     "nuxt3-notifications", // Docs : https://github.com/kyvg/vue3-notification
+    "nuxt-lucide-icons",
   ],
+
   css: ['@/assets/styles/global.css'],
+
+  lucide: {
+    namePrefix: 'Icon',
+  }
 });
