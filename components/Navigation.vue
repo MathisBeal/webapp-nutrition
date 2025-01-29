@@ -65,7 +65,7 @@ watch(isAuthenticated, (newValue) => {
       <li>
         <a href="/home">
           <img
-            src="/assets/icons/icon_home.png"
+            src="/assets/icons/icon_home.svg"
             alt="Home Icon"
             class="nav-icon"
           />
@@ -74,7 +74,7 @@ watch(isAuthenticated, (newValue) => {
       <li>
         <a href="/search">
           <img
-            src="/assets/icons/icon_search.png"
+            src="/assets/icons/icon_white_search.svg"
             alt="Search Icon"
             class="nva-icon"
           />
