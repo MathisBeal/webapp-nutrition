@@ -6,7 +6,6 @@
             <div v-for="item in results" :key="item.ID" class="result-item">
                 <img src="/assets/img/plat.png" alt="Image" class="result-image" />
                 <div class="result-text">
-              
                     <template v-if="item.type === 'plat'">
                         <h2>
                             {{ item.description || 'Description non disponible' }} - {{ item.nom_categorie || 'Catégorie inconnue' }}
@@ -17,7 +16,6 @@
                         </p>
                     </template>
           
-                    
                     <template v-else-if="item.type === 'aliment'">
                         <h2>
                             {{ item.nom }}
@@ -30,6 +28,11 @@
                         </p>
                     </template>
                 </div>
+                <div class="favori-icon" @click="toggleFavori(item)">
+                    <img :src="favoris.has(item.ID) ? '/assets/icons/icon_stats.png' : '/assets/icons/icon_user.png'" 
+                    alt="Favori"
+                    class="star-icon">
+                </div>
             </div>
         </div>
         <div v-else class="no-results">
@@ -41,26 +44,99 @@
 
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+import { isAuthenticated } from '@/composables/useAuth';
 
 const searchQuery = ref<string>('');
 const results = ref<any[]>([]);
 const searchInput = ref<HTMLInputElement | null>(null);
+const userSession = ref<any>(null);
+const favoris = ref<Set<number>>(new Set());
+
+const getSession = async () => {
+    try {
+        const response = await axios.get('/api/auth/session');
+        if (response.data && response.data.userId) {
+            userSession.value = response.data;
+        } else {
+            userSession.value = null;
+        }
+    } catch (error) {
+        userSession.value = null;
+    }
+};
 
 const onSearch = async () => {
-    if (!searchQuery.value) return;
+    if (!searchQuery.value.trim()) {
+        await loadFavoris();
+        return;
+    }
     try {
         const response = await fetch(`/api/search?search=${encodeURIComponent(searchQuery.value)}`);
         const data = await response.json();
         results.value = data;
     } catch (error) {
-        console.error('Erreur lors de la recherche:', error);
     }
 };
 
-onMounted(() => {
+
+
+
+const toggleFavori = async (item: any) => {
+    if (!userSession.value) {
+        return;
+    }
+
+    const isFavori = favoris.value.has(item.ID);
+    const action = isFavori ? "remove" : "add";
+
+    try {
+        const response = await fetch('/api/favoris', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                ID_user: userSession.value.userId,
+                ID_item: item.ID,
+                type: item.type,
+                action: action
+            }),
+        });
+
+        if (response.ok) {
+            if (isFavori) {
+                favoris.value.delete(item.ID);
+                results.value = results.value.filter(fav => fav.ID !== item.ID);
+            } else {
+                favoris.value.add(item.ID);
+            }
+        }
+    } catch (error) {
+    }
+};
+
+const loadFavoris = async () => {
+    if (!userSession.value) return;
+
+    try {
+        const response = await fetch(`/api/favoris?userId=${userSession.value.userId}&fullData=true`);
+        const data = await response.json();
+        results.value = data; 
+        favoris.value = new Set(data.map((fav: any) => fav.ID));
+    } catch (error) {
+    }
+};
+
+onMounted(async () => {
+    await getSession();
+    if (userSession.value) {
+        await loadFavoris();
+    }
     searchInput.value?.focus();
 });
+
+
+
 </script>
 
 <style scoped>
@@ -192,4 +268,23 @@ onMounted(() => {
     color: #555;
     text-align: center;
 }
+
+.favori-icon {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+}
+
+.star-icon {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.2s;
+}
+
+.favori-icon:hover .star-icon {
+    transform: scale(1.1);
+}
+
 </style>

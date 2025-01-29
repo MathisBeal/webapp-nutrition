@@ -4,6 +4,7 @@ import { useRouter } from 'nuxt/app';
 import { isAuthenticated, setAuthenticationStatus } from '@/composables/useAuth';
 import axios from 'axios';
 
+
 const router = useRouter();
 
 // Variable pour contrôler la visibilité de la barre de navigation
@@ -45,11 +46,24 @@ const toggleNav = () => {
 // Surveiller `isAuthenticated` et charger les données utilisateur uniquement si l'utilisateur est connecté
 watch(isAuthenticated, (newValue) => {
   if (newValue) {
+    console.log("Utilisateur connecté, récupération de la session...");
     getSession();
   } else {
+    console.log("Utilisateur déconnecté !");
     userId.value = null;
   }
 });
+
+const checkAuthBeforeNavigation = (page: string) => {
+  console.log(`Navigation vers ${page}...`);
+  console.log(`isAuthenticated:`, isAuthenticated.value);
+  if (!isAuthenticated.value) {
+    console.warn("Utilisateur déconnecté avant la navigation !");
+  } else {
+    console.log("Utilisateur toujours connecté.");
+  }
+};
+
 </script>
 
 <template>
@@ -72,7 +86,7 @@ watch(isAuthenticated, (newValue) => {
         </a>
       </li>
       <li>
-        <a href="/search">
+        <a href="/search" @click="checkAuthBeforeNavigation('Search')">
           <img
             src="/assets/icons/icon_white_search.svg"
             alt="Search Icon"

@@ -4,6 +4,7 @@ import { prisma } from '../db/connection';
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);
   const search = query.search as string | undefined;
+  const userId = query.userId ? Number(query.userId) : null;
 
   const plats = await prisma.plats.findMany({
     where: search
@@ -47,16 +48,27 @@ export default defineEventHandler(async (event) => {
   });
 
 
-  const combinedResults = [
-    ...plats.map((plat) => ({
+
+  const favoris = userId
+  ? await prisma.users_Favoris.findMany({
+      where: { ID_user: Number(userId) },
+      select: { ID_plat: true, ID_aliment: true },
+  })
+  : [];
+
+const favoriIds = new Set(favoris.map(fav => fav.ID_plat || fav.ID_aliment));
+
+const combinedResults = [
+  ...plats.map((plat) => ({
       type: 'plat',
       ID: plat.ID_plat,
       description: plat.description || 'Description non disponible',
       nom_categorie: plat.Plats_Categories?.nom || 'Catégorie inconnue',
       duree: plat.duree || 'Non spécifiée',
       image: '/assets/img/plat.png',
-    })),
-    ...aliments.map((aliment) => ({
+      isFavori: favoriIds.has(plat.ID_plat),
+  })),
+  ...aliments.map((aliment) => ({
       type: 'aliment',
       ID: aliment.ID_aliment,
       nom: aliment.nom,
@@ -66,8 +78,10 @@ export default defineEventHandler(async (event) => {
       lipides: aliment.lipides,
       proteines: aliment.proteines,
       image: aliment.image || '/assets/img/aliment.png',
-    })),
-  ];
+      isFavori: favoriIds.has(aliment.ID_aliment),
+  })),
+];
+
 
 
   return combinedResults;

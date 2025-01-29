@@ -11,6 +11,7 @@ const password = ref('')
 const errorMessage = ref('')
 const router = useRouter()
 
+
 const handleLogin = async () => {
   // Validation basique des champs
   if (!email.value || !password.value) {
