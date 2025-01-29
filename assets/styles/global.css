@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: Roboto, Arial, sans-serif;
 }
 
 .questionnaire-container {
@@ -91,11 +91,9 @@ body {
 
 .accueil {
   padding: 20px;
-  transition: margin-left 0.3s ease; 
+  transition: margin-left 0.3s ease;
 }
 
 .accueil.with-nav {
-  margin-left: 145px; 
+  margin-left: 145px;
 }
-
-
