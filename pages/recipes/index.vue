@@ -1,8 +1,13 @@
 <template>
   <div>
-    <div class="recipe" v-for="(recipe, index) in recipes" :key="recipe.ID_plat" @click="goToRecipe(recipe.ID_plat)">
-      <p>{{ recipe.description }}</p>
-    </div>
+    <NuxtLink
+      v-for="(recipe, index) in recipes"
+      :to="{ name: 'recipes-id_recipe', params: {id_recipe: recipe.ID_plat} } "
+      class="recipe">
+      <p>
+        {{ recipe.description }}
+      </p>
+    </NuxtLink>
   </div>
 </template>
 
@@ -32,6 +37,8 @@ div {
   font-size: 1.5em;
   align-items: center;
   align-content: center;
+  color: initial;
+  text-decoration: none;
 }
 
 .recipe:hover {
