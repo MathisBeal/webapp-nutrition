@@ -6,10 +6,9 @@
         v-for="plat in displayedPlats"
         :key="plat.ID_plat"
         class="plat-item"
-        @click="goToRecipe(plat.ID_plat)"
       >
-        <img alt="Image du plat" class="plat-image" src="/assets/img/plat.png"/>
-        <div class="plat-text">
+        <img alt="Image du plat" class="plat-image" src="/assets/img/plat.png" @click="goToRecipe(plat.ID_plat)"/>
+        <div class="plat-text" @click="goToRecipe(plat.ID_plat)">
           <h2>
             {{ plat.description || 'Description non disponible' }} -
             {{ plat.nom_categorie || 'Catégorie inconnue' }}
@@ -23,6 +22,9 @@
             Durée de préparation : {{ plat.duree || 'Non spécifiée' }}
           </p>
         </div>
+        <div class="favori-icon" @click.stop="toggleFavori(plat)">
+          <img :src="favoris.has(plat.ID_plat) ? filledStarIcon : emptyStarIcon " alt="Favori" class="star-icon">
+        </div>
       </div>
     </div>
   </div>
@@ -30,44 +32,105 @@
 
 
 <script lang="ts" setup>
-import {onMounted, ref} from 'vue';
-import {useAsyncData} from '#app';
-import {isNavVisible} from '@/composables/useNavState';
+import { onMounted, ref } from 'vue';
+import { useAsyncData } from '#app';
+import axios from 'axios';
+import emptyStarIcon from '@/assets/icons/icon_empty_star.svg';
+import filledStarIcon from '@/assets/icons/icon_star.svg';
+import { isNavVisible } from '@/composables/useNavState';
 
-const {data: plats} = await useAsyncData('plats', () => $fetch('/api/plat'));
+const { data: plats } = await useAsyncData('plats', () => $fetch('/api/plat'));
 
 const displayedPlats = ref<any[]>([]);
+const favoris = ref<Set<number>>(new Set());
+const userSession = ref<any>(null);
 const pageSize = 5;
 let currentPage = 1;
 
+const getSession = async () => {
+    try {
+        const response = await axios.get('/api/auth/session');
+        if (response.data && response.data.userId) {
+            userSession.value = response.data;
+            await loadFavoris();
+        } else {
+            userSession.value = null;
+        }
+    } catch (error) {
+        userSession.value = null;
+    }
+};
+
+const loadFavoris = async () => {
+    if (!userSession.value) return;
+
+    try {
+        const response = await fetch(`/api/favoris?userId=${userSession.value.userId}&fullData=true`);
+        const data = await response.json();
+        favoris.value = new Set(data.map((fav: any) => fav.ID));
+    } catch (error) {
+        console.error("Erreur lors du chargement des favoris", error);
+    }
+};
+
+const toggleFavori = async (plat: any) => {
+    if (!userSession.value) {
+        return;
+    }
+
+    const isFavori = favoris.value.has(plat.ID_plat);
+    const action = isFavori ? "remove" : "add";
+
+    try {
+        const response = await fetch('/api/favoris', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                ID_user: userSession.value.userId,
+                ID_item: plat.ID_plat,
+                type: 'plat',
+                action: action
+            }),
+        });
+
+        if (response.ok) {
+            if (isFavori) {
+                favoris.value.delete(plat.ID_plat);
+            } else {
+                favoris.value.add(plat.ID_plat);
+            }
+        }
+    } catch (error) {
+        console.error("Erreur lors de la mise à jour des favoris", error);
+    }
+};
 
 const loadPlats = () => {
-  if (!plats.value) return;
-  const start = (currentPage - 1) * pageSize;
-  const end = currentPage * pageSize;
+    if (!plats.value) return;
+    const start = (currentPage - 1) * pageSize;
+    const end = currentPage * pageSize;
 
-  const newPlats = plats.value.slice(start, end);
-  if (newPlats.length) {
-    displayedPlats.value.push(...newPlats);
-    currentPage++;
-  }
+    const newPlats = plats.value.slice(start, end);
+    if (newPlats.length) {
+        displayedPlats.value.push(...newPlats);
+        currentPage++;
+    }
 };
-
 
 const handleScroll = (event: Event) => {
-  const target = event.target as HTMLElement;
-  if (target.scrollTop + target.clientHeight >= target.scrollHeight - 10) {
-    loadPlats();
-  }
+    const target = event.target as HTMLElement;
+    if (target.scrollTop + target.clientHeight >= target.scrollHeight - 10) {
+        loadPlats();
+    }
 };
 
-
-onMounted(() => {
-  loadPlats();
+onMounted(async () => {
+    await getSession();
+    loadPlats();
 });
 
 function goToRecipe(ID_plat: number) {
-  navigateTo("/recipes/" + ID_plat);
+    navigateTo("/recipes/" + ID_plat);
 }
 
 </script>
@@ -89,7 +152,6 @@ function goToRecipe(ID_plat: number) {
   overflow-y: auto;
 }
 
-
 .plat-item {
   display: flex;
   align-items: flex-start;
@@ -107,48 +169,21 @@ function goToRecipe(ID_plat: number) {
   background-color: #f9f9f9;
 }
 
-.plat-item h2 {
-  margin: 0;
-  font-size: 1.2rem;
+.favori-icon {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
 }
 
-.plat-item p {
-  margin: 5px 0 0;
-  color: #555;
+.star-icon {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.2s;
 }
 
-
-.plat-image {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-.plat-text {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 5px;
-}
-
-.plat-text h2,
-.plat-text p {
-  margin: 0;
-  text-align: left;
-  line-height: 1.2;
-}
-
-.plat-text span {
-  font-size: 0.9rem;
-  color: #999;
-}
-
-
-.icon-horloge {
-  width: 15px;
-  height: 15px;
-  object-fit: cover;
-  border-radius: 8px;
+.favori-icon:hover .star-icon {
+    transform: scale(1.1);
 }
 </style>

@@ -3,7 +3,11 @@
         <input ref="searchInput" v-model="searchQuery" type="text" placeholder="Rechercher..." class="search-bar"
             @keyup.enter="onSearch" />
         <div v-if="results.length" class="result-list">
-            <div v-for="item in results" :key="item.ID" class="result-item">
+            <div v-for="item in results" :key="item.ID" 
+                class="result-item"
+                @click="item.type === 'plat' ? goToRecipe(item.ID) : null"
+                :class="{ 'clickable': item.type === 'plat' }"
+            >
                 <img src="/assets/img/plat.png" alt="Image" class="result-image" />
                 <div class="result-text">
                     <template v-if="item.type === 'plat'">
@@ -28,7 +32,7 @@
                         </p>
                     </template>
                 </div>
-                <div class="favori-icon" @click="toggleFavori(item)">
+                <div class="favori-icon" @click.stop="toggleFavori(item)">
                     <img :src="favoris.has(item.ID) ? filledStarIcon : emptyStarIcon " alt="Favori" class="star-icon">
                 </div>
             </div>
@@ -40,15 +44,12 @@
     </div>
 </template>
 
-
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import { isAuthenticated } from '@/composables/useAuth';
+import { navigateTo } from '#app'; 
 import emptyStarIcon from '@/assets/icons/icon_empty_star.svg';
 import filledStarIcon from '@/assets/icons/icon_star.svg';
-
-
 
 const searchQuery = ref<string>('');
 const results = ref<any[]>([]);
@@ -81,9 +82,6 @@ const onSearch = async () => {
     } catch (error) {
     }
 };
-
-
-
 
 const toggleFavori = async (item: any) => {
     if (!userSession.value) {
@@ -129,6 +127,10 @@ const loadFavoris = async () => {
     }
 };
 
+const goToRecipe = (ID: number) => {
+    navigateTo(`/recipes/${ID}`);
+};
+
 onMounted(async () => {
     await getSession();
     if (userSession.value) {
@@ -136,9 +138,6 @@ onMounted(async () => {
     }
     searchInput.value?.focus();
 });
-
-
-
 </script>
 
 <style scoped>
