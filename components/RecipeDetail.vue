@@ -18,8 +18,8 @@ const rawSteps = recipe.value.etapes || ''; // Assuming `etapes` is a string
 const steps = computed(() =>
   rawSteps
     .split(/\d+\.\s/) // Match numbers followed by a period and space
-    .filter((step) => step.trim() !== '') // Remove empty strings
-    .map((step) => step.trim()) // Trim any extra spaces
+    .filter((step: string) => step.trim() !== '') // Remove empty strings
+    .map((step: string) => step.trim()) // Trim any extra spaces
 );
 </script>
 
