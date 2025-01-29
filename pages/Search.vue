@@ -1,197 +1,120 @@
 <template>
   <div class="search-container">
-      <input ref="searchInput" v-model="searchQuery" type="text" placeholder="Rechercher..." class="search-bar"
-          @keyup.enter="onSearch" />
+    <!-- Barre de recherche -->
+    <input
+      v-model="searchQuery"
+      type="text"
+      placeholder="Rechercher..."
+      class="search-bar"
+      @keyup.enter="onSearch"
+    />
 
-      <div v-if="paginatedResults.length" class="result-list">
-          <div v-for="item in paginatedResults" :key="item.ID" class="result-item">
-              <img src="/assets/img/plat.png" alt="Image" class="result-image" />
-              <div class="result-text">
-                  <template v-if="item.type === 'plat'">
-                      <h2>
-                          {{ item.description || 'Description non disponible' }} - {{ item.nom_categorie || 'Catégorie inconnue' }}
-                      </h2>
-                      <p>
-                          <img src="/assets/img/horloge.png" alt="Icône d'horloge" class="icon-horloge" />
-                          Durée de préparation : {{ item.duree || 'Non spécifiée' }}
-                      </p>
-                  </template>
-
-                  <template v-else-if="item.type === 'aliment'">
-                      <h2>
-                          {{ item.nom }}
-                      </h2>
-                      <p>
-                          Calories : {{ item.calories }} kcal<br />
-                          Glucides : {{ item.glucides }} g<br />
-                          Lipides : {{ item.lipides }} g<br />
-                          Protéines : {{ item.proteines }} g
-                      </p>
-                  </template>
-              </div>
-              <div class="favori-icon" @click="toggleFavori(item)">
-                  <img :src="favoris.has(item.ID) ? '/assets/icons/icon_stats.png' : '/assets/icons/icon_user.png'"
-                      alt="Favori" class="star-icon">
-              </div>
+    <!-- Affichage des résultats avec pagination -->
+    <Pagination
+      :results="results"
+      :itemsPerPage="10"
+      @update:results="filteredResults = $event"
+    >
+      <template #default="{ results }">
+        <div v-for="item in results" :key="item.ID" class="result-item">
+          <img src="/assets/img/plat.png" alt="Image" class="result-image" />
+          <div class="result-text">
+            <template v-if="item.type === 'plat'">
+              <h2>{{ item.description || 'Description non disponible' }} - {{ item.nom_categorie || 'Catégorie inconnue' }}</h2>
+              <p>
+                <img src="/assets/img/horloge.png" alt="Icône d'horloge" class="icon-horloge" />
+                Durée de préparation : {{ item.duree || 'Non spécifiée' }}
+              </p>
+            </template>
+            <template v-else-if="item.type === 'aliment'">
+              <h2>{{ item.nom }}</h2>
+              <p>
+                Calories : {{ item.calories }} kcal<br />
+                Glucides : {{ item.glucides }} g<br />
+                Lipides : {{ item.lipides }} g<br />
+                Protéines : {{ item.proteines }} g
+              </p>
+            </template>
           </div>
-      </div>
+          <div class="favori-icon" @click="toggleFavori(item)">
+            <img :src="favoris.has(item.ID) ? '/assets/icons/icon_stats.png' : '/assets/icons/icon_user.png'" alt="Favori" class="star-icon">
+          </div>
+        </div>
+      </template>
+    </Pagination>
 
-      <!-- PAGINATION -->
-      <div v-if="totalPages > 1" class="pagination">
-          <button @click="prevPage" :disabled="currentPage === 1">Précédent</button>
-          <span>Page {{ currentPage }} / {{ totalPages }}</span>
-          <button @click="nextPage" :disabled="currentPage === totalPages">Suivant</button>
-      </div>
-
-      <div v-else class="no-results">
-          <img src="/assets/icons/icon_search.png" alt="Icône de loupe" class="no-results-icon" />
-          <p class="no-results-text">Aucun résultat</p>
-      </div>
+    <!-- Aucun résultat trouvé -->
+    <div v-if="!filteredResults.length && searchQuery" class="no-results">
+      <img src="/assets/icons/icon_search.png" alt="Icône de loupe" class="no-results-icon" />
+      <p class="no-results-text">Aucun résultat</p>
+    </div>
   </div>
 </template>
 
-<script lang="ts" setup>
-import { ref, computed, onMounted } from 'vue';
+<script setup>
+import { ref } from 'vue';
+import Pagination from '@/components/Pagination.vue';
 
-const searchQuery = ref<string>('');
-const results = ref<any[]>([]);
-const searchInput = ref<HTMLInputElement | null>(null);
-const userSession = ref<any>(null);
-const favoris = ref<Set<number>>(new Set());
-
-// Pagination
-const currentPage = ref(1);
-const itemsPerPage = 10;
-
-const totalPages = computed(() => Math.ceil(results.value.length / itemsPerPage));
-
-const paginatedResults = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage;
-  return results.value.slice(start, start + itemsPerPage);
-});
+const searchQuery = ref('');
+const results = ref([]);
+const filteredResults = ref([]);
+const userSession = ref(null);
+const favoris = ref(new Set());
 
 const loadFavoris = async () => {
-    if (!userSession.value) return;
-
-    try {
-        const response = await fetch(`/api/favoris?userId=${userSession.value.userId}&fullData=true`);
-        const data = await response.json();
-        results.value = data;
-        favoris.value = new Set(data.map((fav: any) => fav.ID));
-    } catch (error) {
-    }
+  if (!userSession.value) return;
+  try {
+    const response = await fetch(`/api/favoris?userId=${userSession.value.userId}&fullData=true`);
+    results.value = await response.json();
+    favoris.value = new Set(results.value.map(fav => fav.ID));
+  } catch (error) {
+    console.error("Erreur lors du chargement des favoris :", error);
+  }
 };
 
+// Recherche de données
 const onSearch = async () => {
   if (!searchQuery.value.trim()) {
-      await loadFavoris();
-      return;
+    await loadFavoris();
+    return;
   }
   try {
-      const response = await fetch(`/api/search?search=${encodeURIComponent(searchQuery.value)}`);
-      const data = await response.json();
-      results.value = data;
-      currentPage.value = 1; // Reset page to 1 after search
+    const response = await fetch(`/api/search?search=${encodeURIComponent(searchQuery.value)}`);
+    results.value = await response.json();
   } catch (error) {
+    console.error("Erreur lors de la recherche :", error);
   }
 };
 
-const toggleFavori = async (item: any) => {
-  if (!userSession.value) {
-      return;
-  }
-
+// Ajouter / supprimer un favori
+const toggleFavori = async (item) => {
+  if (!userSession.value) return;
   const isFavori = favoris.value.has(item.ID);
   const action = isFavori ? "remove" : "add";
 
   try {
-      const response = await fetch('/api/favoris', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-              ID_user: userSession.value.userId,
-              ID_item: item.ID,
-              type: item.type,
-              action: action
-          }),
-      });
+    await fetch('/api/favoris', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ID_user: userSession.value.userId, ID_item: item.ID, type: item.type, action: action }),
+    });
 
-      if (response.ok) {
-          if (isFavori) {
-              favoris.value.delete(item.ID);
-              results.value = results.value.filter(fav => fav.ID !== item.ID);
-          } else {
-              favoris.value.add(item.ID);
-          }
-      }
+    favoris.value[isFavori ? 'delete' : 'add'](item.ID);
   } catch (error) {
+    console.error("Erreur lors de la mise à jour des favoris :", error);
   }
 };
-
-// Pagination controls
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-      currentPage.value++;
-      const resultList = document.querySelector('.result-list');
-      if (resultList) {
-          resultList.scrollTop = 0; // Remonter le défilement de la liste
-      }
-  }
-};
-
-const prevPage = () => {
-  if (currentPage.value > 1) {
-      currentPage.value--;
-      const resultList = document.querySelector('.result-list');
-      if (resultList) {
-          resultList.scrollTop = 0; // Remonter le défilement de la liste
-      }
-  }
-};
-
-
-onMounted(() => {
-  searchInput.value?.focus();
-});
 </script>
 
+
 <style scoped>
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  margin-top: 20px;
-  margin-bottom: 40px;
-}
-
-.pagination button {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: #3b82f6;
-  color: white;
-  font-size: 14px;
-}
-
-.pagination button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.pagination span {
-  font-size: 16px;
-  color: #333;
-  font-weight: bold;
-}
-
 .search-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   padding-top: 30px;
+  padding-left: 200px;
   background-color: #f3f4f6;
   height: 95vh;
   gap: 20px;
@@ -214,18 +137,6 @@ onMounted(() => {
   box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
 }
 
-.result-list {
-  height: 600px;
-  overflow-y: hidden;
-  display: flex;
-  flex-direction: column;
-  width: 800px;
-  gap: 20px;
-  padding: 20px;
-  transition: overflow-y 0.3s ease;
-  scroll-behavior: smooth; /* Ajoutez cette ligne */
-}
-
 .result-list:hover {
 overflow-y: auto;
 }
@@ -233,11 +144,11 @@ overflow-y: auto;
 .result-item {
   display: flex;
   align-items: flex-start;
-  gap: 15px;
+  gap: 30px;
   padding: 20px;
   border-radius: 12px;
-  background-color: #fff;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd; /* Ajout de la bordure */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ajout de l'ombre */
   transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
