@@ -21,6 +21,20 @@ const steps = computed(() =>
     .filter((step: string) => step.trim() !== '') // Remove empty strings
     .map((step: string) => step.trim()) // Trim any extra spaces
 );
+
+let img: Blob;
+let url: string;
+let imageFetched: boolean = true;
+try {
+  console.log(recipe.value.images);
+  img = await $fetch(recipe.value.images);
+  url = URL.createObjectURL(img);
+} catch (e) {
+  console.error('Fetching image error: Address may point to nothing or a not image element\n', e);
+  imageFetched = false;
+}
+
+
 </script>
 
 <template>
@@ -29,11 +43,13 @@ const steps = computed(() =>
     <h1 class="recipe_name">{{ recipe?.description || 'Recipe' }}</h1>
 
     <!-- Recipe Image -->
-    <img
-      :alt="'Image of ' + recipe?.description"
-      class="recipe_image"
-      src="assets/img/default_recipe.jpeg"
-    />
+    <!--    <img
+          :alt="'Image of ' + recipe?.description"
+          class="recipe_image"
+          :src="recipe?.images"
+        >-->
+    <img v-if="imageFetched" :alt="'Image of ' + recipe?.description" class="recipe_image" :src="url">
+    <img v-else alt="Default recipe image" class="recipe_image" src="assets/img/plat.png">
 
     <div class="recipe_text">
       <!-- Ingredients List -->
