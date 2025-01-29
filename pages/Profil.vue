@@ -37,6 +37,30 @@ const field = (name: string, value: string | number, type: string, options?: Opt
   }
 }
 
+const createFields = (user: Users) => {
+  return [
+    field('Nom', user.nom, 'text'),
+    field('Prénom', user.prenom, 'text'),
+    field('Email', user.mail, 'email'),
+    field('Poids', Number(user.poids), 'number'),
+    field('Taille', Number(user.taille), 'number'),
+    field('IMC', Number(user.imc), 'number'),
+    field('Régime Alimentaire', user.regimeAlimentaire.toString(), 'select', [
+      { value: '1', text: 'Général' },
+      { value: '2', text: 'Végétarisme' },
+      { value: '3', text: 'Véganisme' }
+    ]),
+    field('Genre', user.sexe, 'select', [
+      { value: 'homme', text: 'Homme' },
+      { value: 'femme', text: 'Femme' },
+      { value: 'autres', text: 'Autres' }
+    ]),
+    field('Âge', user.age.toString(), 'number'),
+    field('Mot de Passe', '', 'password'),
+    field('Confirmer le mot de passe', '', 'hidden'),
+  ];
+}
+
 const enableConfirmField = () => {
   const confirm_field = fields.value.find(f => f.name === 'Confirmer le mot de passe');
   if (!confirm_field) { return; }
@@ -78,7 +102,47 @@ const verifyPassword = (): boolean => {
 /* ------------ Variables --------------*/
 
 const profil: Users = null; //Get user (pas besoin d'etre un ref)
+const userId = 1; //Get user id
 
+
+const fetchUserData = async (): Promise<Users | undefined> => {
+  try {
+    const response = await fetch('/user/get_data', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ id: userId })
+    });
+
+    return await response.json();
+
+    fields.value = [
+      field('Nom', userData.nom, 'text'),
+      field('Prénom', userData.prenom, 'text'),
+      field('Email', userData.mail, 'email'),
+      field('Poids', userData.poids.toString(), 'number'),
+      field('Taille', userData.taille.toString(), 'number'),
+      field('IMC', userData.imc.toString(), 'number'),
+      field('Régime Alimentaire', userData.regimeAlimentaire.toString(), 'select', [
+        { value: '1', text: 'Général' },
+        { value: '2', text: 'Végétarisme' },
+        { value: '3', text: 'Véganisme' }
+      ]),
+      field('Genre', userData.sexe, 'select', [
+        { value: 'homme', text: 'Homme' },
+        { value: 'femme', text: 'Femme' },
+        { value: 'autres', text: 'Autres' }
+      ]),
+      field('Âge', userData.age.toString(), 'number'),
+      field('Mot de Passe', '', 'password'),
+      field('Confirmer le mot de passe', '', 'hidden'),
+    ];
+  } catch (error) {
+    console.error('Failed to fetch user data:', error);
+    return undefined;
+  }
+};
 // const fields = ref<Field[]>([
 //   field('Nom', profil.nom, 'text'),
 //   field('Prénom', profil.prenom, 'text'),
@@ -149,6 +213,21 @@ const updateProfile = () => {
 
   console.log('Profile updated');
 };
+
+onMounted(async () => {
+  const profil = await fetchUserData();
+
+  if (!profil) {
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: 'Impossible de récupérer les données de l\'utilisateur.'
+    });
+    return;
+  }
+
+  fields.value = createFields(profil);
+});
 </script>
 
 <style scoped>
