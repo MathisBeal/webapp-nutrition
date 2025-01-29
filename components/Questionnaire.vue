@@ -102,8 +102,6 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
-
 const props = defineProps({
   userData: {
     type: Object,
@@ -112,8 +110,6 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['submitQuestionnaire']);
-
-const router = useRouter();
 
 const questions = ref([
   { question: 'Quel est votre âge ?', options: [] },
