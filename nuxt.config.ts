@@ -8,6 +8,10 @@ export default defineNuxtConfig({
     typeCheck: true
   },
 
-  modules: ["@nuxt/test-utils/module", "@nuxt/eslint"],
+  modules: [
+    "@nuxt/test-utils/module",
+    "@nuxt/eslint",
+    "nuxt3-notifications", // Docs : https://github.com/kyvg/vue3-notification
+  ],
   css: ['@/assets/styles/global.css'],
 });
