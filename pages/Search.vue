@@ -29,9 +29,7 @@
                     </template>
                 </div>
                 <div class="favori-icon" @click="toggleFavori(item)">
-                    <img :src="favoris.has(item.ID) ? '/assets/icons/icon_stats.png' : '/assets/icons/icon_user.png'" 
-                    alt="Favori"
-                    class="star-icon">
+                    <img :src="favoris.has(item.ID) ? filledStarIcon : emptyStarIcon " alt="Favori" class="star-icon">
                 </div>
             </div>
         </div>
@@ -47,6 +45,10 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { isAuthenticated } from '@/composables/useAuth';
+import emptyStarIcon from '@/assets/icons/icon_empty_star.svg';
+import filledStarIcon from '@/assets/icons/icon_star.svg';
+
+
 
 const searchQuery = ref<string>('');
 const results = ref<any[]>([]);
