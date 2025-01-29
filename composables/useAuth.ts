@@ -34,3 +34,12 @@ export const clearSession = () => {
   userId.value = null;
   setAuthenticationStatus(false);
 };
+
+export const logout = async () => {
+  try {
+    await axios.post('/api/auth/logout');
+    clearSession();
+  } catch (error) {
+    console.error('Erreur lors de la déconnexion :', error);
+  }
+};
