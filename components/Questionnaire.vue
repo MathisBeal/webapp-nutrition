@@ -16,6 +16,7 @@
               id="age"
               v-model="age"
               placeholder="Entrez votre âge"
+              ref="ageInput"
             />
             <p v-if="age !== null && (age <= 0 || age > 100)" class="error">
               Votre âge semble incorrect, veuillez vérifier votre saisie.
@@ -31,6 +32,7 @@
               id="height"
               v-model="height"
               placeholder="Entrez votre taille en cm"
+              ref="heightInput"
             />
             <p v-if="height !== null && (height <= 50 || height > 250)" class="error">
               Votre taille semble incorrecte, veuillez vérifier votre saisie.
@@ -46,6 +48,7 @@
               id="weight"
               v-model="weight"
               placeholder="Entrez votre poids en kg"
+              ref="weightInput"
             />
             <p v-if="weight !== null && (weight <= 20 || weight > 300)" class="error">
               Votre poids semble incorrecte, veuillez vérifier votre saisie.
@@ -65,6 +68,7 @@
               name="question"
               :value="option"
               v-model="selectedOption[currentQuestionIndex]"
+              ref="optionInput"
             />
             <label :for="'option-' + index">{{ option }}</label>
           </div>
@@ -102,6 +106,8 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed, watch, nextTick, onMounted } from 'vue';
+
 const props = defineProps({
   userData: {
     type: Object,
@@ -121,6 +127,10 @@ const questions = ref([
     options: [],
   },
   {
+    question: 'Êtes-vous allergique à un de ces aliments ?',
+    options: ['Aucun'],
+  },
+  {
     question:
       'Êtes-vous intéressé par un plan de nutrition personnalisé pour perdre, maintenir ou gagner du poids ?',
     options: [
@@ -130,10 +140,6 @@ const questions = ref([
       'Je ne sais pas',
     ],
   },
-  {
-    question: 'Êtes-vous allergique à un de ces aliments ?',
-    options: [],
-  },
 ]);
 
 const selectedOption = ref<(string | null)[]>(questions.value.map(() => null));
@@ -142,17 +148,25 @@ const height = ref<number | null>(null);
 const weight = ref<number | null>(null);
 const age = ref<number | null>(null);
 
+const ageInput = ref<HTMLInputElement | null>(null);
+const heightInput = ref<HTMLInputElement | null>(null);
+const weightInput = ref<HTMLInputElement | null>(null);
+
 const isNextEnabled = computed(() => {
-  if (currentQuestionIndex.value === 0) {
-    return age.value !== null && age.value > 0 && age.value <= 100;
-  }
-  if (currentQuestionIndex.value === 2) {
-    return height.value !== null && height.value > 50 && height.value <= 250;
-  }
-  if (currentQuestionIndex.value === 3) {
-    return weight.value !== null && weight.value > 20 && weight.value <= 300;
-  }
-  return selectedOption.value[currentQuestionIndex.value] !== null;
+  const enabled = (() => {
+    if (currentQuestionIndex.value === 0) {
+      return age.value !== null && age.value > 0 && age.value <= 100;
+    }
+    if (currentQuestionIndex.value === 2) {
+      return height.value !== null && height.value > 50 && height.value <= 250;
+    }
+    if (currentQuestionIndex.value === 3) {
+      return weight.value !== null && weight.value > 20 && weight.value <= 300;
+    }
+    return selectedOption.value[currentQuestionIndex.value] !== null;
+  })();
+  console.debug(`isNextEnabled: ${enabled}`);
+  return enabled;
 });
 
 const submitAnswers = () => {
@@ -195,6 +209,7 @@ const fetchOptions = async () => {
       const allergyQuestion = questions.value.find(q => q.question === 'Êtes-vous allergique à un de ces aliments ?');
       if (allergyQuestion) {
         allergyQuestion.options = allergyOptions;
+        allergyQuestion.options.unshift('Aucun');
       }
     } else {
       console.error('Erreur lors de la récupération des options:', data.message);
@@ -205,13 +220,40 @@ const fetchOptions = async () => {
 };
 
 const handleEnterKey = () => {
+  console.debug('Enter key pressed');
   if (isNextEnabled.value) {
-    nextQuestion();
+    console.debug('isNextEnabled is true, moving to next question');
+    if (currentQuestionIndex.value < questions.value.length - 1) {
+      nextQuestion();
+    } else {
+      submitAnswers();
+    }
+  } else {
+    console.debug('isNextEnabled is false, cannot move to next question');
   }
 };
 
+// Watcher pour focus le champ input ou sélectionner le premier élément
+watch(currentQuestionIndex, async (newIndex) => {
+  await nextTick();
+  if (newIndex === 0) {
+    ageInput.value?.focus();
+  } else if (newIndex === 2) {
+    heightInput.value?.focus();
+  } else if (newIndex === 3) {
+    weightInput.value?.focus();
+  } else {
+    selectedOption.value[newIndex] = questions.value[newIndex].options[0];
+    console.debug(`Default option selected for question ${newIndex}: ${questions.value[newIndex].options[0]}`);
+  }
+});
+
 onMounted(() => {
   fetchOptions();
+  // Focus sur le champ âge dès le chargement de la première question
+  nextTick(() => {
+    ageInput.value?.focus();
+  });
 });
 </script>
 
