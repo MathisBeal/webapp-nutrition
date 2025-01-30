@@ -35,7 +35,6 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
 import { useAsyncData } from '#app';
-import axios from 'axios';
 import { Star, StarOff } from "lucide-vue-next";
 import { isNavVisible } from '@/composables/useNavState';
 
@@ -49,13 +48,9 @@ let currentPage = 1;
 
 const getSession = async () => {
     try {
-        const response = await axios.get('/api/auth/session');
-        if (response.data && response.data.userId) {
-            userSession.value = response.data;
-            await loadFavoris();
-        } else {
-            userSession.value = null;
-        }
+        const response = await fetch('/api/auth/session'); 
+        const data = await response.json();
+        userSession.value = data?.userId ? data : null;
     } catch (error) {
         userSession.value = null;
     }

@@ -47,7 +47,6 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
 import { navigateTo } from '#app'; 
 import { Star, StarOff } from "lucide-vue-next";
 
@@ -61,16 +60,14 @@ const favoris = ref<Set<number>>(new Set());
 
 const getSession = async () => {
     try {
-        const response = await axios.get('/api/auth/session');
-        if (response.data && response.data.userId) {
-            userSession.value = response.data;
-        } else {
-            userSession.value = null;
-        }
+        const response = await fetch('/api/auth/session'); 
+        const data = await response.json();
+        userSession.value = data?.userId ? data : null;
     } catch (error) {
         userSession.value = null;
     }
 };
+
 
 const onSearch = async () => {
     if (!searchQuery.value.trim()) {
