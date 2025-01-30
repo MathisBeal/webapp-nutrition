@@ -51,6 +51,9 @@ const getSession = async () => {
         const response = await fetch('/api/auth/session'); 
         const data = await response.json();
         userSession.value = data?.userId ? data : null;
+        if (userSession.value) {
+            await loadFavoris(); 
+        }
     } catch (error) {
         userSession.value = null;
     }
@@ -134,13 +137,46 @@ function goToRecipe(ID_plat: number) {
 
 <style>
 .plat-list {
-  height: 600px;
+  height: 60vh;
   overflow-y: hidden;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 20px;
+  gap: 2vh;
+  padding: 2vh;
   transition: overflow-y 0.3s ease;
+}
+
+.plat-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; 
+  gap: 0.5vh;
+}
+
+.plat-text h2,
+.plat-text p {
+  margin: 0; 
+  text-align: left; 
+  line-height: 1.2; 
+}
+
+.plat-text span {
+  font-size: 0.9rem;
+  color: #999;
+}
+
+.icon-horloge {
+  width: 1.5vw;
+  height: 1.5vw;
+  object-fit: cover;
+  border-radius: 0.5em;
+}
+
+.plat-image {
+  width: 7vw;
+  height: 7vw;
+  object-fit: cover;
+  border-radius: 0.5em;
 }
 
 .plat-list:hover {
@@ -150,17 +186,17 @@ function goToRecipe(ID_plat: number) {
 .plat-item {
   display: flex;
   align-items: flex-start;
-  gap: 15px;
-  padding: 20px;
-  border-radius: 12px;
+  gap: 1vw;
+  padding: 2vh;
+  border-radius: 1em;
   background-color: #fff;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.4vh 0.6vh rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
 .plat-item:hover {
   transform: scale(1.01);
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0.6vh 1vh rgba(0, 0, 0, 0.15);
   background-color: #f9f9f9;
 }
 
@@ -173,8 +209,8 @@ function goToRecipe(ID_plat: number) {
 }
 
 .star-icon {
-    width: 24px;
-    height: 24px;
+    width: 1.5vw;
+    height: 1.5vw;
     transition: transform 0.2s;
     color: #FFD700; 
 }
@@ -186,5 +222,5 @@ function goToRecipe(ID_plat: number) {
 .favori-icon:hover .star-icon {
     transform: scale(1.1);
 }
-
 </style>
+
