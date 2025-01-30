@@ -33,8 +33,8 @@
                     </template>
                 </div>
                 <div class="favori-icon" @click.stop="toggleFavori(item)">
-                    <Star v-if="favoris.has(item.ID)" class="star-icon filled" />
-                    <StarOff v-else class="star-icon empty" />
+                    <IconStar v-if="favoris.has(item.ID)" class="star-icon filled" />
+                    <IconStarOff v-else class="star-icon empty" />
                 </div>
             </div>
         </div>
@@ -48,7 +48,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import { navigateTo } from '#app'; 
-import { Star, StarOff } from "lucide-vue-next";
+
 
 const searchQuery = ref<string>('');
 const results = ref<any[]>([]);

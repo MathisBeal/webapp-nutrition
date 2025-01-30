@@ -23,8 +23,8 @@
           </p>
         </div>
         <div class="favori-icon" @click.stop="toggleFavori(plat)">
-          <Star v-if="favoris.has(plat.ID_plat)" class="star-icon filled" />
-          <StarOff v-else class="star-icon empty" />
+          <IconStar v-if="favoris.has(plat.ID_plat)" class="star-icon filled" />
+          <IconStarOff v-else class="star-icon empty" />
         </div>
       </div>
     </div>
@@ -35,7 +35,6 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
 import { useAsyncData } from '#app';
-import { Star, StarOff } from "lucide-vue-next";
 import { isNavVisible } from '@/composables/useNavState';
 
 const { data: plats } = await useAsyncData('plats', () => $fetch('/api/plat'));
