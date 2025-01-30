@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 const props = defineProps({
   ingredient: {
     type: Object,
@@ -6,6 +6,7 @@ const props = defineProps({
   }
 })
 
+const id_alim = props.ingredient.ID_aliment;
 const nom = props.ingredient.Aliments.nom;
 const qty = Number.parseFloat(props.ingredient.Aliments.quantite_base) * Number.parseFloat(props.ingredient.multiplicateur_quantite);
 const unite = props.ingredient.Aliments.unite;
@@ -14,7 +15,9 @@ const unite = props.ingredient.Aliments.unite;
 
 <template>
   <div class="ingredient">
-    <img src="assets/img/ingredient-placeholder.jpg" class="ingredient-img" />
+    <NuxtLink :to="{name: 'aliments-id_aliment', params: {id_aliment: id_alim}}">
+      <img class="ingredient-img" src="assets/img/ingredient-placeholder.jpg"/>
+    </NuxtLink>
     <p class="ingredient-text"><strong>{{ nom }}</strong>: {{ qty }} {{ unite }}</p>
   </div>
 </template>
@@ -39,4 +42,9 @@ const unite = props.ingredient.Aliments.unite;
 .ingredient-text {
   margin: 0 1em;
 }
+
+a {
+  line-height: 0;
+}
+
 </style>

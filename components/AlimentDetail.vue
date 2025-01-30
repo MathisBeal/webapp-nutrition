@@ -85,10 +85,10 @@ const aliment = computed(() => props.aliment_data || {});
   margin: 0 auto;
   background: #f8f9fa;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  text-align: center;
 }
 
 .aliment_name {
-  text-align: center;
   margin: 0 0 0.5em 0;
   padding: 0.5em 0 0 0;
 }
