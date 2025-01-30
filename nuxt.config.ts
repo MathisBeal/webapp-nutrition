@@ -24,7 +24,4 @@ export default defineNuxtConfig({
     namePrefix: 'Icon',
   }
 
-  lucide: {
-    namePrefix: 'Icon',
-  }
 });

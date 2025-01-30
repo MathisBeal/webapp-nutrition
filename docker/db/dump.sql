@@ -122,7 +122,7 @@ VALUES (1, 'Pomme', 1,'pièce', 52.00, 14.00, 0.20, 0.30, 'image_pomme.jpg'),
        (72, 'Confiture de fraises (100 g)', 100,'g', 250.00, 65.00, 0.10, 0.40, 'image_confiture_fraises.jpg'),
        (73, 'Beurre de cacahuète (100 g)', 100,'g', 589.00, 19.60, 50.00, 25.00, 'image_beurre_cacahuete.jpg'),
        (74, 'Crème fraîche (100 ml)', 100,'ml', 292.00, 3.00, 30.00, 2.40, 'image_creme_fraiche.jpg'),
-       (75, 'Lait d\'amande (100 ml)', 100,'ml', 17.00, 0.30, 1.00, 0.60, 'image_lait_amande.jpg'),
+       (75, 'Lait d amande (100 ml)', 100,'ml', 17.00, 0.30, 1.00, 0.60, 'image_lait_amande.jpg'),
        (76, 'Lait de coco (100 ml)', 100,'ml', 230.00, 6.00, 24.00, 2.30, 'image_lait_coco.jpg'),
        (77, 'Tofu (100 g)', 100,'g', 144.00, 1.90, 8.00, 15.00, 'image_tofu.jpg'),
        (78, 'Seitan (100 g)', 100,'g', 120.00, 6.00, 1.00, 21.00, 'image_seitan.jpg'),
@@ -232,7 +232,6 @@ CREATE TABLE `Ingredients_Recettes`
   PRIMARY KEY (`ID_plat`, `ID_aliment`),
   KEY `fk_ingredient_de_recette_aliment` (`ID_aliment`),
   KEY `fk_ingredient_de_recette_plat` (`ID_plat`),
-  KEY `fk_ingredient_de_recette_plat` (`ID_plat`),
   CONSTRAINT `fk_ingredient_de_recette_aliment` FOREIGN KEY (`ID_aliment`) REFERENCES `Aliments` (`ID_aliment`),
   CONSTRAINT `fk_ingredient_de_recette_plat` FOREIGN KEY (`ID_plat`) REFERENCES `Plats` (`ID_plat`)
 ) ENGINE = InnoDB
@@ -319,7 +318,6 @@ CREATE TABLE `Plats`
   `ID_categorie` int                                                           NOT NULL,
   PRIMARY KEY (`ID_plat`),
   KEY `fk_plat_categorie` (`ID_categorie`),
-  KEY `Plats_duree_idx` (`duree`),
   KEY `Plats_duree_idx` (`duree`),
   CONSTRAINT `fk_plat_categorie` FOREIGN KEY (`ID_categorie`) REFERENCES `Plats_Categories` (`ID_categorie`)
 ) ENGINE = InnoDB
@@ -770,8 +768,6 @@ CREATE TABLE `Users_Alimentations`
   KEY `fk_alimentation_moment` (`ID_moment`),
   KEY `fk_alimentation_plat` (`ID_plat`),
   KEY `fk_alimentation_user` (`ID_user`),
-  KEY `fk_alimentation_plat` (`ID_plat`),
-  KEY `fk_alimentation_user` (`ID_user`),
   CONSTRAINT `fk_alimentation_aliment` FOREIGN KEY (`ID_aliment`) REFERENCES `Aliments` (`ID_aliment`),
   CONSTRAINT `fk_alimentation_moment` FOREIGN KEY (`ID_moment`) REFERENCES `Day_Sections` (`ID_moments`),
   CONSTRAINT `fk_alimentation_plat` FOREIGN KEY (`ID_plat`) REFERENCES `Plats` (`ID_plat`),
@@ -807,8 +803,6 @@ CREATE TABLE `Users_Favoris`
   `ID_aliment` int DEFAULT NULL,
   PRIMARY KEY (`ID_favoris`),
   KEY `fk_favoris_aliment` (`ID_aliment`),
-  KEY `fk_favoris_plat` (`ID_plat`),
-  KEY `fk_favoris_user` (`ID_user`),
   KEY `fk_favoris_plat` (`ID_plat`),
   KEY `fk_favoris_user` (`ID_user`),
   CONSTRAINT `fk_favoris_aliment` FOREIGN KEY (`ID_aliment`) REFERENCES `Aliments` (`ID_aliment`),
@@ -874,7 +868,6 @@ CREATE TABLE `Users_restrictions`
   `ID_restriction` int NOT NULL,
   PRIMARY KEY (`ID_user`, `ID_restriction`),
   KEY `fk_user_restriction_restriction` (`ID_restriction`),
-  KEY `fk_user_restriction_user` (`ID_user`),
   KEY `fk_user_restriction_user` (`ID_user`),
   CONSTRAINT `fk_user_restriction_restriction` FOREIGN KEY (`ID_restriction`) REFERENCES `Restriction_Types` (`ID_restriction`),
   CONSTRAINT `fk_user_restriction_user` FOREIGN KEY (`ID_user`) REFERENCES `Users` (`ID_user`)
