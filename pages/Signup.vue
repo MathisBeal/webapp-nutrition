@@ -3,8 +3,8 @@
     <!-- Affichage conditionnel basé sur l'état -->
     <signUp
       v-if="currentStep === 'signUp'"
-      @signupSuccess="goToQuestionnaire"
       :userData="userData"
+      @signupSuccess="goToQuestionnaire"
     />
     <Questionnaire
       v-else-if="currentStep === 'Questionnaire'"
@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import { type User } from '@/types/User';
+import {type User} from '@/types/User';
 
 const currentStep = ref('signUp');
 const userData = ref<User>({
@@ -39,7 +39,7 @@ const goToQuestionnaire = () => {
 // Fonction pour soumettre les réponses du questionnaire
 const submitQuestionnaire = async () => {
   try {
-    const { data: response } = await useFetch('/api/user/', {
+    const {data: response} = await useFetch('/api/user/', {
       method: 'POST',
       body: userData.value,
     });

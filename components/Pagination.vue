@@ -1,24 +1,24 @@
 <template>
   <div class="pagination-container">
     <!-- Liste des résultats paginés avec un scroll interne -->
-    <div class="result-list" ref="resultList">
+    <div ref="resultList" class="result-list">
       <slot :results="paginatedResults"></slot>
     </div>
 
     <!-- Pagination -->
     <div v-if="totalPages > 1" class="pagination">
-      <button @click="prevPage" :disabled="currentPage === 1">Précédent</button>
+      <button :disabled="currentPage === 1" @click="prevPage">Précédent</button>
       <span>Page {{ currentPage }} / {{ totalPages }}</span>
-      <button @click="nextPage" :disabled="currentPage === totalPages">Suivant</button>
+      <button :disabled="currentPage === totalPages" @click="nextPage">Suivant</button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, watch, defineProps, defineEmits, onMounted } from 'vue';
+import {computed, defineEmits, defineProps, onMounted, ref, watch} from 'vue';
 
 const props = defineProps({
-  results: Array, 
+  results: Array,
   itemsPerPage: {
     type: Number,
     default: 10

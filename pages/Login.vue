@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { useRouter } from 'nuxt/app'
-import { setAuthenticationStatus } from '@/composables/useAuth'
+import {ref} from 'vue'
+import {useRouter} from 'nuxt/app'
+import {setAuthenticationStatus} from '@/composables/useAuth'
 
 // Variables et gestion de la logique
 const email = ref('')
@@ -50,7 +50,7 @@ const handleLogin = async () => {
 <template>
   <div class="login-page">
     <h1 class="title">Connexion</h1>
-    <form @submit.prevent="handleLogin" class="login-form">
+    <form class="login-form" @submit.prevent="handleLogin">
       <!-- Message d'erreur général -->
       <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
 
@@ -58,11 +58,11 @@ const handleLogin = async () => {
       <div class="form-group">
         <label for="email">Email</label>
         <input
-          type="email"
           id="email"
           v-model="email"
-          placeholder="Entrez votre email"
           class="input"
+          placeholder="Entrez votre email"
+          type="email"
         />
       </div>
 
@@ -70,15 +70,15 @@ const handleLogin = async () => {
       <div class="form-group">
         <label for="password">Mot de passe</label>
         <input
-          type="password"
           id="password"
           v-model="password"
-          placeholder="Entrez votre mot de passe"
           class="input"
+          placeholder="Entrez votre mot de passe"
+          type="password"
         />
       </div>
 
-      <button type="submit" class="btn">Se connecter</button>
+      <button class="btn" type="submit">Se connecter</button>
     </form>
 
     <p class="signup-link">
@@ -144,13 +144,6 @@ label {
   color: red;
   margin-bottom: 15px;
   font-size: 14px;
-}
-
-.auth-status {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 16px;
-  color: #007BFF;
 }
 
 .signup-link {

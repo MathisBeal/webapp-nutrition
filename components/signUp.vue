@@ -1,66 +1,66 @@
 <template>
   <div class="signup-page">
     <h1 class="title">Créer un compte</h1>
-    <form @submit.prevent="handleSignup" class="signup-form">
+    <form class="signup-form" @submit.prevent="handleSignup">
       <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
       <p v-if="successMessage" class="success">{{ successMessage }}</p>
 
       <div class="form-group">
         <label for="name">Nom</label>
         <input
-          type="text"
           id="lastName"
           v-model="lastName"
-          placeholder="Entrez votre nom"
           class="input"
+          placeholder="Entrez votre nom"
+          type="text"
         />
       </div>
 
       <div class="form-group">
         <label for="name">prenom</label>
         <input
-          type="text"
           id="name"
           v-model="name"
-          placeholder="Entrez votre prenom"
           class="input"
+          placeholder="Entrez votre prenom"
+          type="text"
         />
       </div>
 
       <div class="form-group">
         <label for="email">Email</label>
         <input
-          type="email"
           id="email"
           v-model="email"
-          placeholder="Entrez votre email"
           class="input"
+          placeholder="Entrez votre email"
+          type="email"
         />
       </div>
 
       <div class="form-group">
         <label for="password">Mot de passe</label>
         <input
-          type="password"
           id="password"
-          minlength="4"
           v-model="password"
-          placeholder="Entrez votre mot de passe"
           class="input"
+          minlength="4"
+          placeholder="Entrez votre mot de passe"
+          type="password"
         />
       </div>
 
       <div class="form-group">
         <label for="confirmPassword">Confirmez le mot de passe</label>
         <input
-          type="password"
           id="confirmPassword"
           v-model="confirmPassword"
-          placeholder="Confirmez votre mot de passe"
           class="input"
+          placeholder="Confirmez votre mot de passe"
+          type="password"
         />
       </div>
-      <button type="submit" class="btn">S'inscrire</button>
+      <button class="btn" type="submit">S'inscrire</button>
     </form>
     <p class="login-link">
       Vous avez déjà un compte ?
@@ -70,7 +70,7 @@
 </template>
 
 <script lang="ts" setup>
-import { type User } from '@/types/User';
+import {type User} from '@/types/User';
 
 const props = defineProps({
   userData: {
@@ -101,7 +101,7 @@ const handleSignup = async () => {
     errorMessage.value = 'Adresse e-mail invalide.';
     return;
   }
- if (password.value !== confirmPassword.value) {
+  if (password.value !== confirmPassword.value) {
     errorMessage.value = 'Les mots de passe ne correspondent pas.';
     return;
   }
@@ -117,7 +117,7 @@ const handleSignup = async () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email: email.value }),
+      body: JSON.stringify({email: email.value}),
     });
 
     const data = await response.json();

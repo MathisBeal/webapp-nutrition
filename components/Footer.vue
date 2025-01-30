@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import icon_home from "assets/icons/icon_home.svg";
 import icon_search from "assets/icons/icon_white_search.svg";
 import icon_stats from "assets/icons/icon_stats.png";
@@ -33,6 +33,6 @@ a {
 a:hover {
   text-decoration: none;
   border-radius: 25%;
-  box-shadow: 0 0 5px rgba(40,40,40,0.71);
+  box-shadow: 0 0 5px rgba(40, 40, 40, 0.71);
 }
 </style>

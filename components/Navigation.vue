@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { getSession, logout, isAuthenticated, userId } from '@/composables/useAuth';
+import {getSession, isAuthenticated, logout, userId} from '@/composables/useAuth';
 
 
 const router = useRouter();
@@ -44,53 +44,53 @@ const checkAuthBeforeNavigation = (page: string) => {
 <template>
   <nav v-if="isNavVisible">
     <img
-      src="/assets/icons/icon_list-white.png"
       alt="Settings Button"
-      @click="toggleNav"
       class="settings-button"
+      src="/assets/icons/icon_list-white.png"
+      @click="toggleNav"
     />
     <ul>
       <li>
         <a href="/home">
           <img
-            src="/assets/icons/icon_home.svg"
             alt="Home Icon"
             class="nav-icon"
+            src="/assets/icons/icon_home.svg"
           />
         </a>
       </li>
       <li>
         <a href="/search" @click="checkAuthBeforeNavigation('Search')">
           <img
-            src="/assets/icons/icon_white_search.svg"
             alt="Search Icon"
             class="nva-icon"
+            src="/assets/icons/icon_white_search.svg"
           />
         </a>
       </li>
       <li>
         <a href="/stats">
           <img
-            src="/assets/icons/icon_stats.png"
             alt="Stats Icon"
             class="nva-icon"
+            src="/assets/icons/icon_stats.png"
           />
         </a>
       </li>
     </ul>
 
-    <li v-if="isAuthenticated">
+    <div v-if="isAuthenticated">
       <p>Utilisateur : {{ userId ? userId : 'ID non trouvé' }}</p>
       <button @click="logoutRedirection">Se déconnecter</button>
-    </li>
+    </div>
   </nav>
 
   <img
     v-else
-    src="/assets/icons/icon_list.png"
     alt="Settings Button"
-    @click="toggleNav"
     class="settings-button-hidden"
+    src="/assets/icons/icon_list.png"
+    @click="toggleNav"
   />
 </template>
 

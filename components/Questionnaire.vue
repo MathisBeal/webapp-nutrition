@@ -14,11 +14,11 @@
           <div class="option">
             <label for="age">Votre âge :</label>
             <input
-              type="number"
               id="age"
+              ref="ageInput"
               v-model="age"
               placeholder="Entrez votre âge"
-              ref="ageInput"
+              type="number"
             />
             <p v-if="age !== null && (age <= 0 || age > 100)" class="error">
               Votre âge semble incorrect, veuillez vérifier votre saisie.
@@ -31,11 +31,11 @@
           <div class="option">
             <label for="height">Votre taille (cm) :</label>
             <input
-              type="number"
               id="height"
+              ref="heightInput"
               v-model="height"
               placeholder="Entrez votre taille en cm"
-              ref="heightInput"
+              type="number"
             />
             <p v-if="height !== null && (height <= 50 || height > 250)" class="error">
               Votre taille semble incorrecte, veuillez vérifier votre saisie.
@@ -48,11 +48,11 @@
           <div class="option">
             <label for="weight">Votre poids (kg) :</label>
             <input
-              type="number"
               id="weight"
+              ref="weightInput"
               v-model="weight"
               placeholder="Entrez votre poids en kg"
-              ref="weightInput"
+              type="number"
             />
             <p v-if="weight !== null && (weight <= 20 || weight > 300)" class="error">
               Votre poids semble incorrect, veuillez vérifier votre saisie.
@@ -68,12 +68,12 @@
             class="option"
           >
             <input
-              type="radio"
               :id="'option-' + index"
-              name="question"
-              :value="option"
-              v-model="selectedOption[currentQuestionIndex]"
               ref="optionInput"
+              v-model="selectedOption[currentQuestionIndex]"
+              :value="option"
+              name="question"
+              type="radio"
             />
             <label :for="'option-' + index">{{ option }}</label>
           </div>
@@ -83,25 +83,25 @@
       <div class="navigation-buttons">
         <button
           v-if="currentQuestionIndex > 0"
-          @click="previousQuestion"
           class="previous-button"
+          @click="previousQuestion"
         >
           Précédent
         </button>
         <button
           v-if="currentQuestionIndex < questions.length - 1"
-          @click="nextQuestion"
-          class="next-button"
           :class="{ 'align-right': currentQuestionIndex === 0 }"
           :disabled="!isNextEnabled"
+          class="next-button"
+          @click="nextQuestion"
         >
           Suivant
         </button>
         <button
           v-else
-          @click="submitAnswers"
-          class="submit-button"
           :disabled="!isNextEnabled"
+          class="submit-button"
+          @click="submitAnswers"
         >
           Terminer
         </button>
@@ -110,8 +110,8 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, computed, watch, nextTick, onMounted } from 'vue';
+<script lang="ts" setup>
+import {computed, nextTick, onMounted, ref, watch} from 'vue';
 
 const props = defineProps({
   userData: {
@@ -123,10 +123,10 @@ const props = defineProps({
 const emit = defineEmits(['submitQuestionnaire']);
 
 const questions = ref([
-  { question: 'Quel est votre âge ?', options: [] },
-  { question: 'Quel est votre sexe ?', options: ['Homme', 'Femme', 'Autre'] },
-  { question: 'Quelle est votre taille (en cm) ?', options: [] },
-  { question: 'Quel est votre poids (en kg) ?', options: [] },
+  {question: 'Quel est votre âge ?', options: []},
+  {question: 'Quel est votre sexe ?', options: ['Homme', 'Femme', 'Autre']},
+  {question: 'Quelle est votre taille (en cm) ?', options: []},
+  {question: 'Quel est votre poids (en kg) ?', options: []},
   {
     question: 'Suivez-vous un régime alimentaire spécifique ?',
     options: [],
@@ -289,25 +289,6 @@ onMounted(() => {
   color: red;
   font-size: 14px;
   margin-top: 5px;
-}
-
-.other-input {
-  margin-top: 15px;
-}
-
-.other-label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.other-textarea {
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 10px;
-  font-size: 16px;
-  resize: none;
 }
 
 .navigation-buttons {
