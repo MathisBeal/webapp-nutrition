@@ -10,8 +10,6 @@ export default defineEventHandler(async (event) => {
         nom: true, // On récupère uniquement les noms
       },
     });
-
-    // Retourner les données sous forme de tableau simple
     return {
       success: true,
       data: restrictions.map((restriction) => restriction.nom),

@@ -9,39 +9,28 @@ const props = defineProps({
   },
 });
 
-// Extract data from `recipe_data`
-// const recipe = computed(() => props.recipe_data.recipe_info || {});
-// const ingredients = computed(() => props.recipe_data.ingredients || []);
 const aliment = computed(() => props.aliment_data || {});
 
-// Extract the recipe steps
-// const rawSteps = recipe.value.etapes || ''; // Assuming `etapes` is a string
-// const steps = computed(() =>
-//   rawSteps
-//     .split(/\d+\.\s/) // Match numbers followed by a period and space
-//     .filter((step: string) => step.trim() !== '') // Remove empty strings
-//     .map((step: string) => step.trim()) // Trim any extra spaces
-// );
-
-// let img: Blob;
-// let url: string;
-// let imageFetched: boolean = true;
-// try {
-//   console.log(recipe.value.images);
-//   img = await $fetch(recipe.value.images);
-//   url = URL.createObjectURL(img);
-// } catch (e) {
-//   console.error('Fetching image error: Address may point to nothing or a not image element\n', e);
-//   imageFetched = false;
-// }
-
+let img: Blob;
+let url: string;
+let imageFetched: boolean = true;
+try {
+  // console.log(aliment.value.image);
+  // @ts-ignore
+  img = await $fetch(aliment.value.image);
+  url = URL.createObjectURL(img);
+} catch (e) {
+  console.error('Fetching image error: Address may point to nothing or a not image element\n', e);
+  imageFetched = false;
+}
 
 </script>
 
 <template>
   <div class="container">
     <h1 class="aliment_name">{{ aliment?.nom || 'Aliment' }}</h1>
-    <img class="aliment_img" alt="" src="assets/img/default_ingredient.jpg">
+    <img v-if="imageFetched" :alt="'Image de ' + aliment.nom" :src="url" class="aliment_img">
+    <img v-else alt="Placeholder pour l'ingrédient" class="aliment_img" src="assets/img/default_ingredient.jpg">
     <div class="recipe_text">
       <p class="nutri_title">Valeurs nutritionnelles pour {{ aliment.nom }}</p>
       <table>
@@ -54,23 +43,23 @@ const aliment = computed(() => props.aliment_data || {});
         <tbody>
         <tr>
           <th>Quantité</th>
-          <th>{{aliment.quantite_base}} {{aliment.unite}}</th>
+          <th>{{ aliment.quantite_base }} {{ aliment.unite }}</th>
         </tr>
         <tr>
           <th>kCalories</th>
-          <th>{{aliment.calories}}</th>
+          <th>{{ aliment.calories }}</th>
         </tr>
         <tr>
           <th>Glucides</th>
-          <th>{{aliment.glucides}} g</th>
+          <th>{{ aliment.glucides }} g</th>
         </tr>
         <tr>
           <th>Lipides</th>
-          <th>{{aliment.lipides}} g</th>
+          <th>{{ aliment.lipides }} g</th>
         </tr>
         <tr>
           <th>Protéines</th>
-          <th>{{aliment.proteines}} g</th>
+          <th>{{ aliment.proteines }} g</th>
         </tr>
         </tbody>
       </table>
@@ -85,10 +74,10 @@ const aliment = computed(() => props.aliment_data || {});
   margin: 0 auto;
   background: #f8f9fa;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  text-align: center;
 }
 
 .aliment_name {
-  text-align: center;
   margin: 0 0 0.5em 0;
   padding: 0.5em 0 0 0;
 }

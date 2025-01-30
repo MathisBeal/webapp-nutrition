@@ -4,7 +4,14 @@ body {
   font-family: Roboto, Arial, sans-serif;
 }
 
-
+.question-box {
+  background-color: white;
+  padding: 50px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 300px;
+}
 
 .accueil {
   padding: 20px;
@@ -15,20 +22,31 @@ body {
   margin-left: 145px; 
 }
 
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
 
 .accueil.with-nav {
   margin-left: 145px; 
 }
 
-
 .accueil.with-nav {
   margin-left: 145px; 
 }
 
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
 
+.accueil {
+  padding: 20px;
+  transition: margin-left 0.3s ease; 
+}
 
-
-
-
-
-
+.accueil.with-nav {
+  margin-left: 145px; 
+}

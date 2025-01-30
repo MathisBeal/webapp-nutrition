@@ -8,8 +8,8 @@
         Question {{ currentQuestionIndex + 1 }} sur {{ questions.length }}
       </p>
 
-      <form>
-        <!-- Question spécifique pour l'âge -->
+      <!-- Question spécifique pour l'âge -->
+      <form @keydown.enter.prevent="handleEnterKey">
         <template v-if="currentQuestionIndex === 0">
           <div class="option">
             <label for="age">Votre âge :</label>
@@ -79,6 +79,7 @@
           </div>
         </template>
       </form>
+
       <div class="navigation-buttons">
         <button
           v-if="currentQuestionIndex > 0"
@@ -146,7 +147,6 @@ const questions = ref([
   },
 ]);
 
-// Variables de suivi
 const selectedOption = ref<(string | null)[]>(questions.value.map(() => null));
 const currentQuestionIndex = ref(0);
 const height = ref<number | null>(null);

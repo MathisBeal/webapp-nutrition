@@ -1,7 +1,7 @@
 <template>
   <div :class="['accueil', { 'with-nav': isNavVisible }]">
     <h1>Plats</h1>
-    <div ref="platList" class="plat-list" @scroll="handleScroll">
+    <div class="plat-list" @scroll="handleScroll" ref="platList">
       <div
         v-for="plat in displayedPlats"
         :key="plat.ID_plat"
@@ -15,9 +15,9 @@
           </h2>
           <p>
             <img
+              src="/assets/img/horloge.png"
               alt="Icône d'horloge"
               class="icon-horloge"
-              src="/assets/img/horloge.png"
             />
             Durée de préparation : {{ plat.duree || 'Non spécifiée' }}
           </p>
@@ -31,14 +31,11 @@
   </div>
 </template>
 
-
-<script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+<script setup lang="ts">
 import { useAsyncData } from '#app';
 import { isNavVisible } from '@/composables/useNavState';
 
 const { data: plats } = await useAsyncData('plats', () => $fetch('/api/plat'));
-
 const displayedPlats = ref<any[]>([]);
 const favoris = ref<Set<number>>(new Set());
 const userSession = ref<any>(null);
@@ -114,6 +111,7 @@ const loadPlats = () => {
     }
 };
 
+
 const handleScroll = (event: Event) => {
     const target = event.target as HTMLElement;
     if (target.scrollTop + target.clientHeight >= target.scrollHeight - 10) {
@@ -125,16 +123,9 @@ onMounted(async () => {
     await getSession();
     loadPlats();
 });
-
-function goToRecipe(ID_plat: number) {
-    navigateTo("/recipes/" + ID_plat);
-}
-
 </script>
 
-
-
-<style>
+<style scoped>
 .plat-list {
   height: 60vh;
   overflow-y: hidden;
@@ -156,7 +147,12 @@ function goToRecipe(ID_plat: number) {
 .plat-text p {
   margin: 0; 
   text-align: left; 
-  line-height: 1.2; 
+  line-height: 1.2em; 
+
+.plat-item:hover {
+  transform: scale(1.01); 
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); 
+  background-color: #f9f9f9; 
 }
 
 .plat-text span {
@@ -197,6 +193,9 @@ function goToRecipe(ID_plat: number) {
   transform: scale(1.01);
   box-shadow: 0 0.6vh 1vh rgba(0, 0, 0, 0.15);
   background-color: #f9f9f9;
+  flex-direction: column;
+  align-items: flex-start; 
+  gap: 5px;
 }
 
 .favori-icon {
