@@ -15,14 +15,25 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { type User } from '@/types/User';
 
 const currentStep = ref('signUp');
-const userData = ref({});
+const userData = ref<User>({
+  nom: '',
+  prenom: '',
+  mail: '',
+  password: '',
+  age: 0,
+  sexe: '',
+  taille: 0,
+  poids: 0,
+  imc: 0,
+});
 const router = useRouter()
 
 // Fonction pour changer de step après une inscription réussie
 const goToQuestionnaire = () => {
+  console.log(userData.value)
   currentStep.value = 'Questionnaire';
 };
 
