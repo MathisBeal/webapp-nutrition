@@ -7,11 +7,9 @@ export default defineEventHandler(async (event) => {
     // Récupérer tous les champs 'nom' de la table Restriction_Types
     const restrictions = await prisma.restriction_Types.findMany({
       select: {
-        nom: true, // On récupère uniquement les noms
+        nom: true,
       },
     });
-
-    // Retourner les données sous forme de tableau simple
     return {
       success: true,
       data: restrictions.map((restriction) => restriction.nom),
