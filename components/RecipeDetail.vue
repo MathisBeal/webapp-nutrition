@@ -42,37 +42,14 @@ try {
     <!-- Recipe Title -->
     <h1 class="recipe_name">{{ recipe?.description || 'Recipe' }}</h1>
 
-    <!-- Recipe Image -->
-    <!--    <img
-          :alt="'Image of ' + recipe?.description"
-          class="recipe_image"
-          :src="recipe?.images"
-        >-->
     <img v-if="imageFetched" :alt="'Image of ' + recipe?.description" class="recipe_image" :src="url">
-    <img v-else alt="Default recipe image" class="recipe_image" src="assets/img/plat.png">
+    <img v-else alt="Recipe placeholder image" class="recipe_image" src="assets/img/recipe-placeholder.jpg">
 
     <div class="recipe_text">
       <!-- Ingredients List -->
       <div class="ingredients">
-        <h2>Ingrédients</h2>
-        <ul>
-          <li
-            v-for="(ingredient, index) in ingredients"
-            :key="index"
-            class="ingredient"
-          >
-            <img
-              :alt="'Image of ' + ingredient.Aliments.nom"
-              src="assets/img/default_ingredient.jpg"
-            />
-            <p>
-              <strong>{{ ingredient.Aliments.nom }}</strong>:
-              {{
-                Number.parseInt(ingredient.Aliments.quantite_base) * Number.parseFloat(ingredient.multiplicateur_quantite)
-              }} {{ ingredient.Aliments.unite }}
-            </p>
-          </li>
-        </ul>
+        <h2>Ingrédients :</h2>
+        <RecipeIngredient v-for="(ingredient, index) in ingredients" :key="index" :ingredient="ingredient"/>
       </div>
 
       <!-- Recipe Steps -->
@@ -113,25 +90,6 @@ try {
 
 .steps ol {
   padding-left: 1.5em;
-}
-
-.ingredients ul {
-  list-style: none;
-  padding: 0;
-}
-
-.ingredient {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1em;
-}
-
-.ingredient img {
-  width: 50px;
-  height: 50px;
-  margin-right: 1em;
-  border-radius: 50%;
-  object-fit: cover;
 }
 
 .step {
