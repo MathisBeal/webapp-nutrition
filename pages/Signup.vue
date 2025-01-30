@@ -33,7 +33,6 @@ const router = useRouter()
 
 // Fonction pour changer de step après une inscription réussie
 const goToQuestionnaire = () => {
-  console.log(userData.value)
   currentStep.value = 'Questionnaire';
 };
 

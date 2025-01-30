@@ -14,3 +14,4 @@ const check_connectDB = async () => {
 }
 
 export { prisma, check_connectDB }
+

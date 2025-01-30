@@ -1,5 +1,5 @@
 <template>
-  <div class="search-container">
+<div class="search-container">
     <input
       v-model="searchQuery"
       type="text"
@@ -34,8 +34,9 @@
               </p>
             </template>
           </div>
-          <div class="favori-icon" @click="toggleFavori(item)">
-            <img :src="favoris.has(item.ID) ? '/assets/icons/icon_stats.png' : '/assets/icons/icon_user.png'" alt="Favori" class="star-icon">
+          <div class="favori-icon" @click.stop="toggleFavori(item)">
+              <IconStar v-if="favoris.has(item.ID)" class="star-icon filled" />
+              <IconStarOff v-else class="star-icon empty" />
           </div>
         </div>
       </template>
@@ -49,190 +50,213 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue';
-import Pagination from '@/components/Pagination.vue';
+<script lang="ts" setup>
+import { navigateTo } from '#app'; 
+import { getSession, isAuthenticated, userId } from '@/composables/useAuth';
 
-const searchQuery = ref('');
-const results = ref([]);
-const filteredResults = ref([]);
-const userSession = ref(null);
-const favoris = ref(new Set());
-
-const loadFavoris = async () => {
-  if (!userSession.value) return;
-  try {
-    const response = await fetch(`/api/favoris?userId=${userSession.value.userId}&fullData=true`);
-    results.value = await response.json();
-    favoris.value = new Set(results.value.map(fav => fav.ID));
-  } catch (error) {
-    console.error("Erreur lors du chargement des favoris :", error);
-  }
-};
+const searchQuery = ref<string>('');
+const results = ref<any[]>([]);
+const searchInput = ref<HTMLInputElement | null>(null);
+const favoris = ref<Set<number>>(new Set());
 
 const onSearch = async () => {
-  if (!searchQuery.value.trim()) {
-    await loadFavoris();
-    return;
-  }
-  try {
-    const response = await fetch(`/api/search?search=${encodeURIComponent(searchQuery.value)}`);
-    results.value = await response.json();
-  } catch (error) {
-    console.error("Erreur lors de la recherche :", error);
-  }
+    if (!searchQuery.value.trim()) {
+        await loadFavoris();
+        return;
+    }
+    try {
+        const response = await fetch(`/api/search?search=${encodeURIComponent(searchQuery.value)}`);
+        const data = await response.json();
+        results.value = data;
+    } catch (error) {
+    }
 };
 
-const toggleFavori = async (item) => {
-  if (!userSession.value) return;
-  const isFavori = favoris.value.has(item.ID);
-  const action = isFavori ? "remove" : "add";
-
-  try {
-    await fetch('/api/favoris', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ID_user: userSession.value.userId, ID_item: item.ID, type: item.type, action: action }),
-    });
-
-    favoris.value[isFavori ? 'delete' : 'add'](item.ID);
-  } catch (error) {
-    console.error("Erreur lors de la mise à jour des favoris :", error);
-  }
+const toggleFavori = async (item: any) => {
+    if (!userId.value) {
+        return;
+    }
+    const isFavori = favoris.value.has(item.ID);
+    const action = isFavori ? "remove" : "add";
+    
+    try {
+        const response = await fetch('/api/favoris', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                ID_user: userId.value,
+                ID_item: item.ID,
+                type: item.type,
+                action: action
+            }),
+        });
+        
+        if (response.ok) {
+            if (isFavori) {
+                favoris.value.delete(item.ID);
+                results.value = results.value.filter(fav => fav.ID !== item.ID);
+            } else {
+                favoris.value.add(item.ID);
+            }
+        }
+    } catch (error) {
+    }
 };
+
+const loadFavoris = async () => {
+    if (!userId.value) return;
+    try {
+        const response = await fetch(`/api/favoris?userId=${userId.value}&fullData=true`);
+        const data = await response.json();
+        results.value = data; 
+        favoris.value = new Set(data.map((fav: any) => fav.ID));
+    } catch (error) {
+    }
+};
+
+onMounted(async () => {
+    if (isLoggedIn) {
+        await loadFavoris();
+    }
+    searchInput.value?.focus();
+});
+
+watch(userId, async (newUserId) => {
+    if (newUserId) {
+        await loadFavoris();
+    } else {
+        results.value = [];
+        favoris.value.clear();
+    }
+});
 </script>
 
 
 <style scoped>
 .search-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding-top: 30px;
-  padding-left: 200px;
-  background-color: #f3f4f6;
-  height: 95vh;
-  gap: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 5vh;
+    background-color: #f3f4f6;
+    height: 100vh;
+    gap: 2vh;
 }
-
 .search-bar {
-  width: 60%;
-  max-width: 1000px;
-  padding: 15px;
-  font-size: 14px;
-  border: 2px solid #ccc;
-  border-radius: 40px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  outline: none;
-  transition: all 0.3s ease;
+    width: 60vw;
+    max-width: 62.5vw;
+    padding: 1.5vh;
+    font-size: 0.875rem;
+    border: 0.15em solid #ccc;
+    border-radius: 2.5em;
+    box-shadow: 0 0.4vh 1vh rgba(0, 0, 0, 0.1);
+    outline: none;
+    transition: all 0.3s ease;
 }
-
 .search-bar:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+    border-color: #3b82f6;
+    box-shadow: 0 0.4vh 2vh rgba(59, 130, 246, 0.3);
 }
-
+.result-list {
+    height: 60vh;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+    width: 50vw;
+    gap: 2vh;
+    padding: 2vh;
+    transition: overflow-y 0.3s ease; 
+}
 .result-list:hover {
-overflow-y: auto;
+  overflow-y: auto;
 }
-
 .result-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 30px;
-  padding: 20px;
-  border-radius: 12px;
-  border: 1px solid #ddd;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    display: flex;
+    align-items: flex-start;
+    gap: 1vw;
+    padding: 2vh;
+    border-radius: 1em;
+    background-color: #fff;
+    box-shadow: 0 0.4vh 0.6vh rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
-
 .result-item:hover {
-  transform: scale(1.01);
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-  background-color: #f9f9f9;
+    transform: scale(1.01);
+    box-shadow: 0 0.6vh 1vh rgba(0, 0, 0, 0.15);
+    background-color: #f9f9f9;
 }
-
 .result-item h2 {
-margin: 0;
-font-size: 1.2rem;
+  margin: 0;
+  font-size: 1.2rem;
 }
-
 .result-item p {
-margin: 5px 0 0;
-color: #555;
+  margin: 0.5vh 0 0;
+  color: #555;
 }
-
 .result-image {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 8px;
+    width: 7vw;
+    height: 7vw;
+    object-fit: cover;
+    border-radius: 0.5em;
 }
-
 .result-text {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+    gap: 0.5vh;
 }
-
 .result-text h2,
 .result-text p {
-margin: 0;
-text-align: left;
-line-height: 1.2;
+  margin: 0; 
+  text-align: left; 
+  line-height: 1.2; 
 }
-
 .result-text span {
-font-size: 0.9rem;
-color: #999;
+  font-size: 0.9rem;
+  color: #999;
 }
-
 .icon-horloge {
-  width: 15px;
-  height: 15px;
-  object-fit: cover;
-  border-radius: 8px;
+    width: 1vw;
+    height: 1vw;
+    object-fit: cover;
+    border-radius: 0.5em;
 }
-
 .no-results {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1vh;
+    margin-top: 5vh;
 }
-
 .no-results-icon {
-  width: 50px;
-  height: 50px;
-  opacity: 0.7;
+    width: 3vw;
+    height: 3vw;
+    opacity: 0.7;
 }
-
 .no-results-text {
-  font-size: 1.2rem;
-  color: #555;
-  text-align: center;
+    font-size: 1.2rem;
+    color: #555;
+    text-align: center;
 }
-
 .favori-icon {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: auto;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
 }
-
 .star-icon {
-  width: 24px;
-  height: 24px;
-  transition: transform 0.2s;
+    width: 1.5vw;
+    height: 1.5vw;
+    transition: transform 0.2s;
+    color: #FFD700; 
 }
-
+.star-icon.empty {
+    color: #ccc; 
+}
 .favori-icon:hover .star-icon {
-  transform: scale(1.1);
+    transform: scale(1.1);
 }
 </style>

@@ -2,11 +2,13 @@
   <h1 class="questionnaire-title">Veuillez remplir ce bref questionnaire</h1>
   <div class="questionnaire-container">
     <div class="question-box">
+      <!-- Affichage de la question actuelle et du total -->
       <h2>{{ questions[currentQuestionIndex].question }}</h2>
       <p class="progress-info">
         Question {{ currentQuestionIndex + 1 }} sur {{ questions.length }}
       </p>
 
+      <!-- Question spécifique pour l'âge -->
       <form @keydown.enter.prevent="handleEnterKey">
         <template v-if="currentQuestionIndex === 0">
           <div class="option">
@@ -24,6 +26,7 @@
           </div>
         </template>
 
+        <!-- Question spécifique pour la taille -->
         <template v-if="currentQuestionIndex === 2">
           <div class="option">
             <label for="height">Votre taille (cm) :</label>
@@ -40,6 +43,7 @@
           </div>
         </template>
 
+        <!-- Question spécifique pour le poids -->
         <template v-else-if="currentQuestionIndex === 3">
           <div class="option">
             <label for="weight">Votre poids (kg) :</label>
@@ -51,11 +55,12 @@
               ref="weightInput"
             />
             <p v-if="weight !== null && (weight <= 20 || weight > 300)" class="error">
-              Votre poids semble incorrecte, veuillez vérifier votre saisie.
+              Votre poids semble incorrect, veuillez vérifier votre saisie.
             </p>
           </div>
         </template>
 
+        <!-- Options pour les autres questions -->
         <template v-else>
           <div
             v-for="(option, index) in questions[currentQuestionIndex].options"

@@ -6,10 +6,9 @@
         v-for="plat in displayedPlats"
         :key="plat.ID_plat"
         class="plat-item"
-        @click="goToRecipe(plat.ID_plat)"
       >
-        <img alt="Image du plat" class="plat-image" src="/assets/img/plat.png"/>
-        <div class="plat-text">
+        <img alt="Image du plat" class="plat-image" src="/assets/img/plat.png" @click="goToRecipe(plat.ID_plat)"/>
+        <div class="plat-text" @click="goToRecipe(plat.ID_plat)">
           <h2>
             {{ plat.description || 'Description non disponible' }} -
             {{ plat.nom_categorie || 'Catégorie inconnue' }}
@@ -23,6 +22,10 @@
             Durée de préparation : {{ plat.duree || 'Non spécifiée' }}
           </p>
         </div>
+        <div class="favori-icon" @click.stop="toggleFavori(plat)">
+          <IconStar v-if="favoris.has(plat.ID_plat)" class="star-icon filled" />
+          <IconStarOff v-else class="star-icon empty" />
+        </div>
       </div>
     </div>
   </div>
@@ -33,45 +36,142 @@ import { useAsyncData } from '#app';
 import { isNavVisible } from '@/composables/useNavState';
 
 const { data: plats } = await useAsyncData('plats', () => $fetch('/api/plat'));
-
-const displayedPlats = ref<any[]>([]); 
-const pageSize = 5; 
+const displayedPlats = ref<any[]>([]);
+const favoris = ref<Set<number>>(new Set());
+const userSession = ref<any>(null);
+const pageSize = 5;
 let currentPage = 1;
 
-const loadPlats = () => {
-  if (!plats.value) return;
-  const start = (currentPage - 1) * pageSize;
-  const end = currentPage * pageSize;
+const getSession = async () => {
+    try {
+        const response = await fetch('/api/auth/session'); 
+        const data = await response.json();
+        userSession.value = data?.userId ? data : null;
+        if (userSession.value) {
+            await loadFavoris(); 
+        }
+    } catch (error) {
+        userSession.value = null;
+    }
+};
 
-  const newPlats = plats.value.slice(start, end);
-  if (newPlats.length) {
-    displayedPlats.value.push(...newPlats);
-    currentPage++;
-  }
+const loadFavoris = async () => {
+    if (!userSession.value) return;
+
+    try {
+        const response = await fetch(`/api/favoris?userId=${userSession.value.userId}&fullData=true`);
+        const data = await response.json();
+        favoris.value = new Set(data.map((fav: any) => fav.ID));
+    } catch (error) {
+        console.error("Erreur lors du chargement des favoris", error);
+    }
+};
+
+const toggleFavori = async (plat: any) => {
+    if (!userSession.value) {
+        return;
+    }
+
+    const isFavori = favoris.value.has(plat.ID_plat);
+    const action = isFavori ? "remove" : "add";
+
+    try {
+        const response = await fetch('/api/favoris', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                ID_user: userSession.value.userId,
+                ID_item: plat.ID_plat,
+                type: 'plat',
+                action: action
+            }),
+        });
+
+        if (response.ok) {
+            if (isFavori) {
+                favoris.value.delete(plat.ID_plat);
+            } else {
+                favoris.value.add(plat.ID_plat);
+            }
+        }
+    } catch (error) {
+        console.error("Erreur lors de la mise à jour des favoris", error);
+    }
+};
+
+const loadPlats = () => {
+    if (!plats.value) return;
+    const start = (currentPage - 1) * pageSize;
+    const end = currentPage * pageSize;
+
+    const newPlats = plats.value.slice(start, end);
+    if (newPlats.length) {
+        displayedPlats.value.push(...newPlats);
+        currentPage++;
+    }
 };
 
 
 const handleScroll = (event: Event) => {
-  const target = event.target as HTMLElement;
-  if (target.scrollTop + target.clientHeight >= target.scrollHeight - 10) {
-    loadPlats();
-  }
+    const target = event.target as HTMLElement;
+    if (target.scrollTop + target.clientHeight >= target.scrollHeight - 10) {
+        loadPlats();
+    }
 };
 
-onMounted(() => {
-  loadPlats();
+onMounted(async () => {
+    await getSession();
+    loadPlats();
 });
 </script>
 
-<style>
+<style scoped>
 .plat-list {
-  height: 600px;
+  height: 60vh;
   overflow-y: hidden;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 20px;
+  gap: 2vh;
+  padding: 2vh;
   transition: overflow-y 0.3s ease;
+}
+
+.plat-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; 
+  gap: 0.5vh;
+}
+
+.plat-text h2,
+.plat-text p {
+  margin: 0; 
+  text-align: left; 
+  line-height: 1.2em; 
+
+.plat-item:hover {
+  transform: scale(1.01); 
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); 
+  background-color: #f9f9f9; 
+}
+
+.plat-text span {
+  font-size: 0.9rem;
+  color: #999;
+}
+
+.icon-horloge {
+  width: 1.5vw;
+  height: 1.5vw;
+  object-fit: cover;
+  border-radius: 0.5em;
+}
+
+.plat-image {
+  width: 7vw;
+  height: 7vw;
+  object-fit: cover;
+  border-radius: 0.5em;
 }
 
 .plat-list:hover {
@@ -80,62 +180,45 @@ onMounted(() => {
 
 .plat-item {
   display: flex;
-  align-items: flex-start; 
-  gap: 15px;
-  padding: 20px;
-  border-radius: 12px;
+  align-items: flex-start;
+  gap: 1vw;
+  padding: 2vh;
+  border-radius: 1em;
   background-color: #fff;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.4vh 0.6vh rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
 .plat-item:hover {
-  transform: scale(1.01); 
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); 
-  background-color: #f9f9f9; 
-}
-
-.plat-item h2 {
-  margin: 0;
-  font-size: 1.2rem;
-}
-
-.plat-item p {
-  margin: 5px 0 0;
-  color: #555;
-}
-
-.plat-image {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-.plat-text {
-  display: flex;
+  transform: scale(1.01);
+  box-shadow: 0 0.6vh 1vh rgba(0, 0, 0, 0.15);
+  background-color: #f9f9f9;
   flex-direction: column;
   align-items: flex-start; 
   gap: 5px;
 }
 
-.plat-text h2,
-.plat-text p {
-  margin: 0; 
-  text-align: left; 
-  line-height: 1.2; 
+.favori-icon {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
 }
 
-.plat-text span {
-  font-size: 0.9rem;
-  color: #999;
+.star-icon {
+    width: 1.5vw;
+    height: 1.5vw;
+    transition: transform 0.2s;
+    color: #FFD700; 
 }
 
+.star-icon.empty {
+    color: #ccc; 
+}
 
-.icon-horloge {
-  width: 15px;
-  height: 15px;
-  object-fit: cover;
-  border-radius: 8px;
+.favori-icon:hover .star-icon {
+    transform: scale(1.1);
 }
 </style>
+
