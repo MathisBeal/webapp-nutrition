@@ -23,7 +23,8 @@
           </p>
         </div>
         <div class="favori-icon" @click.stop="toggleFavori(plat)">
-          <img :src="favoris.has(plat.ID_plat) ? filledStarIcon : emptyStarIcon " alt="Favori" class="star-icon">
+          <Star v-if="favoris.has(plat.ID_plat)" class="star-icon filled" />
+          <StarOff v-else class="star-icon empty" />
         </div>
       </div>
     </div>
@@ -35,8 +36,7 @@
 import { onMounted, ref } from 'vue';
 import { useAsyncData } from '#app';
 import axios from 'axios';
-import emptyStarIcon from '@/assets/icons/icon_empty_star.svg';
-import filledStarIcon from '@/assets/icons/icon_star.svg';
+import { Star, StarOff } from "lucide-vue-next";
 import { isNavVisible } from '@/composables/useNavState';
 
 const { data: plats } = await useAsyncData('plats', () => $fetch('/api/plat'));
@@ -181,9 +181,15 @@ function goToRecipe(ID_plat: number) {
     width: 24px;
     height: 24px;
     transition: transform 0.2s;
+    color: #FFD700; 
+}
+
+.star-icon.empty {
+    color: #ccc; 
 }
 
 .favori-icon:hover .star-icon {
     transform: scale(1.1);
 }
+
 </style>

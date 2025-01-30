@@ -33,7 +33,8 @@
                     </template>
                 </div>
                 <div class="favori-icon" @click.stop="toggleFavori(item)">
-                    <img :src="favoris.has(item.ID) ? filledStarIcon : emptyStarIcon " alt="Favori" class="star-icon">
+                    <Star v-if="favoris.has(item.ID)" class="star-icon filled" />
+                    <StarOff v-else class="star-icon empty" />
                 </div>
             </div>
         </div>
@@ -48,8 +49,9 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { navigateTo } from '#app'; 
-import emptyStarIcon from '@/assets/icons/icon_empty_star.svg';
-import filledStarIcon from '@/assets/icons/icon_star.svg';
+import { Star, StarOff } from "lucide-vue-next";
+
+
 
 const searchQuery = ref<string>('');
 const results = ref<any[]>([]);
@@ -282,10 +284,17 @@ onMounted(async () => {
     width: 24px;
     height: 24px;
     transition: transform 0.2s;
+    color: #FFD700; 
+}
+
+.star-icon.empty {
+    color: #ccc; 
 }
 
 .favori-icon:hover .star-icon {
     transform: scale(1.1);
 }
+
+
 
 </style>
