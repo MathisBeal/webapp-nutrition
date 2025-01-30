@@ -1,18 +1,18 @@
 <template>
   <div>
     <NuxtLink
-      v-for="(recipe, index) in recipes"
-      :to="{ name: 'recipes-id_recipe', params: {id_recipe: recipe.ID_plat} } "
-      class="recipe">
+      v-for="(aliment, index) in aliments"
+      :to="{ name: 'aliments-id_aliment', params: {id_aliment: aliments[index].ID_aliment} } "
+      class="aliment">
       <p>
-        {{ recipe.description }}
+        {{ aliment.nom }}
       </p>
     </NuxtLink>
   </div>
 </template>
 
 <script lang="ts" setup>
-const recipes = await $fetch("/api/recipes");
+const aliments = await $fetch("/api/aliments");
 </script>
 
 <style scoped>
@@ -23,7 +23,7 @@ div {
   align-items: center;
 }
 
-.recipe {
+.aliment {
   width: 40%;
   padding: 0.4em;
   margin: 0.4em auto;
@@ -37,7 +37,7 @@ div {
   text-decoration: none;
 }
 
-.recipe:hover {
+.aliment:hover {
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
   background: #e6e6e6;
 }
