@@ -8,12 +8,16 @@ export default defineNuxtConfig({
     typeCheck: true
   },
 
- 
+
 
   modules: [
     "@nuxt/test-utils/module",
     "@nuxt/eslint",
     "nuxt-auth-utils",
+    "nuxt-lucide-icons",
   ],
   css: ['@/assets/styles/global.css'],
+  lucide: {
+    namePrefix: 'Icon',
+  }
 });
