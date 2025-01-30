@@ -199,7 +199,7 @@ const previousQuestion = () => {
 // Récupérer les options dynamiques pour les questions
 const fetchOptions = async () => {
   try {
-    const response = await fetch('/api/user/restrictionType');
+    const response = await fetch('/api/restrictionType');
     const data = await response.json();
 
     if (data.success) {
