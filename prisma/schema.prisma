@@ -11,6 +11,7 @@ model Aliments {
   ID_aliment            Int                     @id @default(autoincrement())
   nom                   String                  @db.VarChar(255)
   quantite_base         Int
+  unite                 String                  @db.VarChar(15)
   calories              Decimal                 @db.Decimal(10, 2)
   glucides              Decimal                 @db.Decimal(10, 2)
   lipides               Decimal                 @db.Decimal(10, 2)
@@ -44,7 +45,6 @@ model Ingredients_Recettes {
   ID_plat                 Int
   ID_aliment              Int
   multiplicateur_quantite Decimal  @db.Decimal(10, 2)
-  unite                   String   @db.VarChar(15)
   Aliments                Aliments @relation(fields: [ID_aliment], references: [ID_aliment], onDelete: NoAction, onUpdate: NoAction, map: "fk_ingredient_de_recette_aliment")
   Plats                   Plats    @relation(fields: [ID_plat], references: [ID_plat], onDelete: NoAction, onUpdate: NoAction, map: "fk_ingredient_de_recette_plat")
 
@@ -78,6 +78,7 @@ model Plats_Categories {
 model Restriction_Types {
   ID_restriction        Int                     @id @default(autoincrement())
   nom                   String                  @db.VarChar(255)
+  est_regime            Boolean
   Restrictions_aliments Restrictions_aliments[]
   Users_restrictions    Users_restrictions[]
 }
