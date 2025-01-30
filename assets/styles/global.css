@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: Roboto, Arial, sans-serif;
 }
 
 .questionnaire-container {
@@ -94,5 +94,3 @@ body {
 .accueil.with-nav {
   margin-left: 145px; 
 }
-
-

@@ -6,8 +6,9 @@
         v-for="plat in displayedPlats"
         :key="plat.ID_plat"
         class="plat-item"
+        @click="goToRecipe(plat.ID_plat)"
       >
-        <img src="/assets/img/plat.png" alt="Image du plat" class="plat-image" />
+        <img alt="Image du plat" class="plat-image" src="/assets/img/plat.png"/>
         <div class="plat-text">
           <h2>
             {{ plat.description || 'Description non disponible' }} -
@@ -27,10 +28,7 @@
   </div>
 </template>
 
-
-
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
 import { useAsyncData } from '#app';
 import { isNavVisible } from '@/composables/useNavState';
 
@@ -39,7 +37,6 @@ const { data: plats } = await useAsyncData('plats', () => $fetch('/api/plat'));
 const displayedPlats = ref<any[]>([]); 
 const pageSize = 5; 
 let currentPage = 1;
-
 
 const loadPlats = () => {
   if (!plats.value) return;
@@ -61,13 +58,10 @@ const handleScroll = (event: Event) => {
   }
 };
 
-
 onMounted(() => {
   loadPlats();
 });
 </script>
-
-
 
 <style>
 .plat-list {
@@ -75,15 +69,14 @@ onMounted(() => {
   overflow-y: hidden;
   display: flex;
   flex-direction: column;
-  gap:20px;
+  gap: 20px;
   padding: 20px;
-  transition: overflow-y 0.3s ease; 
+  transition: overflow-y 0.3s ease;
 }
 
 .plat-list:hover {
   overflow-y: auto;
 }
-
 
 .plat-item {
   display: flex;
@@ -111,7 +104,6 @@ onMounted(() => {
   margin: 5px 0 0;
   color: #555;
 }
-
 
 .plat-image {
   width: 100px;
