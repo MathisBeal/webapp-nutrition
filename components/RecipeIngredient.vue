@@ -11,12 +11,27 @@ const nom = props.ingredient.Aliments.nom;
 const qty = Number.parseFloat(props.ingredient.Aliments.quantite_base) * Number.parseFloat(props.ingredient.multiplicateur_quantite);
 const unite = props.ingredient.Aliments.unite;
 
+let img: Blob;
+let url: string;
+let imageFetched: boolean = true;
+try {
+  // console.log(props.ingredient.Aliments.image);
+  img = await $fetch(props.ingredient.Aliments.image);
+  url = URL.createObjectURL(img);
+} catch (e) {
+  console.error('Fetching image error: Address may point to nothing or a not image element\n', e);
+  imageFetched = false;
+}
+
 </script>
 
 <template>
   <div class="ingredient">
     <NuxtLink :to="{name: 'aliments-id_aliment', params: {id_aliment: id_alim}}">
-      <img class="ingredient-img" src="assets/img/ingredient-placeholder.jpg"/>
+      <img v-if="imageFetched" :alt="'Image de '+nom" :src="url" class="ingredient-img">
+      <img
+        v-else alt="Placeholder pour l'ingrédient" class="ingredient-img"
+        src="assets/img/ingredient-placeholder.jpg">
     </NuxtLink>
     <p class="ingredient-text"><strong>{{ nom }}</strong>: {{ qty }} {{ unite }}</p>
   </div>

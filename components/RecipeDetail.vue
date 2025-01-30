@@ -26,7 +26,7 @@ let img: Blob;
 let url: string;
 let imageFetched: boolean = true;
 try {
-  // @ts-ignore
+  // console.log(recipe.value.images);
   img = await $fetch(recipe.value.images);
   url = URL.createObjectURL(img);
 } catch (e) {
@@ -42,7 +42,7 @@ try {
     <!-- Recipe Title -->
     <h1 class="recipe_name">{{ recipe?.description || 'Recipe' }}</h1>
 
-    <img v-if="imageFetched" :alt="'Image of ' + recipe?.description" class="recipe_image" :src="url">
+    <img v-if="imageFetched" :alt="'Image of ' + recipe?.description" :src="url" class="recipe_image">
     <img v-else alt="Recipe placeholder image" class="recipe_image" src="assets/img/recipe-placeholder.jpg">
 
     <div class="recipe_text">

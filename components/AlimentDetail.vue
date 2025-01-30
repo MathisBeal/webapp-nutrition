@@ -15,7 +15,7 @@ let img: Blob;
 let url: string;
 let imageFetched: boolean = true;
 try {
-  console.log(aliment.value.image);
+  // console.log(aliment.value.image);
   img = await $fetch(aliment.value.image);
   url = URL.createObjectURL(img);
 } catch (e) {
