@@ -26,7 +26,6 @@ let img: Blob;
 let url: string;
 let imageFetched: boolean = true;
 try {
-  console.log(recipe.value.images);
   // @ts-ignore
   img = await $fetch(recipe.value.images);
   url = URL.createObjectURL(img);
@@ -70,7 +69,7 @@ try {
               <strong>{{ ingredient.Aliments.nom }}</strong>:
               {{
                 Number.parseInt(ingredient.Aliments.quantite_base) * Number.parseFloat(ingredient.multiplicateur_quantite)
-              }} {{ ingredient.unite }}
+              }} {{ ingredient.Aliments.unite }}
             </p>
           </li>
         </ul>

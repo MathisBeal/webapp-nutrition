@@ -62,15 +62,15 @@ const aliment = computed(() => props.aliment_data || {});
         </tr>
         <tr>
           <th>Glucides</th>
-          <th>{{aliment.glucides}}</th>
+          <th>{{aliment.glucides}} g</th>
         </tr>
         <tr>
           <th>Lipides</th>
-          <th>{{aliment.lipides}}</th>
+          <th>{{aliment.lipides}} g</th>
         </tr>
         <tr>
           <th>Protéines</th>
-          <th>{{aliment.proteines}}</th>
+          <th>{{aliment.proteines}} g</th>
         </tr>
         </tbody>
       </table>
