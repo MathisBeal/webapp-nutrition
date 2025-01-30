@@ -16,6 +16,7 @@ let url: string;
 let imageFetched: boolean = true;
 try {
   // console.log(props.ingredient.Aliments.image);
+  // @ts-ignore
   img = await $fetch(props.ingredient.Aliments.image);
   url = URL.createObjectURL(img);
 } catch (e) {
