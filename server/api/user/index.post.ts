@@ -1,5 +1,5 @@
 import { prisma } from '~/server/db/connection';
-import { useCryptage } from '~/composables/cryptage';
+import { cryptPassword } from '~/utils/cryptPassword';
 
 export default defineEventHandler(async (event) => {
   // Récupérer les données du corps de la requête
@@ -28,7 +28,6 @@ export default defineEventHandler(async (event) => {
     }
 
     // Hasher le mot de passe
-    const { cryptPassword } = useCryptage();
     const hashedPassword = await cryptPassword(password);
 
     // Créer l'utilisateur
