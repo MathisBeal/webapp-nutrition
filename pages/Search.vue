@@ -46,25 +46,15 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { navigateTo } from '#app'; 
-
+import { getSession, isAuthenticated, userId } from '@/composables/useAuth';
 
 const searchQuery = ref<string>('');
 const results = ref<any[]>([]);
 const searchInput = ref<HTMLInputElement | null>(null);
-const userSession = ref<any>(null);
 const favoris = ref<Set<number>>(new Set());
 
-const getSession = async () => {
-    try {
-        const response = await fetch('/api/auth/session'); 
-        const data = await response.json();
-        userSession.value = data?.userId ? data : null;
-    } catch (error) {
-        userSession.value = null;
-    }
-};
 const onSearch = async () => {
     if (!searchQuery.value.trim()) {
         await loadFavoris();
@@ -77,23 +67,26 @@ const onSearch = async () => {
     } catch (error) {
     }
 };
+
 const toggleFavori = async (item: any) => {
-    if (!userSession.value) {
+    if (!userId.value) {
         return;
     }
     const isFavori = favoris.value.has(item.ID);
     const action = isFavori ? "remove" : "add";
+    
     try {
         const response = await fetch('/api/favoris', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                ID_user: userSession.value.userId,
+                ID_user: userId.value,
                 ID_item: item.ID,
                 type: item.type,
                 action: action
             }),
         });
+        
         if (response.ok) {
             if (isFavori) {
                 favoris.value.delete(item.ID);
@@ -105,27 +98,41 @@ const toggleFavori = async (item: any) => {
     } catch (error) {
     }
 };
+
 const loadFavoris = async () => {
-    if (!userSession.value) return;
+    if (!userId.value) return;
     try {
-        const response = await fetch(`/api/favoris?userId=${userSession.value.userId}&fullData=true`);
+        const response = await fetch(`/api/favoris?userId=${userId.value}&fullData=true`);
         const data = await response.json();
         results.value = data; 
         favoris.value = new Set(data.map((fav: any) => fav.ID));
     } catch (error) {
     }
 };
+
 const goToRecipe = (ID: number) => {
     navigateTo(`/recipes/${ID}`);
 };
+
 onMounted(async () => {
-    await getSession();
-    if (userSession.value) {
+    const isLoggedIn = await getSession();
+    if (isLoggedIn) {
         await loadFavoris();
     }
     searchInput.value?.focus();
 });
+
+
+watch(userId, async (newUserId) => {
+    if (newUserId) {
+        await loadFavoris();
+    } else {
+        results.value = [];
+        favoris.value.clear();
+    }
+});
 </script>
+
 
 <style scoped>
 .search-container {
