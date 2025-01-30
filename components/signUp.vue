@@ -96,6 +96,18 @@ const handleSignup = async () => {
     errorMessage.value = 'Veuillez remplir tous les champs.';
     return;
   }
+  if (!validMail(email.value)) {
+    errorMessage.value = 'Adresse e-mail invalide.';
+    return;
+  }
+ if (password.value !== confirmPassword.value) {
+    errorMessage.value = 'Les mots de passe ne correspondent pas.';
+    return;
+  }
+  if (/\s/.test(password.value)) {
+    errorMessage.value = 'Le mot de passe ne doit pas contenir d\'espaces.';
+    return;
+  }
 
   // Vérification de l'existence de l'e-mail
   try {
@@ -123,12 +135,6 @@ const handleSignup = async () => {
     console.error(error);
     return;
   }
-
-  if (password.value !== confirmPassword.value) {
-    errorMessage.value = 'Les mots de passe ne correspondent pas.';
-    return;
-  }
-
   successMessage.value = 'Compte créé avec succès !';
 
   props.userData.prenom = name.value;

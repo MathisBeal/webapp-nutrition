@@ -18,6 +18,7 @@
               id="age"
               v-model="age"
               placeholder="Entrez votre âge"
+              ref="ageInput"
             />
             <p v-if="age !== null && (age <= 0 || age > 100)" class="error">
               Votre âge semble incorrect, veuillez vérifier votre saisie.
@@ -34,6 +35,7 @@
               id="height"
               v-model="height"
               placeholder="Entrez votre taille en cm"
+              ref="heightInput"
             />
             <p v-if="height !== null && (height <= 50 || height > 250)" class="error">
               Votre taille semble incorrecte, veuillez vérifier votre saisie.
@@ -50,6 +52,7 @@
               id="weight"
               v-model="weight"
               placeholder="Entrez votre poids en kg"
+              ref="weightInput"
             />
             <p v-if="weight !== null && (weight <= 20 || weight > 300)" class="error">
               Votre poids semble incorrect, veuillez vérifier votre saisie.
@@ -70,6 +73,7 @@
               name="question"
               :value="option"
               v-model="selectedOption[currentQuestionIndex]"
+              ref="optionInput"
             />
             <label :for="'option-' + index">{{ option }}</label>
           </div>
@@ -106,13 +110,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router'; // Importer le composable useRouter
+import { ref, computed, watch, nextTick, onMounted } from 'vue';
 
-// Instance du routeur
-const router = useRouter();
+const props = defineProps({
+  userData: {
+    type: Object,
+    required: true,
+  },
+});
 
-// Questions du formulaire
+const emit = defineEmits(['submitQuestionnaire']);
+
 const questions = ref([
   { question: 'Quel est votre âge ?', options: [] },
   { question: 'Quel est votre sexe ?', options: ['Homme', 'Femme', 'Autre'] },
@@ -120,16 +128,11 @@ const questions = ref([
   { question: 'Quel est votre poids (en kg) ?', options: [] },
   {
     question: 'Suivez-vous un régime alimentaire spécifique ?',
-    options: [
-      'Général',
-      'Végétarien',
-      'Vesco Végétarien',
-      'Végan',
-      'Sans gluten',
-      'Sans lactose',
-      'Cétogène',
-      'Paléo',
-    ],
+    options: [],
+  },
+  {
+    question: 'Êtes-vous allergique à un de ces aliments ?',
+    options: ['Aucun'],
   },
   {
     question:
@@ -141,20 +144,6 @@ const questions = ref([
       'Je ne sais pas',
     ],
   },
-  {
-    question: 'Êtes-vous allergique à un de ces aliments ?',
-    options: [
-      'Aucun',
-      'Arachides',
-      'Fruits à coque',
-      'Lait et produits laitiers',
-      'Gluten',
-      'Fruits de mer',
-      'Œufs',
-      'Soja',
-      'Sésame',
-    ],
-  },
 ]);
 
 // Variables de suivi
@@ -164,21 +153,37 @@ const height = ref<number | null>(null);
 const weight = ref<number | null>(null);
 const age = ref<number | null>(null);
 
-// Validation pour activer le bouton "Suivant"
+const ageInput = ref<HTMLInputElement | null>(null);
+const heightInput = ref<HTMLInputElement | null>(null);
+const weightInput = ref<HTMLInputElement | null>(null);
+
 const isNextEnabled = computed(() => {
-  if (currentQuestionIndex.value === 0) {
-    return age.value !== null && age.value > 0 && age.value <= 100;
-  }
-  if (currentQuestionIndex.value === 2) {
-    return height.value !== null && height.value > 50 && height.value <= 250;
-  }
-  if (currentQuestionIndex.value === 3) {
-    return weight.value !== null && weight.value > 20 && weight.value <= 300;
-  }
-  return selectedOption.value[currentQuestionIndex.value] !== null;
+  const enabled = (() => {
+    if (currentQuestionIndex.value === 0) {
+      return age.value !== null && age.value > 0 && age.value <= 100;
+    }
+    if (currentQuestionIndex.value === 2) {
+      return height.value !== null && height.value > 50 && height.value <= 250;
+    }
+    if (currentQuestionIndex.value === 3) {
+      return weight.value !== null && weight.value > 20 && weight.value <= 300;
+    }
+    return selectedOption.value[currentQuestionIndex.value] !== null;
+  })();
+  console.debug(`isNextEnabled: ${enabled}`);
+  return enabled;
 });
 
-// Navigation
+const submitAnswers = () => {
+  props.userData.age = age.value;
+  props.userData.sexe = selectedOption.value[1];
+  props.userData.taille = height.value;
+  props.userData.poids = weight.value;
+  props.userData.imc = 1; //calculé directement par la BDD
+
+  emit('submitQuestionnaire');
+};
+
 const nextQuestion = () => {
   if (currentQuestionIndex.value < questions.value.length - 1) {
     currentQuestionIndex.value++;
@@ -191,11 +196,70 @@ const previousQuestion = () => {
   }
 };
 
-// Soumission des réponses
-const submitAnswers = () => {
-  alert('Questionnaire soumis avec succès !');
-  router.push('/login');
+// Récupérer les options dynamiques pour les questions
+const fetchOptions = async () => {
+  try {
+    const response = await fetch('/api/user/restrictionType');
+    const data = await response.json();
+
+    if (data.success) {
+      const dietOptions = data.data.slice(0, 11);
+      const allergyOptions = data.data.slice(11);
+
+      const dietQuestion = questions.value.find(q => q.question === 'Suivez-vous un régime alimentaire spécifique ?');
+      if (dietQuestion) {
+        dietQuestion.options = dietOptions;
+      }
+
+      const allergyQuestion = questions.value.find(q => q.question === 'Êtes-vous allergique à un de ces aliments ?');
+      if (allergyQuestion) {
+        allergyQuestion.options = allergyOptions;
+        allergyQuestion.options.unshift('Aucun');
+      }
+    } else {
+      console.error('Erreur lors de la récupération des options:', data.message);
+    }
+  } catch (error) {
+    console.error('Erreur lors de la récupération des options:', error);
+  }
 };
+
+const handleEnterKey = () => {
+  console.debug('Enter key pressed');
+  if (isNextEnabled.value) {
+    console.debug('isNextEnabled is true, moving to next question');
+    if (currentQuestionIndex.value < questions.value.length - 1) {
+      nextQuestion();
+    } else {
+      submitAnswers();
+    }
+  } else {
+    console.debug('isNextEnabled is false, cannot move to next question');
+  }
+};
+
+// Watcher pour focus le champ input ou sélectionner le premier élément
+watch(currentQuestionIndex, async (newIndex) => {
+  await nextTick();
+  if (newIndex === 0) {
+    ageInput.value?.focus();
+  } else if (newIndex === 2) {
+    heightInput.value?.focus();
+  } else if (newIndex === 3) {
+    weightInput.value?.focus();
+  } else {
+    selectedOption.value[newIndex] = questions.value[newIndex].options[0];
+    console.debug(`Default option selected for question ${newIndex}: ${questions.value[newIndex].options[0]}`);
+  }
+});
+
+onMounted(() => {
+  fetchOptions();
+  // Focus sur le champ âge dès le chargement de la première question
+  nextTick(() => {
+    ageInput.value?.focus();
+  });
+});
 </script>
 
 <style scoped>
