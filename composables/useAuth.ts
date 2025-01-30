@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 export const isAuthenticated = ref(false);
 export const userId = ref<string | null>(null);
 
@@ -9,9 +7,10 @@ export const setAuthenticationStatus = (status: boolean) => {
 
 export const getSession = async () => {
   try {
-    const response = await axios.get('/api/auth/session');
-    if (response.data?.userId) {
-      userId.value = response.data.userId;
+    const response = await fetch('/api/auth/session');
+    const data = await response.json();
+    if (data?.userId) {
+      userId.value = data.userId;
       setAuthenticationStatus(true);
       console.log('ID utilisateur récupéré :', userId.value);
       return true;  // connecté
@@ -31,7 +30,7 @@ export const getSession = async () => {
 
 export const logout = async () => {
   try {
-    await axios.post('/api/auth/logout');
+    await fetch('/api/auth/logout', { method: 'POST' });
     userId.value = null;
     setAuthenticationStatus(false);
   } catch (error) {

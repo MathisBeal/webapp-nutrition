@@ -1,16 +1,13 @@
 <script lang="ts" setup>
-// Importations nécessaires
 import { ref } from 'vue'
 import { useRouter } from 'nuxt/app'
 import { setAuthenticationStatus } from '@/composables/useAuth'
-import axios from 'axios'
 
 // Variables et gestion de la logique
 const email = ref('')
 const password = ref('')
 const errorMessage = ref('')
 const router = useRouter()
-
 
 const handleLogin = async () => {
   // Validation basique des champs
@@ -20,26 +17,32 @@ const handleLogin = async () => {
   }
 
   try {
-  // Appel API pour se connecter
-  const response = await axios.post('/api/user/login', {
-    email: email.value,
-    password: password.value,
-  });
+    // Appel API pour se connecter
+    const response = await fetch('/api/user/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email.value,
+        password: password.value,
+      }),
+    });
 
+    const data = await response.json();
 
-  // Si connexion réussie
-  if (response.data.success) {
-    errorMessage.value = '';
-    setAuthenticationStatus(true);
-    router.push('/home');
-  }
+    // Si connexion réussie
+    if (data.success) {
+      errorMessage.value = '';
+      setAuthenticationStatus(true);
+      router.push('/home');
+    } else {
+      errorMessage.value = data.message || 'Erreur lors de la connexion.';
+    }
   } catch (error) {
     // Gestion des erreurs (par exemple, mauvais email/mot de passe ou erreur serveur)
-    if (axios.isAxiosError(error) && error.response) {
-      errorMessage.value = error.response.data.message || 'Email ou mot de passe incorrect.';
-    } else {
-      errorMessage.value = 'Erreur de connexion. Veuillez réessayer plus tard.';
-    }
+    console.error('Erreur lors de la connexion :', error);
+    errorMessage.value = 'Erreur lors de la connexion. Veuillez réessayer.';
   }
 }
 </script>
