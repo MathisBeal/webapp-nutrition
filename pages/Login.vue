@@ -1,9 +1,7 @@
 <script lang="ts" setup>
-// Importations nécessaires
 import { ref } from 'vue'
 import { useRouter } from 'nuxt/app'
 import { setAuthenticationStatus } from '@/composables/useAuth'
-
 
 // Variables et gestion de la logique
 const email = ref('')
@@ -11,16 +9,41 @@ const password = ref('')
 const errorMessage = ref('')
 const router = useRouter()
 
-const handleLogin = () => {
+const handleLogin = async () => {
   // Validation basique des champs
   if (!email.value || !password.value) {
     errorMessage.value = 'Veuillez remplir tous les champs.'
     return
   }
-  // Simulation de la logique de connexion (remplacer par un appel API)
-  errorMessage.value = ''
-  setAuthenticationStatus(true)
-  router.push('/home')
+
+  try {
+    // Appel API pour se connecter
+    const response = await fetch('/api/user/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email.value,
+        password: password.value,
+      }),
+    });
+
+    const data = await response.json();
+
+    // Si connexion réussie
+    if (data.success) {
+      errorMessage.value = '';
+      setAuthenticationStatus(true);
+      router.push('/home');
+    } else {
+      errorMessage.value = data.message || 'Erreur lors de la connexion.';
+    }
+  } catch (error) {
+    // Gestion des erreurs (par exemple, mauvais email/mot de passe ou erreur serveur)
+    console.error('Erreur lors de la connexion :', error);
+    errorMessage.value = 'Erreur lors de la connexion. Veuillez réessayer.';
+  }
 }
 </script>
 
@@ -150,3 +173,4 @@ label {
   font-weight: bold;
 }
 </style>
+

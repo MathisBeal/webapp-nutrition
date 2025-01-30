@@ -11,10 +11,11 @@ export default defineNuxtConfig({
   modules: [
     "@nuxt/test-utils/module",
     "@nuxt/eslint",
+    "nuxt-auth-utils",
     "nuxt3-notifications", // Docs : https://github.com/kyvg/vue3-notification
     "nuxt-lucide-icons",
   ],
-
+  
   css: ['@/assets/styles/global.css'],
 
   lucide: {
