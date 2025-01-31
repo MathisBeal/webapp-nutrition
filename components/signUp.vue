@@ -79,6 +79,11 @@ const props = defineProps({
   },
 });
 
+interface ApiResponse {
+  exists: boolean;
+  message?: string;
+}
+
 const name = ref('');
 const lastName = ref('');
 const email = ref('');
@@ -89,64 +94,66 @@ const successMessage = ref('');
 
 const emit = defineEmits(['signupSuccess']);
 
+const validateFields = (): boolean => {
+  if (!name.value || !lastName.value || !email.value || !password.value || !confirmPassword.value) {
+    errorMessage.value = 'Veuillez remplir tous les champs.';
+    return false;
+  }
+  if (!validMail(email.value)) {
+    errorMessage.value = 'Adresse e-mail invalide.';
+    return false;
+  }
+  if (password.value !== confirmPassword.value) {
+    errorMessage.value = 'Les mots de passe ne correspondent pas.';
+    return false;
+  }
+  if (/\s/.test(password.value)) {
+    errorMessage.value = 'Le mot de passe ne doit pas contenir d\'espaces.';
+    return false;
+  }
+  return true;
+};
+
+const checkEmailExists = async (): Promise<ApiResponse> => {
+  const response = await fetch('/api/user/findByEmail', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email: email.value }),
+  });
+
+  return response.json();
+};
+
+const handleResponse = (data: ApiResponse) => {
+  if (data.exists) {
+    errorMessage.value = data.message || 'Une erreur non identifiée est survenue.';  // Affiche le message reçu du serveur ou un message par défaut
+    return false;
+  }
+
+  successMessage.value = 'Compte créé avec succès !';
+  props.userData.prenom = name.value!;
+  props.userData.nom = lastName.value!;
+  props.userData.mail = email.value!;
+  props.userData.password = password.value!;
+
+  setTimeout(() => {
+    emit('signupSuccess');
+  }, 500);
+
+  return true;
+};
+
 const handleSignup = async () => {
   errorMessage.value = '';
   successMessage.value = '';
 
-  if (!name.value || !lastName.value || !email.value || !password.value || !confirmPassword.value) {
-    errorMessage.value = 'Veuillez remplir tous les champs.';
-    return;
-  }
-  if (!validMail(email.value)) {
-    errorMessage.value = 'Adresse e-mail invalide.';
-    return;
-  }
-  if (password.value !== confirmPassword.value) {
-    errorMessage.value = 'Les mots de passe ne correspondent pas.';
-    return;
-  }
-  if (/\s/.test(password.value)) {
-    errorMessage.value = 'Le mot de passe ne doit pas contenir d\'espaces.';
-    return;
-  }
+  if (!validateFields()) return;
 
-  // Vérification de l'existence de l'e-mail
   try {
-    const response = await fetch('/api/user/findByEmail', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email: email.value }),
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      if (data.exists) {
-        errorMessage.value = data.message;  // Affiche le message reçu du serveur
-      } else {
-        successMessage.value = 'Compte créé avec succès !';
-
-        props.userData.prenom = name.value;
-        props.userData.nom = lastName.value;
-        props.userData.mail = email.value;
-        props.userData.password = password.value;
-
-        setTimeout(() => {
-          emit('signupSuccess');
-        }, 500);
-      }
-    } else {
-      // Si le serveur renvoie une erreur
-      if (data.message) {
-        errorMessage.value = data.message;  // Affiche le message d'erreur détaillé
-      } else {
-        errorMessage.value = 'Erreur lors de la communication avec le serveur.';
-      }
-      console.error('Erreur HTTP:', response.statusText);
-    }
-
+    const data = await checkEmailExists();
+    if (!handleResponse(data)) return;
   } catch (error) {
     errorMessage.value = 'Erreur lors de la vérification de l’e-mail.';
     console.error(error);
