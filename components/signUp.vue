@@ -2,9 +2,6 @@
   <div class="signup-page">
     <h1 class="title">Créer un compte</h1>
     <form class="signup-form" @submit.prevent="handleSignup">
-      <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-      <p v-if="successMessage" class="success">{{ successMessage }}</p>
-
       <div class="form-group">
         <label for="name">Nom</label>
         <input
@@ -66,11 +63,15 @@
       Vous avez déjà un compte ?
       <a href="/login">Connectez-vous <span class="highlight">ici</span>.</a>
     </p>
+    <NuxtNotifications class="custom-notif"
+    position="top center"
+    :speed="500"/>
   </div>
 </template>
 
 <script lang="ts" setup>
 import {type User} from '@/types/User';
+import { NuxtNotifications } from '#components';
 
 const props = defineProps({
   userData: {
@@ -84,31 +85,45 @@ interface ApiResponse {
   message?: string;
 }
 
+const { notify } = useNotification();
 const name = ref('');
 const lastName = ref('');
 const email = ref('');
 const password = ref('');
 const confirmPassword = ref('');
-const errorMessage = ref('');
-const successMessage = ref('');
-
 const emit = defineEmits(['signupSuccess']);
 
 const validateFields = (): boolean => {
   if (!name.value || !lastName.value || !email.value || !password.value || !confirmPassword.value) {
-    errorMessage.value = 'Veuillez remplir tous les champs.';
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: 'Veuillez remplir tous les champs.'
+    });
     return false;
   }
   if (!validMail(email.value)) {
-    errorMessage.value = 'Adresse e-mail invalide.';
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: 'Adresse e-mail invalide.'
+    });
     return false;
   }
   if (password.value !== confirmPassword.value) {
-    errorMessage.value = 'Les mots de passe ne correspondent pas.';
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: 'Les mots de passe ne correspondent pas.'
+    });
     return false;
   }
   if (/\s/.test(password.value)) {
-    errorMessage.value = 'Le mot de passe ne doit pas contenir d\'espaces.';
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: 'Le mot de passe ne doit pas contenir d\'espaces.'
+    });
     return false;
   }
   return true;
@@ -128,11 +143,19 @@ const checkEmailExists = async (): Promise<ApiResponse> => {
 
 const handleResponse = (data: ApiResponse) => {
   if (data.exists) {
-    errorMessage.value = data.message || 'Une erreur non identifiée est survenue.';  // Affiche le message reçu du serveur ou un message par défaut
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: data.message
+    });
     return false;
   }
 
-  successMessage.value = 'Compte créé avec succès !';
+  notify({
+      type: 'error',
+      title: 'Erreur',
+      text: 'Compte créé avec succès !'
+    });
   props.userData.prenom = name.value!;
   props.userData.nom = lastName.value!;
   props.userData.mail = email.value!;
@@ -146,17 +169,17 @@ const handleResponse = (data: ApiResponse) => {
 };
 
 const handleSignup = async () => {
-  errorMessage.value = '';
-  successMessage.value = '';
-
   if (!validateFields()) return;
 
   try {
     const data = await checkEmailExists();
     if (!handleResponse(data)) return;
   } catch (error) {
-    errorMessage.value = 'Erreur lors de la vérification de l’e-mail.';
-    console.error(error);
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: 'Erreur lors de la vérification de l’e-mail.'
+    });
   }
 };
 </script>
