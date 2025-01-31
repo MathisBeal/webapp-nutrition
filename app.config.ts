@@ -5,4 +5,5 @@ export default defineAppConfig({
     primaryColor: "#ababab",
     device: "mobile",
   },
+  debug: true,
 });
