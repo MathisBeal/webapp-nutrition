@@ -58,7 +58,6 @@ const props = defineProps({
 
 const aliment = computed(() => props.alimentData || {});
 const recipes = computed(() => props.linkedRecipes || null);
-
 const imgSrc = lazyLoad("/img/placeholders/ingredient.jpg", aliment.value.image);
 </script>
 
