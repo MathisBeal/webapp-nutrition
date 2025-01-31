@@ -6,11 +6,10 @@ export default defineNuxtRouteMiddleware((to, from) => {
   if (publicRoutes.includes(to.path)) {
     return;
   }
-
-  if (!loggedIn.value) {
-    return navigateTo({
-      path: '/login',
-      query: { error: `You must be logged in to access this page : ${to.path}` },
-    });
-  }
+  return;
+  // if (!loggedIn.value) {
+  //   return navigateTo({
+  //     path: '/login',
+  //     query: { error: `You must be logged in to access this page : ${to.path}` },
+  //   });
 })

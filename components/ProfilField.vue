@@ -14,14 +14,37 @@
     </div>
 
     <div v-else>
-      <!--Select-->
-      <select :name="field.name" v-model="field.value">
+      <!--Select unique-->
+      <select v-if="field.type != 'select'"
+        :name="field.name"
+        placeholder="Choisissez une option"
+        v-model="field.value">
+
         <option v-for="option in field.options"
           :key="option.value"
           :value="option.value">
           {{ option.text }}
         </option>
+
       </select>
+
+      <!--Select multiple-->
+      <!--
+        Label = valeur de l'option à afficher
+        Track-by = valeur de l'option à sauvegarder
+
+      -->
+      <Multiselect v-else
+        class="multiselect"
+        placeholder="Choisissez une ou plusieurs option(s)"
+        :name="field.name"
+        label="text"
+        :track-by="'value'"
+        :options="field.options"
+        :multiple="true"
+        v-model="field.value">
+
+      </Multiselect>
     </div>
 
     <span v-if="bError" class="error-icon">❌</span>
@@ -30,6 +53,7 @@
 </template>
 
 <script lang="ts" setup>
+import Multiselect from 'vue-multiselect'
 import { type Field } from '@/types/Profil';
 import { validMail, validWeight, validHeight, validAge } from '@/utils/validProfilData';
 
@@ -51,6 +75,8 @@ const checkVal = (val: any, verif: (arg0: any) => boolean): boolean => {
 }
 
 watch(() => props.field.value, (newValue) => {
+  if (props.field.name === "") { console.log(props.field.value); }
+
   // Refuse empty values
   if (newValue === '' || newValue === null || newValue === undefined) {
     bError.value = true;

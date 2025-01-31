@@ -19,22 +19,17 @@
 </template>
 
 <script lang="ts" setup>
+import { Prisma } from '@prisma/client';
 import { type Field, type Option } from '@/types/Profil';
 import { type Users } from '@prisma/client';
 import { useNotification } from "@kyvg/vue3-notification";
 
 const { notify } = useNotification();
 
-
 /* ------------ Functions --------------*/
 
-const field = (name: string, value: string | number, type: string, options?: Option[]): Field => {
-  return {
-    name,
-    value,
-    type,
-    options,
-  }
+const field = (name: string, value: string | number | number[], type: string, options?: Option[]): Field => {
+  return { name, value, type, options };
 }
 
 const createFields = (user: Users) => {
@@ -42,21 +37,26 @@ const createFields = (user: Users) => {
     field('Nom', user.nom, 'text'),
     field('Prénom', user.prenom, 'text'),
     field('Email', user.mail, 'email'),
-    field('Poids', Number(user.poids), 'number'),
-    field('Taille', Number(user.taille), 'number'),
-    field('IMC', Number(user.imc), 'number'),
-    field('Régime Alimentaire', user.regimeAlimentaire.toString(), 'select', [
-      { value: '1', text: 'Général' },
-      { value: '2', text: 'Végétarisme' },
-      { value: '3', text: 'Véganisme' }
-    ]),
     field('Genre', user.sexe, 'select', [
       { value: 'homme', text: 'Homme' },
       { value: 'femme', text: 'Femme' },
       { value: 'autres', text: 'Autres' }
     ]),
     field('Âge', user.age.toString(), 'number'),
-    field('Mot de Passe', '', 'password'),
+    field('Poids', Number(user.poids), 'number'),
+    field('Taille', Number(user.taille), 'number'),
+    field('IMC', Number(user.imc), 'number'),
+    field('Régime Alimentaire', -1, 'select', [
+      { value: '-1', text: 'Aucun' },
+      { value: '1', text: 'Végétarisme' },
+      { value: '2', text: 'Véganisme' }
+    ]),
+    field('Allergie', [-1], 'multiple', [
+      { value: '-1', text: 'Aucun' },
+      { value: '1', text: 'Fruits à coque' },
+      { value: '2', text: 'Fruits de mer' }
+    ]),
+    field('Mot de Passe', 'password123', 'password'),
     field('Confirmer le mot de passe', '', 'hidden'),
   ];
 }
@@ -101,8 +101,18 @@ const verifyPassword = (): boolean => {
 
 /* ------------ Variables --------------*/
 
-const profil: Users = null; //Get user (pas besoin d'etre un ref)
-const userId = 1; //Get user id
+const profil: Users = {
+  ID_user: 1,
+  nom: 'Doe',
+  prenom: 'John',
+  mail: 'john.doe@example.com',
+  password: 'password123',
+  age: 30,
+  poids: new Prisma.Decimal(70),
+  taille: 175,
+  imc: new Prisma.Decimal(22.9),
+  sexe: 'homme',
+};
 
 
 const fetchUserData = async (): Promise<Users | undefined> => {
@@ -143,26 +153,6 @@ const fetchUserData = async (): Promise<Users | undefined> => {
     return undefined;
   }
 };
-// const fields = ref<Field[]>([
-//   field('Nom', profil.nom, 'text'),
-//   field('Prénom', profil.prenom, 'text'),
-//   field('Email', profil.mail, 'email'),
-//   field('Poids', profil.poids.toString(), 'number'),
-//   field('Taille', profil.taille.toString(), 'number'),
-//   field('IMC', profil.imc.toString(), 'number'), //Trouver comment l'update sans la db
-//   field('Régime Alimentaire', profil.regimeAlimentaire.toString(), 'select', [
-//     { value: '1', text: 'Général' },
-//     { value: '2', text: 'Végétarisme' },
-//     { value: '3', text: 'Véganisme' }
-//   ]),
-//   field('Genre', profil.sexe, 'select', [
-//     { value: 'homme', text: 'Homme' },
-//     { value: 'femme', text: 'Femme' },
-//     { value: 'autres', text: 'Autres' }
-//   ]),
-//   field('Âge', profil.age.toString(), 'number'),
-//   field('Mot de Passe', '', 'password'),
-// ]);
 
 const fields = ref<Field[]>([
   field('Nom', 'Doe', 'text'),
@@ -215,7 +205,7 @@ const updateProfile = () => {
 };
 
 onMounted(async () => {
-  const profil = await fetchUserData();
+  //const profil = await fetchUserData();
 
   if (!profil) {
     notify({
