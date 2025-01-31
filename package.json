@@ -7,6 +7,7 @@
     "build": "nuxi build",
     "clean": "rimraf .output",
     "dev": "nuxt dev",
+    "dev:host": "nuxt dev --host",
     "test": "vitest run",
     "test:watch": "vitest",
     "generate": "nuxt generate",
@@ -20,7 +21,6 @@
   },
   "dependencies": {
     "@prisma/client": "^6.2.1",
-    "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
     "chart.js": "^4.4.7",
     "dotenv": "^16.4.7",
