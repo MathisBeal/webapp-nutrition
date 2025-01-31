@@ -22,7 +22,7 @@ export default defineEventHandler(async (event: H3Event) => {
     if (fullData) {
       const [plats, aliments] = await Promise.all([prisma.plats.findMany({
         where: {ID_plat: {in: idsPlats}},
-        include: {Plats_Categories: true}
+        include: {Plats_Categories: true,},
       },), prisma.aliments.findMany({where: {ID_aliment: {in: idsAliments}}}),]);
 
       console.log(plats);

@@ -64,7 +64,7 @@ export default defineEventHandler(async (event) => {
     ...plats.map((plat) => ({
       type: 'plat',
       ID_plat: plat.ID_plat,
-      ID_unified: plat.ID_plat,
+      ID: plat.ID_plat,
       description: plat.description || 'Description non disponible',
       nom_categorie: plat.Plats_Categories?.nom || 'Catégorie inconnue',
       duree: plat.duree || 'Non spécifiée',
@@ -74,7 +74,7 @@ export default defineEventHandler(async (event) => {
     ...aliments.map((aliment) => ({
       type: 'aliment',
       ID_aliment: aliment.ID_aliment,
-      ID_unified: aliment.ID_aliment,
+      ID: aliment.ID_aliment,
       nom: aliment.nom,
       quantite_base: aliment.quantite_base,
       calories: aliment.calories,

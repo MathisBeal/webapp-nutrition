@@ -28,7 +28,7 @@ const toggleFavori = async (item: any) => {
   if (!userId.value) {
     return;
   }
-  const isFavori = favoris.value.has(item.ID_unified);
+  const isFavori = favoris.value.has(item.ID);
   const action = isFavori ? "remove" : "add";
 
   try {
@@ -37,7 +37,7 @@ const toggleFavori = async (item: any) => {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         ID_user: userId.value,
-        ID_item: item.ID_unified,
+        ID_item: item.ID,
         type: item.type,
         action: action
       }),
@@ -45,10 +45,10 @@ const toggleFavori = async (item: any) => {
 
     if (response.ok) {
       if (isFavori) {
-        favoris.value.delete(item.ID_unified);
-        results.value = results.value.filter(fav => fav.ID_unified !== item.ID_unified);
+        favoris.value.delete(item.ID);
+        results.value = results.value.filter(fav => fav.ID !== item.ID);
       } else {
-        favoris.value.add(item.ID_unified);
+        favoris.value.add(item.ID);
       }
     }
   } catch (error) {
@@ -62,7 +62,7 @@ const loadFavoris = async () => {
     const data = await response.json();
     console.log(data);
     results.value = data;
-    favoris.value = new Set(data.map((fav: any) => fav.ID_unified));
+    favoris.value = new Set(data.map((fav: any) => fav.ID));
   } catch (error) {
   }
 };
@@ -91,7 +91,7 @@ watch(userId, async (newUserId) => {
     <input ref="searchInput" v-model="searchQuery" class="search-bar" placeholder="Rechercher..." type="text"
            @keyup.enter="onSearch"/>
     <div v-if="results.length" class="result-list">
-      <div v-for="item in results" :key="item.ID_unified">
+      <div v-for="item in results" :key="item.ID">
         <Plat v-if="item.type === 'plat'" :favoris="favoris" :plat="item"
               :toggleFavori="toggleFavori"/>
 
