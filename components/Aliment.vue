@@ -13,7 +13,7 @@ function navigate() {
   router.push("/aliments/" + props.aliment.ID_aliment);
 }
 
-const imgSrc = lazyLoad("/img/placeholders/aliment.jpg", props.aliment.image);
+const imgSrc = lazyLoad("/img/placeholders/ingredient.jpg", props.aliment.image);
 
 </script>
 
