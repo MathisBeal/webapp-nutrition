@@ -1,148 +1,119 @@
 <template>
-    <div class="result-item" @click="goToRecipe(plat.ID)" :class="{ 'clickable': true }">
-        <img src="/assets/img/plat.png" alt="Image" class="result-image" />
-        <div class="result-text">
-            <h2>
-                {{ plat.description || 'Description non disponible' }} - {{ plat.nom_categorie || 'Catégorie inconnue' }}
-            </h2>
-            <p>
-                <img src="/assets/img/horloge.png" alt="Icône d'horloge" class="icon-horloge" />
-                Durée de préparation : {{ plat.duree || 'Non spécifiée' }}
-            </p>
-        </div>
-        <div class="favori-icon" @click.stop="toggleFavori(plat)">
-            <IconStar v-if="favoris.has(plat.ID)" class="star-icon filled" />
-            <IconStarOff v-else class="star-icon empty" />
-        </div>
+  <div class="result-item" @click="navigate">
+    <img alt="Image" class="result-image" src="/assets/img/plat.png">
+    <div class="result-text">
+      <h2>
+        {{ plat.description || 'Description non disponible' }} - {{ plat.nom_categorie || 'Catégorie inconnue' }}
+      </h2>
+      <p>
+        <img alt="Icône d'horloge" class="icon-horloge" src="/assets/img/horloge.png"/>
+        Durée de préparation : {{ plat.duree || 'Non spécifiée' }}
+      </p>
     </div>
+    <div class="favori-icon" @click.stop="toggleFavori(plat)">
+      <IconStar v-if="favoris.has(plat.ID)" class="star-icon filled"/>
+      <IconStarOff v-else class="star-icon empty"/>
+    </div>
+  </div>
 </template>
 
-<script setup lang="ts">
-defineProps<{
-    plat: any;
-    favoris: Set<number>;
-    toggleFavori: (item: any) => void;
-    goToRecipe: (ID: number) => void;
+<script lang="ts" setup>
+
+const router = useRouter()
+
+const props = defineProps<{
+  plat: any;
+  favoris: Set<number>;
+  toggleFavori: (item: any) => void;
 }>();
+
+function navigate() {
+  router.push("/recipes/" + props.plat.ID_plat);
+}
 </script>
 
 <style scoped>
-.result-list {
-    height: 60vh;
-    overflow-y: hidden;
-    display: flex;
-    flex-direction: column;
-    width: 50vw;
-    gap: 2vh;
-    padding: 2vh;
-    transition: overflow-y 0.3s ease;
-}
-
-.result-list:hover {
-    overflow-y: auto;
-}
 
 .result-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 1vw;
-    padding: 2vh;
-    border-radius: 1em;
-    background-color: #fff;
-    box-shadow: 0 0.4vh 0.6vh rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  display: flex;
+  align-items: flex-start;
+  gap: 1vw;
+  padding: 2vh;
+  border-radius: 1em;
+  background-color: #fff;
+  box-shadow: 0 0.4vh 0.6vh rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
 .result-item:hover {
-    transform: scale(1.01);
-    box-shadow: 0 0.6vh 1vh rgba(0, 0, 0, 0.15);
-    background-color: #f9f9f9;
+  transform: scale(1.01);
+  box-shadow: 0 0.6vh 1vh rgba(0, 0, 0, 0.15);
+  background-color: #f9f9f9;
 }
 
 .result-item h2 {
-    margin: 0;
-    font-size: 1.2rem;
+  margin: 0;
+  font-size: 1.2rem;
 }
 
 .result-item p {
-    margin: 0.5vh 0 0;
-    color: #555;
+  margin: 0.5vh 0 0;
+  color: #555;
 }
 
 .result-image {
-    width: 7vw;
-    height: 7vw;
-    object-fit: cover;
-    border-radius: 0.5em;
+  width: 7vw;
+  height: 7vw;
+  object-fit: cover;
+  border-radius: 0.5em;
 }
 
 .result-text {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5vh;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5vh;
 }
 
 .result-text h2,
 .result-text p {
-    margin: 0;
-    text-align: left;
-    line-height: 1.2;
+  margin: 0;
+  text-align: left;
+  line-height: 1.2;
 }
 
 .result-text span {
-    font-size: 0.9rem;
-    color: #999;
+  font-size: 0.9rem;
+  color: #999;
 }
 
 .icon-horloge {
-    width: 1vw;
-    height: 1vw;
-    object-fit: cover;
-    border-radius: 0.5em;
-}
-
-.no-results {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1vh;
-    margin-top: 5vh;
-}
-
-.no-results-icon {
-    width: 3vw;
-    height: 3vw;
-    opacity: 0.7;
-}
-
-.no-results-text {
-    font-size: 1.2rem;
-    color: #555;
-    text-align: center;
+  width: 1vw;
+  height: 1vw;
+  object-fit: cover;
+  border-radius: 0.5em;
 }
 
 .favori-icon {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: auto;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
 }
 
 .star-icon {
-    width: 1.5vw;
-    height: 1.5vw;
-    transition: transform 0.2s;
-    color: #FFD700;
+  width: 1.5vw;
+  height: 1.5vw;
+  transition: transform 0.2s;
+  color: #FFD700;
 }
 
 .star-icon.empty {
-    color: #ccc;
+  color: #ccc;
 }
 
 .favori-icon:hover .star-icon {
-    transform: scale(1.1);
+  transform: scale(1.1);
 }
 </style>
