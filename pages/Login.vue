@@ -31,16 +31,19 @@ const handleLogin = async () => {
 
     const data = await response.json();
 
-    // Si connexion réussie
+    if (response.status === 400 && data.message) {
+      errorMessage.value = data.message; // Erreur de validation renvoyée par le backend
+      return;
+    }
+
     if (data.success) {
       errorMessage.value = '';
       setAuthenticationStatus(true);
       router.push('/home');
     } else {
-      errorMessage.value = data.message || 'Erreur lors de la connexion.';
+      errorMessage.value = data.message || 'Email ou mot de passe incorrect.';
     }
   } catch (error) {
-    // Gestion des erreurs (par exemple, mauvais email/mot de passe ou erreur serveur)
     console.error('Erreur lors de la connexion :', error);
     errorMessage.value = 'Erreur lors de la connexion. Veuillez réessayer.';
   }

@@ -272,6 +272,7 @@ onMounted(() => {
 
 .questionnaire-container {
   margin: 50px auto;
+  padding-left: 500px;
   background-color: #ffffff;
 }
 

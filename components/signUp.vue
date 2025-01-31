@@ -117,35 +117,40 @@ const handleSignup = async () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({email: email.value}),
+      body: JSON.stringify({ email: email.value }),
     });
 
     const data = await response.json();
 
-    if (response.ok && data.exists) {
-      errorMessage.value = data.message;
-      return;
-    } else if (!response.ok) {
-      errorMessage.value = 'Erreur lors de la communication avec le serveur.';
+    if (response.ok) {
+      if (data.exists) {
+        errorMessage.value = data.message;  // Affiche le message reçu du serveur
+      } else {
+        successMessage.value = 'Compte créé avec succès !';
+
+        props.userData.prenom = name.value;
+        props.userData.nom = lastName.value;
+        props.userData.mail = email.value;
+        props.userData.password = password.value;
+
+        setTimeout(() => {
+          emit('signupSuccess');
+        }, 500);
+      }
+    } else {
+      // Si le serveur renvoie une erreur
+      if (data.message) {
+        errorMessage.value = data.message;  // Affiche le message d'erreur détaillé
+      } else {
+        errorMessage.value = 'Erreur lors de la communication avec le serveur.';
+      }
       console.error('Erreur HTTP:', response.statusText);
-      return;
     }
 
   } catch (error) {
     errorMessage.value = 'Erreur lors de la vérification de l’e-mail.';
     console.error(error);
-    return;
   }
-  successMessage.value = 'Compte créé avec succès !';
-
-  props.userData.prenom = name.value;
-  props.userData.nom = lastName.value;
-  props.userData.mail = email.value;
-  props.userData.password = password.value;
-
-  setTimeout(() => {
-    emit('signupSuccess');
-  }, 500);
 };
 </script>
 
