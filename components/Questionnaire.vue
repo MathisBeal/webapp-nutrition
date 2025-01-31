@@ -12,7 +12,7 @@
       <form @keydown.enter.prevent="handleEnterKey">
         <template v-if="currentQuestionIndex === 0">
           <div class="option">
-            <label for="age">Votre âge :</label>
+            <label for="age">Votre âge : </label>
             <input
               id="age"
               ref="ageInput"
@@ -29,7 +29,7 @@
         <!-- Question spécifique pour la taille -->
         <template v-if="currentQuestionIndex === 2">
           <div class="option">
-            <label for="height">Votre taille (cm) :</label>
+            <label for="height">Votre taille (cm) : </label>
             <input
               id="height"
               ref="heightInput"
@@ -46,7 +46,7 @@
         <!-- Question spécifique pour le poids -->
         <template v-else-if="currentQuestionIndex === 3">
           <div class="option">
-            <label for="weight">Votre poids (kg) :</label>
+            <label for="weight">Votre poids (kg) : </label>
             <input
               id="weight"
               ref="weightInput"
@@ -273,6 +273,9 @@ onMounted(() => {
 .questionnaire-container {
   margin: 50px auto;
   background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .progress-info {
