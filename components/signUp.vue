@@ -152,10 +152,11 @@ const handleResponse = (data: ApiResponse) => {
   }
 
   notify({
-      type: 'error',
-      title: 'Erreur',
-      text: 'Compte créé avec succès !'
-    });
+    type: 'success',
+    title: 'Succès',
+    text: 'Compte créé avec succès !'
+  });
+
   props.userData.prenom = name.value!;
   props.userData.nom = lastName.value!;
   props.userData.mail = email.value!;
@@ -187,49 +188,50 @@ const handleSignup = async () => {
 
 <style scoped>
 .signup-page {
-  max-width: 400px;
-  margin: 50px auto;
-  padding: 25px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 30vw;
+  margin: 5vh 30vw;
+  margin-left: 40vw;
+  padding: 3vh;
+  border: 0.1vh solid #ccc;
+  border-radius: 1vw;
+  box-shadow: 0 0.2vh 0.4vh rgba(0, 0, 0, 0.1);
   font-family: Arial, sans-serif;
   background-color: #fff;
 }
 
 .title {
   text-align: center;
-  margin-bottom: 20px;
-  font-size: 24px;
+  margin-bottom: 3vh;
+  font-size: 3vw;
   color: #333;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 2vh;
 }
 
 label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 1vh;
   font-weight: bold;
 }
 
 .input {
   width: 95%;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 1.5vh;
+  font-size: 1.8vh;
+  border: 0.1vh solid #ccc;
+  border-radius: 0.5vw;
 }
 
 .btn {
   width: 100%;
-  padding: 10px;
-  font-size: 16px;
+  padding: 1.5vh;
+  font-size: 1.8vh;
   background-color: #28a745;
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 0.5vw;
   cursor: pointer;
 }
 
@@ -239,20 +241,20 @@ label {
 
 .error {
   color: red;
-  margin-bottom: 15px;
-  font-size: 14px;
+  margin-bottom: 1.5vh;
+  font-size: 1.6vh;
 }
 
 .success {
   color: green;
-  margin-bottom: 15px;
-  font-size: 14px;
+  margin-bottom: 1.5vh;
+  font-size: 1.6vh;
 }
 
 .login-link {
-  margin-top: 20px;
+  margin-top: 3vh;
   text-align: center;
-  font-size: 14px;
+  font-size: 1.6vh;
   color: #333;
 }
 

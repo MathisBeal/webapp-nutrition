@@ -234,38 +234,51 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.question-box {
+  background-color: white;
+  padding: 5vh;
+  margin-left: 25vw;
+  border-radius: 1vh;
+  box-shadow: 0 0 1vh 0.5vh rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 30vw;
+}
+
 .questionnaire-title {
   text-align: center;
-  font-size: 50px;
+  font-size: 4vw;
   color: #333;
-  margin-bottom: 20px;
+  margin-bottom: 10vh;
+  margin-left: 15vw;
 }
 
 .questionnaire-container {
-  margin: 50px auto;
-  padding-left: 500px;
+  margin: 5vh auto;
+  padding-left: 10vw;
   background-color: #ffffff;
 }
 
 .progress-info {
-  font-size: 16px;
+  font-size: 1.8vh;
   color: #555;
-  margin-top: 10px;
+  margin-top: 1vh;
 }
 
 .option {
-  margin: 10px 0;
+  margin: 2vh 0;
 }
 
 .error {
   color: red;
-  font-size: 14px;
-  margin-top: 5px;
+  font-size: 1.5vh;
+  margin-top: 0.5vh;
 }
 
 .navigation-buttons {
   display: flex;
   justify-content: space-between;
+  width: 80%;
+  margin: 0 auto;
 }
 
 button:disabled {
@@ -273,7 +286,6 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* Bouton suivant aligné à droite */
 .align-right {
   margin-left: auto;
 }
@@ -281,9 +293,10 @@ button:disabled {
 .submit-button {
   background-color: #4CAF50;
   color: white;
-  padding: 10px 20px;
+  padding: 1.5vh 3vw;
   border: none;
-  border-radius: 5px;
+  border-radius: 1vw;
+  font-size: 1.5vh;
 }
 
 .submit-button:disabled {
@@ -295,8 +308,9 @@ button:disabled {
 .next-button {
   background-color: #007BFF;
   color: white;
-  padding: 10px 20px;
+  padding: 1.5vh 3vw;
   border: none;
-  border-radius: 5px;
+  border-radius: 1vw;
+  font-size: 1.5vh;
 }
 </style>

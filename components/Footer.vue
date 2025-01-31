@@ -21,9 +21,9 @@ footer {
   width: 100%;
   position: fixed;
   bottom: 0;
-  padding: 7px;
-  border-top: 1px solid rgba(96, 96, 96, 0.9);
-  box-shadow: 0 -2px 7px rgba(96, 96, 96, 0.7);
+  padding: 1vh;
+  border-top: 0.1vh solid rgba(96, 96, 96, 0.9);
+  box-shadow: 0 -0.2vh 0.7vh rgba(96, 96, 96, 0.7);
 }
 
 a {
@@ -33,6 +33,6 @@ a {
 a:hover {
   text-decoration: none;
   border-radius: 25%;
-  box-shadow: 0 0 5px rgba(40, 40, 40, 0.71);
+  box-shadow: 0 0 0.5vh rgba(40, 40, 40, 0.71);
 }
 </style>

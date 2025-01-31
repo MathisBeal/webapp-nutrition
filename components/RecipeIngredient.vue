@@ -32,12 +32,12 @@ const imgSrc = lazyLoad("/img/placeholders/ingredient.jpg", props.ingredient.Ali
 }
 
 .ingredient-img {
-  --img-size: 50px;
+  --img-size: 5vw;
   width: var(--img-size);
   height: var(--img-size);
   border-radius: var(--img-size);
   object-fit: cover;
-  border: 1px solid rgba(106, 106, 106, 0.7);
+  border: 0.1vh solid rgba(106, 106, 106, 0.7);
 }
 
 .ingredient-text {

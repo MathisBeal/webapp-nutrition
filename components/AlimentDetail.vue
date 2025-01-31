@@ -67,7 +67,7 @@ const imgSrc = lazyLoad("/img/placeholders/ingredient.jpg", aliment.value.image)
   min-height: 100vh;
   margin: 0 auto;
   background: #f8f9fa;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0.2vh 0.5vh rgba(0, 0, 0, 0.2);
   text-align: center;
 }
 
@@ -101,7 +101,7 @@ const imgSrc = lazyLoad("/img/placeholders/ingredient.jpg", aliment.value.image)
 table {
   margin: auto;
   border-collapse: collapse;
-  border: 2px solid rgb(112, 112, 112);
+  border: 0.2vh solid rgb(112, 112, 112);
   font-size: 1em;
 }
 
@@ -116,7 +116,7 @@ tbody th {
 
 th {
   border-collapse: collapse;
-  border: 1px solid rgb(112, 112, 112);
+  border: 0.1vh solid rgb(112, 112, 112);
   padding: 0.2em 0.2em 0.3em 0.3em;
   width: 12vw;
   min-width: fit-content;

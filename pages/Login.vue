@@ -125,49 +125,51 @@ const handleLogin = async () => {
 
 <style scoped>
 .login-page {
-  max-width: 400px;
-  margin: 50px auto;
-  padding: 25px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 90vw;
+  width: 25%;
+  margin: 20vh;
+  margin-left: 40vw;
+  padding: 2em;
+  border: 0.1vh solid #ccc;
+  border-radius: 0.5em;
+  box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.1);
   font-family: Arial, sans-serif;
   background-color: #fff;
 }
 
 .title {
   text-align: center;
-  margin-bottom: 20px;
-  font-size: 24px;
+  margin-bottom: 2em;
+  font-size: 2.5em;
   color: #333;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 2em;
 }
 
 label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 0.5em;
   font-weight: bold;
 }
 
 .input {
   width: 95%;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 1em;
+  font-size: 1em;
+  border: 0.1vh solid #ccc;
+  border-radius: 0.25em;
 }
 
 .btn {
   width: 100%;
-  padding: 10px;
-  font-size: 16px;
+  padding: 1em;
+  font-size: 1em;
   background-color: #007BFF;
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 0.25em;
   cursor: pointer;
 }
 
@@ -177,14 +179,14 @@ label {
 
 .error {
   color: red;
-  margin-bottom: 15px;
-  font-size: 14px;
+  margin-bottom: 1.5em;
+  font-size: 1em;
 }
 
 .signup-link {
-  margin-top: 20px;
+  margin-top: 2em;
   text-align: center;
-  font-size: 14px;
+  font-size: 1em;
   color: #333;
 }
 

@@ -42,6 +42,6 @@ export default defineComponent({
 
 <style scoped>
 canvas {
-  height: 100px;
+  height: 10vh;
 }
 </style>

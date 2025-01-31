@@ -167,6 +167,7 @@ watch(userId, async (newUserId) => {
   max-width: 62.5vw;
   padding: 1.5vh;
   font-size: 0.875rem;
+  margin-left: 10vw;
   border: 0.15em solid #ccc;
   border-radius: 2.5em;
   box-shadow: 0 0.4vh 1vh rgba(0, 0, 0, 0.1);

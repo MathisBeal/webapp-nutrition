@@ -57,7 +57,7 @@ const imgSrc = lazyLoad("/img/placeholders/recipe.jpg", recipe.value.images);
   min-height: 100vh;
   margin: 0 auto;
   background: #f8f9fa;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0.2vh 0.5vh rgba(0, 0, 0, 0.2);
 }
 
 .recipe_name {
