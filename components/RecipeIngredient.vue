@@ -16,7 +16,7 @@ const imgSrc = ref("/img/ingredient-placeholder.jpg");
 // Preload image
 if (props.ingredient.Aliments.image) {
   if (useAppConfig().debug) {
-    console.log("url for",props.ingredient.Aliments.nom, ":", props.ingredient.Aliments.image)
+    console.log("ingredient image url for",props.ingredient.Aliments.nom, ":", props.ingredient.Aliments.image)
   }
 
   const img = new Image();
