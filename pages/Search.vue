@@ -1,23 +1,3 @@
-<template>
-  <div class="search-container">
-    <input ref="searchInput" v-model="searchQuery" class="search-bar" placeholder="Rechercher..." type="text"
-           @keyup.enter="onSearch"/>
-    <div v-if="results.length" class="result-list">
-      <div v-for="item in results" :key="item.ID">
-        <Plat v-if="item.type === 'plat'" :favoris="favoris" :plat="item"
-              :toggleFavori="toggleFavori"/>
-
-        <Aliment v-else-if="item.type === 'aliment'" :aliment="item" :favoris="favoris"
-                 :toggleFavori="toggleFavori"/>
-      </div>
-    </div>
-    <div v-else class="no-results">
-      <img alt="Icône de loupe" class="no-results-icon" src="/assets/icons/icon_search.png"/>
-      <p class="no-results-text">Aucun résultat</p>
-    </div>
-  </div>
-</template>
-
 <script lang="ts" setup>
 
 import {getSession, userId} from '@/composables/useAuth';
@@ -38,6 +18,7 @@ const onSearch = async () => {
   try {
     const response = await fetch(`/api/search?search=${encodeURIComponent(searchQuery.value)}`);
     const data = await response.json();
+    console.log(data);
     results.value = data;
   } catch (error) {
   }
@@ -47,7 +28,7 @@ const toggleFavori = async (item: any) => {
   if (!userId.value) {
     return;
   }
-  const isFavori = favoris.value.has(item.ID);
+  const isFavori = favoris.value.has(item.ID_unified);
   const action = isFavori ? "remove" : "add";
 
   try {
@@ -56,7 +37,7 @@ const toggleFavori = async (item: any) => {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         ID_user: userId.value,
-        ID_item: item.ID,
+        ID_item: item.ID_unified,
         type: item.type,
         action: action
       }),
@@ -64,10 +45,10 @@ const toggleFavori = async (item: any) => {
 
     if (response.ok) {
       if (isFavori) {
-        favoris.value.delete(item.ID);
-        results.value = results.value.filter(fav => fav.ID !== item.ID);
+        favoris.value.delete(item.ID_unified);
+        results.value = results.value.filter(fav => fav.ID_unified !== item.ID_unified);
       } else {
-        favoris.value.add(item.ID);
+        favoris.value.add(item.ID_unified);
       }
     }
   } catch (error) {
@@ -79,8 +60,9 @@ const loadFavoris = async () => {
   try {
     const response = await fetch(`/api/favoris?userId=${userId.value}&fullData=true`);
     const data = await response.json();
+    console.log(data);
     results.value = data;
-    favoris.value = new Set(data.map((fav: any) => fav.ID));
+    favoris.value = new Set(data.map((fav: any) => fav.ID_unified));
   } catch (error) {
   }
 };
@@ -104,6 +86,25 @@ watch(userId, async (newUserId) => {
 });
 </script>
 
+<template>
+  <div class="search-container">
+    <input ref="searchInput" v-model="searchQuery" class="search-bar" placeholder="Rechercher..." type="text"
+           @keyup.enter="onSearch"/>
+    <div v-if="results.length" class="result-list">
+      <div v-for="item in results" :key="item.ID_unified">
+        <Plat v-if="item.type === 'plat'" :favoris="favoris" :plat="item"
+              :toggleFavori="toggleFavori"/>
+
+        <Aliment v-else-if="item.type === 'aliment'" :aliment="item" :favoris="favoris"
+                 :toggleFavori="toggleFavori"/>
+      </div>
+    </div>
+    <div v-else class="no-results">
+      <img alt="Icône de loupe" class="no-results-icon" src="/assets/icons/icon_search.png"/>
+      <p class="no-results-text">Aucun résultat</p>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .search-container {
