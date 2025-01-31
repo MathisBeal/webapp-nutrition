@@ -1,26 +1,3 @@
-<script lang="ts" setup>
-import {computed} from 'vue';
-import lazyLoad from "~/utils/lazyLoadImg.ts";
-
-// Define props for the component
-const props = defineProps({
-  alimentData: {
-    type: Object,
-    required: true,
-  },
-  linkedRecipes: {
-    type: Array,
-    required: false,
-  }
-});
-
-const aliment = computed(() => props.alimentData || {});
-const recipes = computed(() => props.linkedRecipes || null);
-
-const imgSrc = lazyLoad("/img/placeholders/ingredient.jpg", aliment.value.image);
-
-</script>
-
 <template>
   <div class="container">
     <h1 class="aliment_name">{{ aliment?.nom || 'Aliment' }}</h1>
@@ -64,6 +41,27 @@ const imgSrc = lazyLoad("/img/placeholders/ingredient.jpg", aliment.value.image)
   </div>
 </template>
 
+<script lang="ts" setup>
+import lazyLoad from "~/utils/lazyLoadImg.ts";
+
+// Define props for the component
+const props = defineProps({
+  alimentData: {
+    type: Object,
+    required: true,
+  },
+  linkedRecipes: {
+    type: Array,
+    required: false,
+  }
+});
+
+const aliment = computed(() => props.alimentData || {});
+const recipes = computed(() => props.linkedRecipes || null);
+
+const imgSrc = lazyLoad("/img/placeholders/ingredient.jpg", aliment.value.image);
+</script>
+
 <style scoped>
 .container {
   width: 60vw;
@@ -94,9 +92,6 @@ const imgSrc = lazyLoad("/img/placeholders/ingredient.jpg", aliment.value.image)
   max-height: 25vw;
   object-fit: cover;
   border-radius: 1vw;
-}
-
-.linked_recipes {
 }
 
 .linked_recipe_item {

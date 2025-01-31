@@ -1,3 +1,9 @@
+<template>
+  <div id="bottle-container">
+    <img src="assets/img/bottle_mask.png" alt="" :style="styleObject">
+  </div>
+</template>
+
 <script setup lang="ts">
 import {reactive, watch} from "#imports";
 
@@ -7,7 +13,6 @@ const props = defineProps({
     required: true,
   }
 });
-
 
 const styleObject = reactive({
   background: '',
@@ -35,14 +40,7 @@ watch(
   },
   { immediate: true }
 );
-
 </script>
-
-<template>
-  <div id="bottle-container">
-    <img src="assets/img/bottle_mask.png" alt="" :style="styleObject">
-  </div>
-</template>
 
 <style scoped>
 #bottle-container {

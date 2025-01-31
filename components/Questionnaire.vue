@@ -131,6 +131,7 @@ const ageInput = ref<HTMLInputElement | null>(null);
 const heightInput = ref<HTMLInputElement | null>(null);
 const weightInput = ref<HTMLInputElement | null>(null);
 
+
 const isNextEnabled = computed(() => {
   const enabled = (() => {
     if (currentQuestionIndex.value === 0) {
@@ -144,7 +145,6 @@ const isNextEnabled = computed(() => {
     }
     return selectedOption.value[currentQuestionIndex.value] !== null;
   })();
-  console.debug(`isNextEnabled: ${enabled}`);
   return enabled;
 });
 
@@ -199,9 +199,7 @@ const fetchOptions = async () => {
 };
 
 const handleEnterKey = () => {
-  console.debug('Enter key pressed');
   if (isNextEnabled.value) {
-    console.debug('isNextEnabled is true, moving to next question');
     if (currentQuestionIndex.value < questions.value.length - 1) {
       nextQuestion();
     } else {
@@ -223,7 +221,6 @@ watch(currentQuestionIndex, async (newIndex) => {
     weightInput.value?.focus();
   } else {
     selectedOption.value[newIndex] = questions.value[newIndex].options[0];
-    console.debug(`Default option selected for question ${newIndex}: ${questions.value[newIndex].options[0]}`);
   }
 });
 

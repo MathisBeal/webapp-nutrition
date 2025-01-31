@@ -1,5 +1,16 @@
+<template>
+  <div>
+    <AlimentDetail v-if="aliment_data" :alimentData="aliment_data" :linkedRecipes="linked_recipes"/>
+    <div v-else-if="error">
+      Could not fetch aliment from database.
+    </div>
+    <div v-else>
+      Loading...
+    </div>
+  </div>
+</template>
+
 <script lang="ts" setup>
-import {onMounted, ref} from 'vue';
 import {useRoute} from 'vue-router';
 
 const params = useRoute().params;
@@ -33,19 +44,3 @@ onMounted(async () => {
   }
 });
 </script>
-
-<template>
-  <div>
-    <AlimentDetail v-if="aliment_data" :alimentData="aliment_data" :linkedRecipes="linked_recipes"/>
-    <div v-else-if="error">
-      Could not fetch aliment from database.
-    </div>
-    <div v-else>
-      Loading...
-    </div>
-  </div>
-</template>
-
-<style scoped>
-/* Add styles if needed */
-</style>

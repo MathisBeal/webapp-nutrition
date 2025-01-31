@@ -11,12 +11,17 @@
       :userData="userData"
       @submitQuestionnaire="submitQuestionnaire"
     />
+    <NuxtNotifications class="custom-notif"
+    position="top center"
+    :speed="500"/>
   </div>
 </template>
 
 <script lang="ts" setup>
 import {type User} from '@/types/User';
+import { NuxtNotifications } from '#components';
 
+const { notify } = useNotification();
 const currentStep = ref('signUp');
 const userData = ref<User>({
   nom: '',
@@ -45,12 +50,20 @@ const submitQuestionnaire = async () => {
     });
 
     if (response) {
-      alert('Questionnaire soumis avec succès !');
+      notify({
+        type: 'error',
+        title: 'Erreur',
+        text: 'Questionnaire soumis avec succès !'
+      });
       router.push('/login');
     }
   } catch (error) {
     console.error('Erreur lors de l\'envoi des données :', error);
-    alert('Une erreur est survenue lors de la soumission du formulaire ou du questionnaire.');
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: 'Une erreur est survenue lors de la soumission du formulaire ou du questionnaire.'
+    });
   }
 };
 </script>

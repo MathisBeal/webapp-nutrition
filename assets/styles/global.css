@@ -4,6 +4,13 @@ body {
   font-family: Roboto, Arial, sans-serif;
 }
 
+.custom-notif {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
 .question-box {
   background-color: white;
   padding: 50px;

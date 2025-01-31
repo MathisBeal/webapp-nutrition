@@ -1,46 +1,3 @@
-<script lang="ts" setup>
-import {getSession, isAuthenticated, logout, userId} from '@/composables/useAuth';
-
-
-const router = useRouter();
-const isNavVisible = ref(true);
-
-const logoutRedirection = async () => {
-  await logout();
-  router.push('/login');
-};
-
-const toggleNav = () => {
-  isNavVisible.value = !isNavVisible.value;
-};
-
-onMounted(async () => {
-  await getSession();
-});
-
-// Surveiller changements d'état d'authentification
-watch(isAuthenticated, async (newValue) => {
-  if (newValue) {
-    console.log("Utilisateur connecté, récupération de la session...");
-    await getSession();
-  } else {
-    console.log("Utilisateur déconnecté !");
-    userId.value = null;
-  }
-});
-
-const checkAuthBeforeNavigation = (page: string) => {
-  console.log(`Navigation vers ${page}...`);
-  console.log(`isAuthenticated:`, isAuthenticated.value);
-  if (!isAuthenticated.value) {
-    console.warn("Utilisateur déconnecté avant la navigation !");
-  } else {
-    console.log("Utilisateur toujours connecté.");
-  }
-};
-
-</script>
-
 <template>
   <nav v-if="isNavVisible">
     <img
@@ -51,7 +8,7 @@ const checkAuthBeforeNavigation = (page: string) => {
     />
     <ul>
       <li>
-        <a href="/home">
+        <a href="/">
           <img
             alt="Home Icon"
             class="nav-icon"
@@ -60,7 +17,7 @@ const checkAuthBeforeNavigation = (page: string) => {
         </a>
       </li>
       <li>
-        <a href="/search" @click="checkAuthBeforeNavigation('Search')">
+        <a href="/search">
           <img
             alt="Search Icon"
             class="nva-icon"
@@ -93,6 +50,35 @@ const checkAuthBeforeNavigation = (page: string) => {
     @click="toggleNav"
   />
 </template>
+
+<script lang="ts" setup>
+import {getSession, isAuthenticated, logout, userId} from '@/composables/useAuth';
+
+const router = useRouter();
+const isNavVisible = ref(true);
+
+const logoutRedirection = async () => {
+  await logout();
+  router.push('/login');
+};
+
+const toggleNav = () => {
+  isNavVisible.value = !isNavVisible.value;
+};
+
+onMounted(async () => {
+  await getSession();
+});
+
+// Surveiller changements d'état d'authentification
+watch(isAuthenticated, async (newValue) => {
+  if (newValue) {
+    await getSession();
+  } else {
+    userId.value = null;
+  }
+});
+</script>
 
 <style scoped>
 nav {

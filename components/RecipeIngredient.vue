@@ -1,3 +1,12 @@
+<template>
+  <div class="ingredient">
+    <NuxtLink :to="{name: 'aliments-id_aliment', params: {id_aliment: id_alim}}">
+      <img :alt="'Image de '+nom" :src="imgSrc" class="ingredient-img">
+    </NuxtLink>
+    <p class="ingredient-text"><strong>{{ nom }}</strong>: {{ qty }} {{ unite }}</p>
+  </div>
+</template>
+
 <script lang="ts" setup>
 import lazyLoad from "~/utils/lazyLoadImg.ts";
 
@@ -12,22 +21,10 @@ const id_alim = props.ingredient.ID_aliment;
 const nom = props.ingredient.Aliments.nom;
 const qty = Number.parseFloat(props.ingredient.Aliments.quantite_base) * Number.parseFloat(props.ingredient.multiplicateur_quantite);
 const unite = props.ingredient.Aliments.unite;
-
 const imgSrc = lazyLoad("/img/placeholders/ingredient.jpg", props.ingredient.Aliments.image);
-
 </script>
 
-<template>
-  <div class="ingredient">
-    <NuxtLink :to="{name: 'aliments-id_aliment', params: {id_aliment: id_alim}}">
-      <img :alt="'Image de '+nom" :src="imgSrc" class="ingredient-img">
-    </NuxtLink>
-    <p class="ingredient-text"><strong>{{ nom }}</strong>: {{ qty }} {{ unite }}</p>
-  </div>
-</template>
-
 <style scoped>
-
 .ingredient {
   display: flex;
   margin: 0 0 0.4em 0.6em;
