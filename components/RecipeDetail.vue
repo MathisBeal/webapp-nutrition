@@ -1,17 +1,18 @@
 <script lang="ts" setup>
 import {computed} from 'vue';
+import lazyLoad from "~/utils/lazyLoadImg.ts";
 
 // Define props for the component
 const props = defineProps({
-  recipe_data: {
+  recipeData: {
     type: Object,
     required: true,
   },
 });
 
 // Extract data from `recipe_data`
-const recipe = computed(() => props.recipe_data.recipe_info || {});
-const ingredients = computed(() => props.recipe_data.ingredients || []);
+const recipe = computed(() => props.recipeData.recipe_info || {});
+const ingredients = computed(() => props.recipeData.ingredients || []);
 
 // Extract the recipe steps
 const rawSteps = recipe.value.etapes || ''; // Assuming `etapes` is a string
@@ -22,21 +23,7 @@ const steps = computed(() =>
     .map((step: string) => step.trim()) // Trim any extra spaces
 );
 
-const imgSrc = ref("/img/recipe-placeholder.jpg");
-
-// Preload image
-if (recipe.value.images) {
-  if (useAppConfig().debug) {
-    console.log("recipe image url for",recipe.value.description, ":", recipe.value.images)
-  }
-
-  const img = new Image();
-  img.src = recipe.value.images;
-
-  img.onload = () => {
-    imgSrc.value = img.src; // Update only after the image fully loads
-  };
-}
+const imgSrc = lazyLoad("/img/placeholders/recipe.jpg", recipe.value.images);
 
 </script>
 

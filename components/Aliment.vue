@@ -1,6 +1,25 @@
+<script lang="ts" setup>
+import lazyLoad from "~/utils/lazyLoadImg.ts";
+
+const props = defineProps<{
+  aliment: any;
+  favoris: Set<number>;
+  toggleFavori: (item: any) => void;
+}>();
+
+const router = useRouter();
+
+function navigate() {
+  router.push("/aliments/" + props.aliment.ID_aliment);
+}
+
+const imgSrc = lazyLoad("/img/placeholders/aliment.jpg", props.aliment.image);
+
+</script>
+
 <template>
   <div class="result-item" @click="navigate">
-    <img alt="Image" class="result-image" src="/assets/img/plat.png"/>
+    <img :src="imgSrc" alt="Image" class="result-image"/>
     <div class="result-text">
       <h2>
         {{ aliment.nom }}
@@ -18,20 +37,6 @@
     </div>
   </div>
 </template>
-
-<script lang="ts" setup>
-const props = defineProps<{
-  aliment: any;
-  favoris: Set<number>;
-  toggleFavori: (item: any) => void;
-}>();
-
-const router = useRouter();
-
-function navigate() {
-  router.push("/aliments/" + props.aliment.ID_aliment);
-}
-</script>
 
 <style scoped>
 

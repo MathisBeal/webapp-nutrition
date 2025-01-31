@@ -1,24 +1,7 @@
-<template>
-  <div :class="['accueil', { 'with-nav': isNavVisible }]">
-    <h1>Plats</h1>
-    <div ref="platList" class="plat-list" @scroll="handleScroll">
-      <Plat
-        v-for="plat in displayedPlats"
-        :key="plat.ID_plat"
-        :favoris="favoris"
-        :plat="plat"
-        :toggleFavori="toggleFavori"
-      />
-    </div>
-  </div>
-</template>
-
-
 <script lang="ts" setup>
 import {useAsyncData} from '#app';
 import {isNavVisible} from '@/composables/useNavState';
 import Plat from '@/components/Plat.vue';
-
 
 const {data: plats} = await useAsyncData('plats', () => $fetch('/api/plat'));
 
@@ -101,7 +84,6 @@ const loadPlats = () => {
   }
 };
 
-
 const handleScroll = (event: Event) => {
   const target = event.target as HTMLElement;
   if (target.scrollTop + target.clientHeight >= target.scrollHeight - 10) {
@@ -114,12 +96,22 @@ onMounted(async () => {
   loadPlats();
 });
 
-function goToRecipe(ID_plat: number) {
-  navigateTo("/recipes/" + ID_plat);
-}
-
 </script>
 
+<template>
+  <div :class="['accueil', { 'with-nav': isNavVisible }]">
+    <h1>Plats</h1>
+    <div ref="platList" class="plat-list" @scroll="handleScroll">
+      <Plat
+        v-for="plat in displayedPlats"
+        :key="plat.ID_plat"
+        :favoris="favoris"
+        :plat="plat"
+        :toggleFavori="toggleFavori"
+      />
+    </div>
+  </div>
+</template>
 
 <style>
 .plat-list {
@@ -130,13 +122,6 @@ function goToRecipe(ID_plat: number) {
   gap: 2vh;
   padding: 2vh;
   transition: overflow-y 0.3s ease;
-}
-
-.plat-text {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.5vh;
 }
 
 .plat-text h2,
@@ -151,58 +136,8 @@ function goToRecipe(ID_plat: number) {
   color: #999;
 }
 
-.icon-horloge {
-  width: 1.5vw;
-  height: 1.5vw;
-  object-fit: cover;
-  border-radius: 0.5em;
-}
-
-.plat-image {
-  width: 7vw;
-  height: 7vw;
-  object-fit: cover;
-  border-radius: 0.5em;
-}
-
 .plat-list:hover {
   overflow-y: auto;
-}
-
-.plat-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 1vw;
-  padding: 2vh;
-  border-radius: 1em;
-  background-color: #fff;
-  box-shadow: 0 0.4vh 0.6vh rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-}
-
-.plat-item:hover {
-  transform: scale(1.01);
-  box-shadow: 0 0.6vh 1vh rgba(0, 0, 0, 0.15);
-  background-color: #f9f9f9;
-}
-
-.favori-icon {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: auto;
-}
-
-.star-icon {
-  width: 1.5vw;
-  height: 1.5vw;
-  transition: transform 0.2s;
-  color: #FFD700;
-}
-
-.star-icon.empty {
-  color: #ccc;
 }
 
 .favori-icon:hover .star-icon {

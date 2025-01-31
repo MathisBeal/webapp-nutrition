@@ -1,6 +1,26 @@
+<script lang="ts" setup>
+
+import lazyLoad from "~/utils/lazyLoadImg.ts";
+
+const router = useRouter()
+
+const props = defineProps<{
+  plat: any;
+  favoris: Set<number>;
+  toggleFavori: (item: any) => void;
+}>();
+
+function navigate() {
+  router.push("/recipes/" + props.plat.ID_plat);
+}
+
+const imgSrc = lazyLoad("/img/placeholders/plat.png", props.plat.images);
+
+</script>
+
 <template>
   <div class="result-item" @click="navigate">
-    <img alt="Image" class="result-image" src="/assets/img/plat.png">
+    <img :src="imgSrc" alt="Image" class="result-image">
     <div class="result-text">
       <h2>
         {{ plat.description || 'Description non disponible' }} - {{ plat.nom_categorie || 'Catégorie inconnue' }}
@@ -16,21 +36,6 @@
     </div>
   </div>
 </template>
-
-<script lang="ts" setup>
-
-const router = useRouter()
-
-const props = defineProps<{
-  plat: any;
-  favoris: Set<number>;
-  toggleFavori: (item: any) => void;
-}>();
-
-function navigate() {
-  router.push("/recipes/" + props.plat.ID_plat);
-}
-</script>
 
 <style scoped>
 
