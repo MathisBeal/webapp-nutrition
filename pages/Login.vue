@@ -2,9 +2,6 @@
   <div class="login-page">
     <h1 class="title">Connexion</h1>
     <form class="login-form" @submit.prevent="handleLogin">
-      <!-- Message d'erreur général -->
-      <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-
       <!-- Champ Email -->
       <div class="form-group">
         <label for="email">Email</label>
