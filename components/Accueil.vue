@@ -2,40 +2,26 @@
   <div :class="['accueil', { 'with-nav': isNavVisible }]">
     <h1>Plats</h1>
     <div ref="platList" class="plat-list" @scroll="handleScroll">
-      <div
+      <Plat
         v-for="plat in displayedPlats"
         :key="plat.ID_plat"
-        class="plat-item"
-      >
-        <img alt="Image du plat" class="plat-image" src="/assets/img/plat.png" @click="null;">
-        <div class="plat-text" @click="null;">
-          <h2>
-            {{ plat.description || 'Description non disponible' }} -
-            {{ plat.nom_categorie || 'Catégorie inconnue' }}
-          </h2>
-          <p>
-            <img
-              alt="Icône d'horloge"
-              class="icon-horloge"
-              src="/assets/img/horloge.png"
-            >
-            Durée de préparation : {{ plat.duree || 'Non spécifiée' }}
-          </p>
-        </div>
-        <div class="favori-icon" @click.stop="toggleFavori(plat)">
-          <IconStar v-if="favoris.has(plat.ID_plat)" class="star-icon filled"/>
-          <IconStarOff v-else class="star-icon empty"/>
-        </div>
-      </div>
+        :favoris="favoris"
+        :plat="plat"
+        :toggleFavori="toggleFavori"
+      />
     </div>
   </div>
 </template>
 
+
 <script lang="ts" setup>
 import {useAsyncData} from '#app';
 import {isNavVisible} from '@/composables/useNavState';
+import Plat from '@/components/Plat.vue';
+
 
 const {data: plats} = await useAsyncData('plats', () => $fetch('/api/plat'));
+
 const displayedPlats = ref<any[]>([]);
 const favoris = ref<Set<number>>(new Set());
 const userSession = ref<any>(null);
@@ -72,7 +58,7 @@ const toggleFavori = async (plat: any) => {
     return;
   }
 
-  const isFavori = favoris.value.has(plat.ID_plat);
+  const isFavori = favoris.value.has(plat.ID);
   const action = isFavori ? "remove" : "add";
 
   try {
@@ -104,7 +90,11 @@ const loadPlats = () => {
   const start = (currentPage - 1) * pageSize;
   const end = currentPage * pageSize;
 
-  const newPlats = plats.value.slice(start, end);
+  const newPlats = plats.value.slice(start, end).map(plat => ({
+    ...plat,
+    ID: plat.ID_plat,
+  }));
+
   if (newPlats.length) {
     displayedPlats.value.push(...newPlats);
     currentPage++;
@@ -123,9 +113,15 @@ onMounted(async () => {
   await getSession();
   loadPlats();
 });
+
+function goToRecipe(ID_plat: number) {
+  navigateTo("/recipes/" + ID_plat);
+}
+
 </script>
 
-<style scoped>
+
+<style>
 .plat-list {
   height: 60vh;
   overflow-y: hidden;
@@ -147,13 +143,7 @@ onMounted(async () => {
 .plat-text p {
   margin: 0;
   text-align: left;
-  line-height: 1.2em;
-}
-
-.plat-item:hover {
-  transform: scale(1.01);
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-  background-color: #f9f9f9;
+  line-height: 1.2;
 }
 
 .plat-text span {
