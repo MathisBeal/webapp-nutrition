@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { StarOff, Star } from 'lucide-vue-next';
 import lazyLoad from "~/utils/lazyLoadImg.ts";
 
 const props = defineProps<{
@@ -32,8 +33,8 @@ const imgSrc = lazyLoad("/img/placeholders/ingredient.jpg", props.aliment.image)
       </p>
     </div>
     <div class="favori-icon" @click.stop="toggleFavori(aliment)">
-      <IconStar v-if="favoris.has(aliment.ID)" class="star-icon filled"/>
-      <IconStarOff v-else class="star-icon empty"/>
+      <Star v-if="favoris.has(aliment.ID)" class="star-icon filled"/>
+      <StarOff v-else class="star-icon empty"/>
     </div>
   </div>
 </template>
