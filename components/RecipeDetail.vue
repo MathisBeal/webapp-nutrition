@@ -22,19 +22,21 @@ const steps = computed(() =>
     .map((step: string) => step.trim()) // Trim any extra spaces
 );
 
-let img: Blob;
-let url: string;
-let imageFetched: boolean = true;
-try {
-  // console.log(recipe.value.images);
-  // @ts-ignore
-  img = await $fetch(recipe.value.images);
-  url = URL.createObjectURL(img);
-} catch (e) {
-  console.error('Fetching image error: Address may point to nothing or a not image element\n', e);
-  imageFetched = false;
-}
+const imgSrc = ref("/img/recipe-placeholder.jpg");
 
+// Preload image
+if (recipe.value.images) {
+  if (useAppConfig().debug) {
+    console.log("recipe image url for",recipe.value.description, ":", recipe.value.images)
+  }
+
+  const img = new Image();
+  img.src = recipe.value.images;
+
+  img.onload = () => {
+    imgSrc.value = img.src; // Update only after the image fully loads
+  };
+}
 
 </script>
 
@@ -43,8 +45,7 @@ try {
     <!-- Recipe Title -->
     <h1 class="recipe_name">{{ recipe?.description || 'Recipe' }}</h1>
 
-    <img v-if="imageFetched" :alt="'Image of ' + recipe?.description" :src="url" class="recipe_image">
-    <img v-else alt="Recipe placeholder image" class="recipe_image" src="assets/img/recipe-placeholder.jpg">
+    <img :alt="'Image of ' + recipe?.description" :src="imgSrc" class="recipe_image">
 
     <div class="recipe_text">
       <!-- Ingredients List -->
