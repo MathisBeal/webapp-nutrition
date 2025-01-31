@@ -5,6 +5,7 @@
   "scripts": {
     "check-type": "tsc --noEmit",
     "build": "nuxi build",
+    "start": "nuxt start",
     "clean": "rimraf .output",
     "dev": "nuxt dev",
     "dev:host": "nuxt dev --host",
