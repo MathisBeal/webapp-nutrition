@@ -25,7 +25,7 @@ onMounted(async () => {
 
 <template>
   <div>
-    <AlimentDetail v-if="aliment_data" :aliment_data="aliment_data"/>
+    <AlimentDetail v-if="aliment_data" :alimentData="aliment_data"/>
     <div v-else-if="error">
       Could not fetch aliment from database.
     </div>

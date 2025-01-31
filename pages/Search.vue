@@ -20,7 +20,6 @@
 
 <script lang="ts" setup>
 
-import {navigateTo} from '#app';
 import {getSession, userId} from '@/composables/useAuth';
 import Plat from '@/components/Plat.vue';
 import Aliment from '@/components/Aliment.vue';
@@ -84,10 +83,6 @@ const loadFavoris = async () => {
     favoris.value = new Set(data.map((fav: any) => fav.ID));
   } catch (error) {
   }
-};
-
-const goToRecipe = (ID: number) => {
-  navigateTo(`/recipes/${ID}`);
 };
 
 onMounted(async () => {
@@ -154,23 +149,6 @@ watch(userId, async (newUserId) => {
   overflow-y: auto;
 }
 
-.result-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 1vw;
-  padding: 2vh;
-  border-radius: 1em;
-  background-color: #fff;
-  box-shadow: 0 0.4vh 0.6vh rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-}
-
-.result-item:hover {
-  transform: scale(1.01);
-  box-shadow: 0 0.6vh 1vh rgba(0, 0, 0, 0.15);
-  background-color: #f9f9f9;
-}
-
 .result-item h2 {
   margin: 0;
   font-size: 1.2rem;
@@ -179,20 +157,6 @@ watch(userId, async (newUserId) => {
 .result-item p {
   margin: 0.5vh 0 0;
   color: #555;
-}
-
-.result-image {
-  width: 7vw;
-  height: 7vw;
-  object-fit: cover;
-  border-radius: 0.5em;
-}
-
-.result-text {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.5vh;
 }
 
 .result-text h2,
@@ -205,13 +169,6 @@ watch(userId, async (newUserId) => {
 .result-text span {
   font-size: 0.9rem;
   color: #999;
-}
-
-.icon-horloge {
-  width: 1vw;
-  height: 1vw;
-  object-fit: cover;
-  border-radius: 0.5em;
 }
 
 .no-results {
@@ -233,25 +190,6 @@ watch(userId, async (newUserId) => {
   font-size: 1.2rem;
   color: #555;
   text-align: center;
-}
-
-.favori-icon {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: auto;
-}
-
-.star-icon {
-  width: 1.5vw;
-  height: 1.5vw;
-  transition: transform 0.2s;
-  color: #FFD700;
-}
-
-.star-icon.empty {
-  color: #ccc;
 }
 
 .favori-icon:hover .star-icon {

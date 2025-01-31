@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import lazyLoad from "~/utils/lazyLoadImg.ts";
+
 const props = defineProps({
   ingredient: {
     type: Object,
@@ -11,21 +13,7 @@ const nom = props.ingredient.Aliments.nom;
 const qty = Number.parseFloat(props.ingredient.Aliments.quantite_base) * Number.parseFloat(props.ingredient.multiplicateur_quantite);
 const unite = props.ingredient.Aliments.unite;
 
-const imgSrc = ref("/img/ingredient-placeholder.jpg");
-
-// Preload image
-if (props.ingredient.Aliments.image) {
-  if (useAppConfig().debug) {
-    console.log("ingredient image url for",props.ingredient.Aliments.nom, ":", props.ingredient.Aliments.image)
-  }
-
-  const img = new Image();
-  img.src = props.ingredient.Aliments.image;
-
-  img.onload = () => {
-    imgSrc.value = img.src; // Update only after the image fully loads
-  };
-}
+const imgSrc = lazyLoad("/img/placeholders/ingredient.jpg", props.ingredient.Aliments.image);
 
 </script>
 
