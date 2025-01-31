@@ -18,7 +18,6 @@ const onSearch = async () => {
   try {
     const response = await fetch(`/api/search?search=${encodeURIComponent(searchQuery.value)}`);
     const data = await response.json();
-    console.log(data);
     results.value = data;
   } catch (error) {
   }
@@ -60,7 +59,6 @@ const loadFavoris = async () => {
   try {
     const response = await fetch(`/api/favoris?userId=${userId.value}&fullData=true`);
     const data = await response.json();
-    console.log(data);
     results.value = data;
     favoris.value = new Set(data.map((fav: any) => fav.ID));
   } catch (error) {

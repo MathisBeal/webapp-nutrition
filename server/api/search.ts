@@ -29,9 +29,6 @@ export default defineEventHandler(async (event) => {
     },
   });
 
-  console.log(plats);
-
-
   const aliments = await prisma.aliments.findMany({
     where: search
       ? {
