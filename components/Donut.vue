@@ -3,13 +3,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
-import {
-  Chart,
-  registerables,
-  type ChartData,
-  type ChartOptions,
-} from 'chart.js';
+import {defineComponent, onMounted, ref} from 'vue';
+import {Chart, type ChartData, type ChartOptions, registerables,} from 'chart.js';
 
 Chart.register(...registerables);
 

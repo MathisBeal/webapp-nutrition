@@ -1,99 +1,52 @@
 body {
   margin: 0;
   font-family: Roboto, Arial, sans-serif;
-}
-
-.questionnaire-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #059627d1;
-  margin: 0;
+  font-family: Roboto, Arial, sans-serif;
 }
 
 .question-box {
   background-color: white;
   padding: 50px;
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.1);
   text-align: center;
   width: 300px;
 }
 
-.option {
-  margin: 10px 0;
-}
-
-
-/* Boutons de navigation */
-.navigation-buttons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
-.previous-button {
-  background-color: #f8f9fa;
-  /* Fond clair */
-  color: black;
-  border: 1px solid #ced4da;
-  padding: 8px 16px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.next-button {
-  background-color: #28a745;
-  /* Vert */
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.previous-button:hover,
-.next-button:hover {
-  opacity: 0.9;
-}
-
-
-.navigation-buttons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
-.previous-button {
-  background-color: #f8f9fa;
-  color: black;
-  border: 1px solid #ced4da;
-  padding: 8px 16px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.next-button {
-  background-color: #28a745;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.previous-button:hover,
-.next-button:hover {
-  opacity: 0.9;
-}
-
-
 .accueil {
   padding: 20px;
-  transition: margin-left 0.3s ease;
+  transition: margin-left 0.3s ease; 
 }
 
 .accueil.with-nav {
-  margin-left: 145px;
+  margin-left: 145px; 
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.accueil.with-nav {
+  margin-left: 145px; 
+}
+
+.accueil.with-nav {
+  margin-left: 145px; 
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.accueil {
+  padding: 20px;
+  transition: margin-left 0.3s ease; 
+}
+
+.accueil.with-nav {
+  margin-left: 145px; 
 }

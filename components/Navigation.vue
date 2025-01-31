@@ -1,51 +1,96 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { useRouter } from 'nuxt/app'
-import { isAuthenticated, setAuthenticationStatus } from '@/composables/useAuth'
+import {getSession, isAuthenticated, logout, userId} from '@/composables/useAuth';
 
-const router = useRouter()
 
-// Variable pour contrôler la visibilité de la barre de navigation
-const isNavVisible = ref(true)
+const router = useRouter();
+const isNavVisible = ref(true);
 
-const logout = () => {
-  setAuthenticationStatus(false)
-  router.push('/login')
-}
+const logoutRedirection = async () => {
+  await logout();
+  router.push('/login');
+};
 
-// Fonction pour masquer ou afficher la barre de navigation
 const toggleNav = () => {
-  isNavVisible.value = !isNavVisible.value
-}
+  isNavVisible.value = !isNavVisible.value;
+};
+
+onMounted(async () => {
+  await getSession();
+});
+
+// Surveiller changements d'état d'authentification
+watch(isAuthenticated, async (newValue) => {
+  if (newValue) {
+    console.log("Utilisateur connecté, récupération de la session...");
+    await getSession();
+  } else {
+    console.log("Utilisateur déconnecté !");
+    userId.value = null;
+  }
+});
+
+const checkAuthBeforeNavigation = (page: string) => {
+  console.log(`Navigation vers ${page}...`);
+  console.log(`isAuthenticated:`, isAuthenticated.value);
+  if (!isAuthenticated.value) {
+    console.warn("Utilisateur déconnecté avant la navigation !");
+  } else {
+    console.log("Utilisateur toujours connecté.");
+  }
+};
+
 </script>
 
 <template>
-  <!-- Barre de navigation, visible uniquement si 'isNavVisible' est true -->
   <nav v-if="isNavVisible">
     <img
-      src="/assets/icons/icon_list-white.png"
       alt="Settings Button"
-      @click="toggleNav"
       class="settings-button"
+      src="/assets/icons/icon_list-white.png"
+      @click="toggleNav"
     />
     <ul>
-      <li><a href="/home">Home</a></li>
-      <li><a href="/about">About</a></li>
-      <li><a href="/contact">Contact</a></li>
+      <li>
+        <a href="/home">
+          <img
+            alt="Home Icon"
+            class="nav-icon"
+            src="/assets/icons/icon_home.svg"
+          />
+        </a>
+      </li>
+      <li>
+        <a href="/search" @click="checkAuthBeforeNavigation('Search')">
+          <img
+            alt="Search Icon"
+            class="nva-icon"
+            src="/assets/icons/icon_white_search.svg"
+          />
+        </a>
+      </li>
+      <li>
+        <a href="/stats">
+          <img
+            alt="Stats Icon"
+            class="nva-icon"
+            src="/assets/icons/icon_stats.png"
+          />
+        </a>
+      </li>
     </ul>
 
-    <li class="bouton" v-if="isAuthenticated">
-      <button @click="logout">Se déconnecter</button>
-    </li>
+    <div v-if="isAuthenticated">
+      <p>Utilisateur : {{ userId ? userId : 'ID non trouvé' }}</p>
+      <button @click="logoutRedirection">Se déconnecter</button>
+    </div>
   </nav>
 
-  <!-- Affiche uniquement l'image pour réactiver la navigation -->
   <img
     v-else
-    src="/assets/icons/icon_list.png"
     alt="Settings Button"
-    @click="toggleNav"
     class="settings-button-hidden"
+    src="/assets/icons/icon_list.png"
+    @click="toggleNav"
   />
 </template>
 
@@ -100,6 +145,7 @@ button:hover {
 
 li:last-child {
   margin-top: auto;
+  margin-bottom: 50px;
 }
 
 .settings-button,
@@ -115,4 +161,6 @@ li:last-child {
   top: 20px;
   left: 20px;
 }
+
+
 </style>

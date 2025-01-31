@@ -1,9 +1,7 @@
 <script lang="ts" setup>
-// Importations nécessaires
-import { ref } from 'vue'
-import { useRouter } from 'nuxt/app'
-import { setAuthenticationStatus } from '@/composables/useAuth'
-
+import {ref} from 'vue'
+import {useRouter} from 'nuxt/app'
+import {setAuthenticationStatus} from '@/composables/useAuth'
 
 // Variables et gestion de la logique
 const email = ref('')
@@ -11,23 +9,48 @@ const password = ref('')
 const errorMessage = ref('')
 const router = useRouter()
 
-const handleLogin = () => {
+const handleLogin = async () => {
   // Validation basique des champs
   if (!email.value || !password.value) {
     errorMessage.value = 'Veuillez remplir tous les champs.'
     return
   }
-  // Simulation de la logique de connexion (remplacer par un appel API)
-  errorMessage.value = ''
-  setAuthenticationStatus(true)
-  router.push('/home')
+
+  try {
+    // Appel API pour se connecter
+    const response = await fetch('/api/user/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email.value,
+        password: password.value,
+      }),
+    });
+
+    const data = await response.json();
+
+    // Si connexion réussie
+    if (data.success) {
+      errorMessage.value = '';
+      setAuthenticationStatus(true);
+      router.push('/home');
+    } else {
+      errorMessage.value = data.message || 'Erreur lors de la connexion.';
+    }
+  } catch (error) {
+    // Gestion des erreurs (par exemple, mauvais email/mot de passe ou erreur serveur)
+    console.error('Erreur lors de la connexion :', error);
+    errorMessage.value = 'Erreur lors de la connexion. Veuillez réessayer.';
+  }
 }
 </script>
 
 <template>
   <div class="login-page">
     <h1 class="title">Connexion</h1>
-    <form @submit.prevent="handleLogin" class="login-form">
+    <form class="login-form" @submit.prevent="handleLogin">
       <!-- Message d'erreur général -->
       <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
 
@@ -35,11 +58,11 @@ const handleLogin = () => {
       <div class="form-group">
         <label for="email">Email</label>
         <input
-          type="email"
           id="email"
           v-model="email"
-          placeholder="Entrez votre email"
           class="input"
+          placeholder="Entrez votre email"
+          type="email"
         />
       </div>
 
@@ -47,15 +70,15 @@ const handleLogin = () => {
       <div class="form-group">
         <label for="password">Mot de passe</label>
         <input
-          type="password"
           id="password"
           v-model="password"
-          placeholder="Entrez votre mot de passe"
           class="input"
+          placeholder="Entrez votre mot de passe"
+          type="password"
         />
       </div>
 
-      <button type="submit" class="btn">Se connecter</button>
+      <button class="btn" type="submit">Se connecter</button>
     </form>
 
     <p class="signup-link">
@@ -123,13 +146,6 @@ label {
   font-size: 14px;
 }
 
-.auth-status {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 16px;
-  color: #007BFF;
-}
-
 .signup-link {
   margin-top: 20px;
   text-align: center;
@@ -150,3 +166,4 @@ label {
   font-weight: bold;
 }
 </style>
+
