@@ -12,3 +12,6 @@ ENTRYPOINT ["/app/docker/entrypoint.sh"]
 
 # Commande par défaut pour démarrer l'application
 CMD ["npm", "run", "dev"]
+
+# Commande pour maintenir le conteneur éveillé
+CMD ["tail", "-f", "/dev/null"]

@@ -6,26 +6,27 @@ services:
       dockerfile: ./docker/Dockerfile
     ports:
       - "3000:3000"
+      - "5173:5173"
     environment:
       - DATABASE_URL=mysql://root:root@db-nutrition:3306/nutrition_webapp
-    depends_on:
-      - db-nutrition
+    # depends_on:
+    #   - db-nutrition
     volumes:
       - .:/app
       - /app/node_modules
       - /app/.nuxt
       - /app/docker/db
-    command: ["npm", "run", "test:watch"]
+    # command: ["npm", "run", "test:watch"]
 
-  db-nutrition:
-    image: mysql:latest
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: nutrition_webapp
-      TZ: Europe/Paris
-      LANG: en_US.UTF-8
-    ports:
-      - "3306:3306"
-    volumes:
-      - ./docker/db/dump.sql:/docker-entrypoint-initdb.d/dump.sql # Initialise le containeur avec le dump
-      - ./docker/db/volume:/var/lib/mysql # Résilience des modifications
+  # db-nutrition:
+  #   image: mysql:latest
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: root
+  #     MYSQL_DATABASE: nutrition_webapp
+  #     TZ: Europe/Paris
+  #     LANG: en_US.UTF-8
+  #   ports:
+  #     - "3307:3306"
+  #   volumes:
+  #     - ./docker/db/dump.sql:/docker-entrypoint-initdb.d/dump.sql # Initialise le containeur avec le dump
+  #     - ./docker/db/volume:/var/lib/mysql # Résilience des modifications
