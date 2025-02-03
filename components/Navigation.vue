@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import {getSession, isAuthenticated, logout, userId} from '@/composables/useAuth';
+import { Utensils } from 'lucide-vue-next';
 
 
 const router = useRouter();
@@ -70,11 +71,7 @@ const checkAuthBeforeNavigation = (page: string) => {
       </li>
       <li>
         <a href="/alimentation" @click="checkAuthBeforeNavigation('Alimentation')">
-          <img
-            alt="Alimentation Icon"
-            class="nav-icon"
-            src="/assets/icons/icon_eat.svg"
-          />
+          <Utensils :size="48" class="nav-icon" />
         </a>
       </li>
       <li>
