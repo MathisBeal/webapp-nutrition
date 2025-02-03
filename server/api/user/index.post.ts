@@ -12,12 +12,13 @@ const userSchema = z.object({
   poids: z.number().positive(),
   sexe: z.enum(['Homme', 'Femme', 'Autre']),
   imc: z.number().positive(),
+  restrictionsIds: z.array(z.number()).optional(),
 });
 
 export default defineEventHandler(async (event) => {
   try {
-    // Validation du corps de la requête avec Zod
-    const { nom, prenom, mail, password, age, taille, poids, sexe, imc } = await readValidatedBody(event, (data) => userSchema.parse(data));
+    // Validation du corps de la requête avec Zod,
+    const { nom, prenom, mail, password, age, taille, poids, sexe, imc, restrictionsIds } = await readValidatedBody(event, (data) => userSchema.parse(data));
 
     // Hasher le mot de passe
     const hashedPassword = await cryptPassword(password);

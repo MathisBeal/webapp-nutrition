@@ -332,13 +332,13 @@ onMounted(() => {
 }
 
 .questionnaire-container {
-  margin: 5vh auto;
-  padding-left: 10vw;
+  margin: 50px auto;
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 
 .progress-info {
   font-size: 1em;
