@@ -194,7 +194,7 @@ const validateInputs = () => {
 
 const fetchRestrictionIds = async () => {
   console.log("Restrictions sélectionnées avant envoi:", selectedRestrictions.value);
-  
+
   try {
     const response = await fetch('/api/user/restriction', {
       method: 'POST',
@@ -222,7 +222,7 @@ const updateUserData = async () => {
   props.userData.sexe = selectedOption.value[1];
   props.userData.taille = height.value;
   props.userData.poids = weight.value;
-  props.userData.imc = 1; 
+  props.userData.imc = 1;
 
   props.userData.restrictionsIds = await fetchRestrictionIds();
   console.log("Mise à jour de userData avec les restrictions:", props.userData);
@@ -230,7 +230,7 @@ const updateUserData = async () => {
 
 const submitAnswers = () => {
   if (validateInputs()) {
-    await updateUserData();
+    updateUserData();
     emit('submitQuestionnaire');
   }
 };

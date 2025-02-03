@@ -40,7 +40,6 @@ export default defineEventHandler(async (event) => {
 
     console.log("Utilisateur créé avec succès, ID:", user.ID_user);
 
-
     if (restrictionsIds && restrictionsIds.length > 0) {
       const userRestrictions = restrictionsIds.map((id) => ({
         ID_user: user.ID_user,
