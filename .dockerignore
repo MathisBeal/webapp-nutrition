@@ -1,0 +1,29 @@
+# Dépendances et fichiers générés
+node_modules
+.nuxt
+.output
+dist
+.cache
+coverage
+
+# Fichiers de Docker
+docker-*.yaml
+docker/Dockerfile
+docker/volume
+
+# Fichiers de configuration
+.editorconfig
+.prettierignore
+.prettierrc
+eslint.config.mjs
+README.md
+vitest.config.ts
+
+# Fichiers de versionnement
+.git
+.gitignore
+
+# Variables d'environnement et secrets
+.env
+.env.local
+.env.*.local
