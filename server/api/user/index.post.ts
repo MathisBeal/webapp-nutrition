@@ -37,9 +37,25 @@ export default defineEventHandler(async (event) => {
       },
     });
 
-    // Répondre avec l'utilisateur créé (sans renvoyer le mot de passe)
+    console.log("Utilisateur créé avec succès, ID:", user.ID_user);
+
+
+    if (restrictionsIds && restrictionsIds.length > 0) {
+      const userRestrictions = restrictionsIds.map((id) => ({
+        ID_user: user.ID_user,
+        ID_restriction: id,
+      }));
+
+      console.log("Données des restrictions à insérer:", userRestrictions);
+
+      await prisma.users_restrictions.createMany({ data: userRestrictions });
+      console.log("Restrictions insérées avec succès.");
+    } else {
+      console.warn("⚠️ Aucune restriction sélectionnée.");
+    }
+
     return {
-      message: 'Utilisateur créé avec succès.',
+      message: "Utilisateur créé avec succès.",
       user: {
         ID_user: user.ID_user,
         nom: user.nom,
@@ -58,7 +74,7 @@ export default defineEventHandler(async (event) => {
     // Erreur générique serveur
     throw createError({
       statusCode: 500,
-      message: 'Erreur lors de la création de l’utilisateur.',
+      message: "Erreur lors de la création de l’utilisateur.",
     });
   }
 });

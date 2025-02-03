@@ -12,7 +12,7 @@
       <form @keydown.enter.prevent="handleEnterKey">
         <template v-if="currentQuestionIndex === 0">
           <div class="option">
-            <label for="age">Votre âge :</label>
+            <label for="age">Votre âge : </label>
             <input
               id="age"
               ref="ageInput"
@@ -29,7 +29,7 @@
         <!-- Question spécifique pour la taille -->
         <template v-if="currentQuestionIndex === 2">
           <div class="option">
-            <label for="height">Votre taille (cm) :</label>
+            <label for="height">Votre taille (cm) : </label>
             <input
               id="height"
               ref="heightInput"
@@ -46,7 +46,7 @@
         <!-- Question spécifique pour le poids -->
         <template v-else-if="currentQuestionIndex === 3">
           <div class="option">
-            <label for="weight">Votre poids (kg) :</label>
+            <label for="weight">Votre poids (kg) : </label>
             <input
               id="weight"
               ref="weightInput"
@@ -60,22 +60,38 @@
           </div>
         </template>
 
-        <!-- Options pour les autres questions -->
-        <template v-else>
+        <!-- Questions à choix unique (radio) pour Sexe et Plan Nutritionnel -->
+        <template v-else-if="questions[currentQuestionIndex].options.length > 0 && currentQuestionIndex !== 4 && currentQuestionIndex !== 5">
           <div
             v-for="(option, index) in questions[currentQuestionIndex].options"
             :key="index"
             class="option"
           >
             <input
-              :id="'option-' + index"
-              ref="optionInput"
+              :id="'option-' + currentQuestionIndex + '-' + index"
               v-model="selectedOption[currentQuestionIndex]"
               :value="option"
               name="question"
               type="radio"
             />
-            <label :for="'option-' + index">{{ option }}</label>
+            <label :for="'option-' + currentQuestionIndex + '-' + index">{{ option }}</label>
+          </div>
+        </template>
+
+        <!-- Questions à choix multiple (checkbox) pour Régimes et Allergies -->
+        <template v-else-if="currentQuestionIndex === 4 || currentQuestionIndex === 5">
+          <div
+            v-for="(option, index) in questions[currentQuestionIndex].options"
+            :key="index"
+            class="option"
+          >
+            <input
+              :id="'option-' + currentQuestionIndex + '-' + index"
+              v-model="selectedRestrictions"
+              :value="option"
+              type="checkbox"
+            />
+            <label :for="'option-' + currentQuestionIndex + '-' + index">{{ option }}</label>
           </div>
         </template>
       </form>
@@ -110,6 +126,7 @@
   </div>
 </template>
 
+
 <script lang="ts" setup>
 import questionsData from '~/content/questions.json';
 
@@ -127,6 +144,9 @@ const currentQuestionIndex = ref(0);
 const height = ref<number | null>(null);
 const weight = ref<number | null>(null);
 const age = ref<number | null>(null);
+
+const selectedRestrictions = ref<string[]>([]);
+
 const ageInput = ref<HTMLInputElement | null>(null);
 const heightInput = ref<HTMLInputElement | null>(null);
 const weightInput = ref<HTMLInputElement | null>(null);
@@ -148,15 +168,53 @@ const isNextEnabled = computed(() => {
   return enabled;
 });
 
-const submitAnswers = () => {
+
+
+
+const fetchRestrictionIds = async () => {
+  console.log("Restrictions sélectionnées avant envoi:", selectedRestrictions.value);
+  
+  try {
+    const response = await fetch('/api/user/restriction', {
+      method: 'POST',
+      body: JSON.stringify({ restrictions: selectedRestrictions.value }),
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    const data = await response.json();
+    console.log("Réponse de l'API restrictions:", data);
+
+    if (data.success) {
+      return data.data;
+    } else {
+      console.error('Erreur lors de la récupération des ID des restrictions :', data.message);
+      return [];
+    }
+  } catch (error) {
+    console.error('Erreur API restrictions:', error);
+    return [];
+  }
+};
+
+const updateUserData = async () => {
   props.userData.age = age.value;
   props.userData.sexe = selectedOption.value[1];
   props.userData.taille = height.value;
   props.userData.poids = weight.value;
-  props.userData.imc = 1; //calculé directement par la BDD
+  props.userData.imc = 1; 
 
+  props.userData.restrictionsIds = await fetchRestrictionIds();
+  console.log("Mise à jour de userData avec les restrictions:", props.userData);
+};
+
+const submitAnswers = async () => {
+  await updateUserData();
   emit('submitQuestionnaire');
 };
+
+
+
+
 
 const nextQuestion = () => {
   if (currentQuestionIndex.value < questions.value.length - 1) {
@@ -248,6 +306,9 @@ onMounted(() => {
   margin: 50px auto;
   padding-left: 500px;
   background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .progress-info {
