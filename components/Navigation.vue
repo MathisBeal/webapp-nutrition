@@ -63,7 +63,7 @@ const checkAuthBeforeNavigation = (page: string) => {
         <a href="/search" @click="checkAuthBeforeNavigation('Search')">
           <img
             alt="Search Icon"
-            class="nva-icon"
+            class="nav-icon"
             src="/assets/icons/icon_white_search.svg"
           />
         </a>
@@ -72,7 +72,7 @@ const checkAuthBeforeNavigation = (page: string) => {
         <a href="/alimentation" @click="checkAuthBeforeNavigation('Alimentation')">
           <img
             alt="Alimentation Icon"
-            class="nva-icon"
+            class="nav-icon"
             src="/assets/icons/icon_eat.svg"
           />
         </a>
@@ -81,7 +81,7 @@ const checkAuthBeforeNavigation = (page: string) => {
         <a href="/stats">
           <img
             alt="Stats Icon"
-            class="nva-icon"
+            class="nav-icon"
             src="/assets/icons/icon_stats.png"
           />
         </a>
