@@ -9,6 +9,7 @@ const plats = ref([]);
 const aliments = ref([]);
 const moments = ref([]);
 const userSession = ref<{ userId: number } | null>(null); 
+const quantity = ref(1);
 
 
 
@@ -59,6 +60,7 @@ const submitSelection = async () => {
       ID_plat: selectedType.value === 'plat' ? selectedItem.value : null,
       ID_aliment: selectedType.value === 'aliment' ? selectedItem.value : null,
       ID_moment: selectedMoment.value,
+      Quantite: quantity.value
     }),
   });
   selectedItem.value = null;
@@ -94,6 +96,18 @@ onMounted(async () => {
     />
 
     <DropdownSelect v-model="selectedMoment" :options="moments" label="nom" value-key="ID_moments" />
+
+    <div class="mt-2">
+      <label for="quantity" class="block mb-1">Quantité</label>
+      <input
+        id="quantity"
+        type="number"
+        v-model="quantity"
+        min="1"
+        class="w-full p-2 border rounded"
+      />
+    </div>
+
 
     <SubmitButton @click="submitSelection" />
   </div>

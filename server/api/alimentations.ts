@@ -8,6 +8,7 @@ export default defineEventHandler(async (event) => {
       ID_plat: body.ID_plat,
       ID_aliment: body.ID_aliment,
       ID_moment: body.ID_moment,
+      Quantite: body.Quantite || 1,
       date: new Date(),
     },
   });
