@@ -1,3 +1,32 @@
+<template>
+  <nav v-if="isNavVisible">
+    <Menu :size="48" class="settings-button" color="#ffffff" @click="toggleNav"/>
+    <ul>
+      <li @click="goTo('/')">
+        <House :size="48" color="#ffffff"/>
+      </li>
+      <li @click="goTo('/search')">
+        <Search :size="48" color="#ffffff"/>
+      </li>
+      <li @click="goTo('/alimentation')">
+        <a href="/alimentation">
+          <Utensils :size="48" class="nav-icon" />
+        </a>
+      </li>
+      <li @click="goTo('/stats')">
+        <ChartColumnBig :size="48" color="#ffffff"/>
+      </li>
+    </ul>
+
+    <div class="fix-bottom" v-if="isAuthenticated">
+      <p>Utilisateur : {{ userName ? userName : 'Prénom introuvable' }}</p>
+      <button @click="logoutRedirection">Se déconnecter</button>
+    </div>
+  </nav>
+
+  <Menu v-else :size="48" class="settings-button-hidden" color="#000000" @click="toggleNav"/>
+</template>
+
 <script lang="ts" setup>
 import {getSession, isAuthenticated, logout, userName} from '@/composables/useAuth';
 import {ChartColumnBig, House, Menu, Search, Utensils} from 'lucide-vue-next'
@@ -34,37 +63,7 @@ watch(isAuthenticated, async (newValue) => {
 function goTo(address: string) {
   router.push(address);
 }
-
 </script>
-
-<template>
-  <nav v-if="isNavVisible">
-    <Menu :size="48" class="settings-button" color="#ffffff" @click="toggleNav"/>
-    <ul>
-      <li @click="goTo('/')">
-        <House :size="48" color="#ffffff"/>
-      </li>
-      <li @click="goTo('/search')">
-        <Search :size="48" color="#ffffff"/>
-      </li>
-      <li @click="goTo('/alimentation')">
-        <a href="/alimentation">
-          <Utensils :size="48" class="nav-icon" />
-        </a>
-      </li>
-      <li @click="goTo('/stats')">
-        <ChartColumnBig :size="48" color="#ffffff"/>
-      </li>
-    </ul>
-
-    <div class="fix-bottom" v-if="isAuthenticated">
-      <p>Utilisateur : {{ userId ? userId : 'ID non trouvé' }}</p>
-      <button @click="logoutRedirection">Se déconnecter</button>
-    </div>
-  </nav>
-
-  <Menu v-else :size="48" class="settings-button-hidden" color="#000000" @click="toggleNav"/>
-</template>
 
 <style scoped>
 nav {
