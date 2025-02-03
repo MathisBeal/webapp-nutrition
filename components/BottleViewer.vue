@@ -34,8 +34,6 @@ watch(
     min_water = Math.max(min_water, 0);
     max_water = Math.max(min_water + offset, max_water);
 
-    console.log(min_water, max_water);
-
     styleObject.background = `linear-gradient(0deg, rgba(0,213,255,1) ${min_water}%, rgba(200,234,255,0) ${max_water}%)`;
   },
   { immediate: true }

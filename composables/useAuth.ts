@@ -13,9 +13,6 @@ export const getSession = async () => {
     if (data?.userId) {
       userId.value = data.userId;
       setAuthenticationStatus(true);
-      if (isDebug) {
-        console.log('ID utilisateur récupéré :', userId.value);
-      }
       return true;  // connecté
     } else {
       if (isDebug) {
