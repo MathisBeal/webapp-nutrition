@@ -1,17 +1,18 @@
 <script lang="ts" setup>
 import {computed} from 'vue';
+import lazyLoad from "~/utils/lazyLoadImg.ts";
 
 // Define props for the component
 const props = defineProps({
-  recipe_data: {
+  recipeData: {
     type: Object,
     required: true,
   },
 });
 
 // Extract data from `recipe_data`
-const recipe = computed(() => props.recipe_data.recipe_info || {});
-const ingredients = computed(() => props.recipe_data.ingredients || []);
+const recipe = computed(() => props.recipeData.recipe_info || {});
+const ingredients = computed(() => props.recipeData.ingredients || []);
 
 // Extract the recipe steps
 const rawSteps = recipe.value.etapes || ''; // Assuming `etapes` is a string
@@ -22,19 +23,7 @@ const steps = computed(() =>
     .map((step: string) => step.trim()) // Trim any extra spaces
 );
 
-let img: Blob;
-let url: string;
-let imageFetched: boolean = true;
-try {
-  // console.log(recipe.value.images);
-  // @ts-ignore
-  img = await $fetch(recipe.value.images);
-  url = URL.createObjectURL(img);
-} catch (e) {
-  console.error('Fetching image error: Address may point to nothing or a not image element\n', e);
-  imageFetched = false;
-}
-
+const imgSrc = lazyLoad("/img/placeholders/recipe.jpg", recipe.value.images);
 
 </script>
 
@@ -43,8 +32,7 @@ try {
     <!-- Recipe Title -->
     <h1 class="recipe_name">{{ recipe?.description || 'Recipe' }}</h1>
 
-    <img v-if="imageFetched" :alt="'Image of ' + recipe?.description" :src="url" class="recipe_image">
-    <img v-else alt="Recipe placeholder image" class="recipe_image" src="assets/img/recipe-placeholder.jpg">
+    <img :alt="'Image of ' + recipe?.description" :src="imgSrc" class="recipe_image">
 
     <div class="recipe_text">
       <!-- Ingredients List -->

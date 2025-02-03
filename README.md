@@ -83,49 +83,38 @@ Surtout pour le GitFlow (celui de base)
 
 ## Explication des scripts npm
 
-Voici une description rapide de chaque script npm :
+📜 Voici une description rapide de chaque script npm :
 
-- **`check-type`** :
-  Vérifie les types avec TypeScript sans générer de fichiers (`tsc --noEmit`).
+Voici les principaux scripts utilisables avec npm pour gérer et exécuter votre application Nuxt :
+🚀 Développement et exécution
 
-- **`build`** :
-  Compile l'application pour la production en générant les fichiers dans le dossier `.output` (`nuxi build`).
+    dev : Lance le serveur de développement avec rechargement automatique.
+    start : Permet de démarer l’application après un build (plus intéréssant si app déployé mais fonctionne en local) (il faut faire au préalable un npm run build).
+    preview : Permet de tester localement l’application générée avant mise en production (il faut faire au préalable un npm run build).
 
-- **`clean`** :
-  Supprime le dossier `.output` pour nettoyer les fichiers générés (`rimraf .output`).
+🏗 Build et génération
 
-- **`dev`** :
-  Lance le serveur de développement pour travailler sur l'application (`nuxt dev`).
+    build : Compile l’application pour la production (nuxi build).
+    generate : Génère un site statique basé sur l’application Nuxt.
+    clean : Supprime le dossier .output pour nettoyer les fichiers générés.
 
-- **`test`** :
-  Exécute les tests définis avec Vitest une seule fois (`vitest run`).
+🔎 Vérification et qualité du code
 
-- **`test:watch`** :
-  Lance les tests avec Vitest en mode "watch" pour une exécution continue lors de modifications (`vitest`).
+    check-type : Vérifie les types avec TypeScript sans générer de fichiers.
+    lint:dev : Analyse le code avec ESLint pour détecter les erreurs.
+    lint:fix : Corrige automatiquement les erreurs de style détectées par ESLint.
+    lint:build : Vérifie le code sans tolérer d'avertissements (max-warnings=0).
+    format : Formate automatiquement le code avec Prettier.
+    format-check : Vérifie si le code est bien formaté sans le modifier.
 
-- **`generate`** :
-  Génère un site statique basé sur l'application Nuxt (`nuxt generate`).
+🧪 Tests
 
-- **`preview`** :
-  Lance un serveur local pour prévisualiser l'application générée en production (`nuxt preview`).
+    test : Exécute les tests définis avec Vitest une seule fois.
+    test:watch : Lance les tests en mode continu pour une exécution automatique après chaque modification.
 
-- **`lint:dev`** :
-  Analyse le code pour détecter les erreurs ou problèmes de style avec ESLint (`eslint`).
+⚙️ Autres
 
-- **`lint:fix`** :
-  Corrige automatiquement les erreurs ou problèmes détectés par ESLint (`eslint --fix`).
-
-- **`lint:build`** :
-  Exécute ESLint sans tolérer d'avertissements (`npm run lint:dev --max-warnings=0`).
-
-- **`format`** :
-  Formate automatiquement le code avec `pretty-quick` sans restager les fichiers (`pretty-quick --no-restage`).
-
-- **`format-check`** :
-  Vérifie si le code est bien formaté sans le modifier (`pretty-quick --check`).
-
-- **`postinstall`** :
-  Prépare les fichiers nécessaires après l'installation des dépendances Nuxt (`nuxt prepare`).
+    postinstall : Prépare les fichiers nécessaires après l’installation des dépendances (nuxt prepare).
 
 ## 📂 **Alias et leurs chemins correspondants**
 

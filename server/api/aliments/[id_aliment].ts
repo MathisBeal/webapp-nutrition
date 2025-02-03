@@ -5,7 +5,10 @@ export default defineEventHandler(async (route) => {
   const params = route.context.params;
 
   if (params && params.id_aliment) {
-    // console.log(typeof params.id_recipe, ":", params.id_recipe);
+    if (useAppConfig().debug) {
+      console.log(typeof params.id_recipe, ":", params.id_recipe);
+    }
+
 
     const id_aliment = Number.parseInt(params.id_aliment);
 

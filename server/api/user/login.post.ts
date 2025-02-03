@@ -1,23 +1,23 @@
-import { prisma } from '../../db/connection';
+import { prisma } from '~/server/db/connection';
 import { compare } from 'bcrypt';
-import { createError } from 'h3';
+import { z } from 'zod';
+
+const loginSchema = z.object({
+  email: z.string().email({ message: "Adresse e-mail invalide." }),
+  password: z.string().min(4, { message: "Le mot de passe doit contenir au moins 4 caractères." }),
+});
 
 export default defineEventHandler(async (event) => {
   try {
-    const body = await readBody(event);
-    const { email, password } = body;
+    // Validation des données d'entrée avec zod
+    const { email, password } = await readValidatedBody(event, (data) => loginSchema.parse(data));
 
-    if (!email || !password) {
-      throw createError({
-        statusCode: 400,
-        message: 'Veuillez remplir tous les champs.',
-      });
-    }
-
+    // Chercher l'utilisateur dans la base de données par email
     const user = await prisma.users.findUnique({
       where: { mail: email },
     });
 
+    // Vérifier si l'utilisateur existe et si le mot de passe est correct
     if (!user || !(await compare(password, user.password))) {
       throw createError({
         statusCode: 401,
@@ -38,6 +38,15 @@ export default defineEventHandler(async (event) => {
       message: 'Connexion réussie.',
     };
   } catch (error) {
+    // Gestion des erreurs : vérifier si c'est une erreur de validation Zod
+    if (error instanceof z.ZodError) {
+      throw createError({
+        statusCode: 400,
+        message: error.errors[0].message, // Prendre le premier message d'erreur
+      });
+    }
+
+    // Relever une erreur générique
     return sendError(event, error as Error);
   }
 });

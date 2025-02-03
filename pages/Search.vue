@@ -1,63 +1,12 @@
-<template>
-  <div class="search-container">
-    <input
-      v-model="searchQuery"
-      class="search-bar"
-      placeholder="Rechercher..."
-      type="text"
-      @keyup.enter="onSearch"
-    />
-
-    <Pagination
-      :itemsPerPage="10"
-      :results="results"
-      @update:results="filteredResults = $event"
-    >
-      <template #default="{ results }">
-        <div v-for="item in results" :key="item.ID" class="result-item">
-          <img alt="Image" class="result-image" src="/assets/img/plat.png"/>
-          <div class="result-text">
-            <template v-if="item.type === 'plat'">
-              <h2>{{ item.description || 'Description non disponible' }} - {{
-                  item.nom_categorie || 'Catégorie inconnue'
-                }}</h2>
-              <p>
-                <img alt="Icône d'horloge" class="icon-horloge" src="/assets/img/horloge.png"/>
-                Durée de préparation : {{ item.duree || 'Non spécifiée' }}
-              </p>
-            </template>
-            <template v-else-if="item.type === 'aliment'">
-              <h2>{{ item.nom }}</h2>
-              <p>
-                Calories : {{ item.calories }} kcal<br/>
-                Glucides : {{ item.glucides }} g<br/>
-                Lipides : {{ item.lipides }} g<br/>
-                Protéines : {{ item.proteines }} g
-              </p>
-            </template>
-          </div>
-          <div class="favori-icon" @click.stop="toggleFavori(item)">
-            <IconStar v-if="favoris.has(item.ID)" class="star-icon filled"/>
-            <IconStarOff v-else class="star-icon empty"/>
-          </div>
-        </div>
-      </template>
-    </Pagination>
-
-    <!-- Aucun résultat trouvé -->
-    <div v-if="!filteredResults.length && searchQuery" class="no-results">
-      <img alt="Icône de loupe" class="no-results-icon" src="/assets/icons/icon_search.png"/>
-      <p class="no-results-text">Aucun résultat</p>
-    </div>
-  </div>
-</template>
-
 <script lang="ts" setup>
+
 import {getSession, userId} from '@/composables/useAuth';
+import Plat from '@/components/Plat.vue';
+import Aliment from '@/components/Aliment.vue';
+
 
 const searchQuery = ref<string>('');
 const results = ref<any[]>([]);
-const filteredResults = ref([]);
 const searchInput = ref<HTMLInputElement | null>(null);
 const favoris = ref<Set<number>>(new Set());
 
@@ -124,6 +73,7 @@ onMounted(async () => {
   searchInput.value?.focus();
 });
 
+
 watch(userId, async (newUserId) => {
   if (newUserId) {
     await loadFavoris();
@@ -134,6 +84,25 @@ watch(userId, async (newUserId) => {
 });
 </script>
 
+<template>
+  <div class="search-container">
+    <input ref="searchInput" v-model="searchQuery" class="search-bar" placeholder="Rechercher..." type="text"
+           @keyup.enter="onSearch"/>
+    <div v-if="results.length" class="result-list">
+      <div v-for="item in results" :key="item.ID">
+        <Plat v-if="item.type === 'plat'" :favoris="favoris" :plat="item"
+              :toggleFavori="toggleFavori"/>
+
+        <Aliment v-else-if="item.type === 'aliment'" :aliment="item" :favoris="favoris"
+                 :toggleFavori="toggleFavori"/>
+      </div>
+    </div>
+    <div v-else class="no-results">
+      <img alt="Icône de loupe" class="no-results-icon" src="/assets/icons/icon_search.png"/>
+      <p class="no-results-text">Aucun résultat</p>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .search-container {
@@ -164,21 +133,19 @@ watch(userId, async (newUserId) => {
   box-shadow: 0 0.4vh 2vh rgba(59, 130, 246, 0.3);
 }
 
-.result-item {
+.result-list {
+  height: 60vh;
+  overflow-y: hidden;
   display: flex;
-  align-items: flex-start;
-  gap: 1vw;
+  flex-direction: column;
+  width: 50vw;
+  gap: 2vh;
   padding: 2vh;
-  border-radius: 1em;
-  background-color: #fff;
-  box-shadow: 0 0.4vh 0.6vh rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  transition: overflow-y 0.3s ease;
 }
 
-.result-item:hover {
-  transform: scale(1.01);
-  box-shadow: 0 0.6vh 1vh rgba(0, 0, 0, 0.15);
-  background-color: #f9f9f9;
+.result-list:hover {
+  overflow-y: auto;
 }
 
 .result-item h2 {
@@ -191,20 +158,6 @@ watch(userId, async (newUserId) => {
   color: #555;
 }
 
-.result-image {
-  width: 7vw;
-  height: 7vw;
-  object-fit: cover;
-  border-radius: 0.5em;
-}
-
-.result-text {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.5vh;
-}
-
 .result-text h2,
 .result-text p {
   margin: 0;
@@ -215,13 +168,6 @@ watch(userId, async (newUserId) => {
 .result-text span {
   font-size: 0.9rem;
   color: #999;
-}
-
-.icon-horloge {
-  width: 1vw;
-  height: 1vw;
-  object-fit: cover;
-  border-radius: 0.5em;
 }
 
 .no-results {
@@ -243,25 +189,6 @@ watch(userId, async (newUserId) => {
   font-size: 1.2rem;
   color: #555;
   text-align: center;
-}
-
-.favori-icon {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: auto;
-}
-
-.star-icon {
-  width: 1.5vw;
-  height: 1.5vw;
-  transition: transform 0.2s;
-  color: #FFD700;
-}
-
-.star-icon.empty {
-  color: #ccc;
 }
 
 .favori-icon:hover .star-icon {

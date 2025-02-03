@@ -1,36 +1,30 @@
 <script lang="ts" setup>
 import {computed} from 'vue';
+import lazyLoad from "~/utils/lazyLoadImg.ts";
 
 // Define props for the component
 const props = defineProps({
-  aliment_data: {
+  alimentData: {
     type: Object,
     required: true,
   },
+  linkedRecipes: {
+    type: Array,
+    required: false,
+  }
 });
 
-const aliment = computed(() => props.aliment_data || {});
+const aliment = computed(() => props.alimentData || {});
+const recipes = computed(() => props.linkedRecipes || null);
 
-let img: Blob;
-let url: string;
-let imageFetched: boolean = true;
-try {
-  // console.log(aliment.value.image);
-  // @ts-ignore
-  img = await $fetch(aliment.value.image);
-  url = URL.createObjectURL(img);
-} catch (e) {
-  console.error('Fetching image error: Address may point to nothing or a not image element\n', e);
-  imageFetched = false;
-}
+const imgSrc = lazyLoad("/img/placeholders/ingredient.jpg", aliment.value.image);
 
 </script>
 
 <template>
   <div class="container">
     <h1 class="aliment_name">{{ aliment?.nom || 'Aliment' }}</h1>
-    <img v-if="imageFetched" :alt="'Image de ' + aliment.nom" :src="url" class="aliment_img">
-    <img v-else alt="Placeholder pour l'ingrédient" class="aliment_img" src="assets/img/default_ingredient.jpg">
+    <img :alt="'Image de ' + aliment.nom" :src="imgSrc" class="aliment_img">
     <div class="recipe_text">
       <p class="nutri_title">Valeurs nutritionnelles pour {{ aliment.nom }}</p>
       <table>
@@ -63,6 +57,9 @@ try {
         </tr>
         </tbody>
       </table>
+    </div>
+    <div v-if="recipes != null" class="linked_recipes">
+      <Plat v-for="(recipe, index) in recipes" :key="index" :plat="recipe" class="linked_recipe_item"/>
     </div>
   </div>
 </template>
@@ -97,6 +94,14 @@ try {
   max-height: 25vw;
   object-fit: cover;
   border-radius: 1vw;
+}
+
+.linked_recipes {
+}
+
+.linked_recipe_item {
+  max-width: 40vw;
+  margin: 0 auto 0.5em auto;
 }
 
 table {
