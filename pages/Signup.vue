@@ -43,6 +43,7 @@ const goToQuestionnaire = () => {
 
 // Fonction pour soumettre les réponses du questionnaire
 const submitQuestionnaire = async () => {
+  console.log("Envoi des données utilisateur:", userData.value);
   try {
     const {data: response} = await useFetch('/api/user/', {
       method: 'POST',
