@@ -16,6 +16,7 @@ onMounted(async () => {
       // @ts-ignore
       linked_recipes.value = await $fetch(`/api/aliments/linked/${params.id_aliment}`);
       linked_recipes.value = linked_recipes.value.map(recipe => ({
+        ID_plat: recipe.ID_plat,
         description: recipe.Plats.description,
         images: recipe.Plats.images,
         duree: recipe.Plats.duree,
