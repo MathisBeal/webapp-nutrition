@@ -15,9 +15,6 @@ function navigate() {
 }
 
 const imgSrc = lazyLoad("/img/placeholders/plat.png", props.plat.images);
-
-console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-
 </script>
 
 <template>

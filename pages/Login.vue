@@ -42,10 +42,10 @@
 <script lang="ts" setup>
 import {useRouter} from 'nuxt/app'
 import {setAuthenticationStatus} from '@/composables/useAuth'
-import { NuxtNotifications } from '#components';
+//import { NuxtNotifications } from '#components';
 
 // Variables et gestion de la logique
-const { notify } = useNotification();
+//const { notify } = useNotification();
 const email = ref('')
 const password = ref('')
 const router = useRouter()
@@ -57,11 +57,11 @@ interface ApiResponse {
 
 const validateFields = (): boolean => {
   if (!email.value || !password.value) {
-    notify({
-      type: 'error',
-      title: 'Erreur',
-      text: 'Veuillez remplir tous les champs.'
-    });
+    // notify({
+    //   type: 'error',
+    //   title: 'Erreur',
+    //   text: 'Veuillez remplir tous les champs.'
+    // });
     return false;
   }
   return true;
@@ -84,11 +84,11 @@ const loginUser = async (): Promise<Response> => {
 
 const handleResponse = (data: ApiResponse, response: Response): boolean => {
   if (response.status === 400 && data.message) {
-    notify({
-      type: 'error',
-      title: 'Erreur',
-      text: data.message
-    });
+    // notify({
+    //   type: 'error',
+    //   title: 'Erreur',
+    //   text: data.message
+    // });
     return false;
   }
 
@@ -97,11 +97,11 @@ const handleResponse = (data: ApiResponse, response: Response): boolean => {
     router.push('/');
     return true;
   } else {
-    notify({
-      type: 'error',
-      title: 'Erreur',
-      text: 'Email ou mot de passe incorrect.'
-    });
+    // notify({
+    //   type: 'error',
+    //   title: 'Erreur',
+    //   text: 'Email ou mot de passe incorrect.'
+    // });
     return false;
   }
 };
@@ -114,11 +114,11 @@ const handleLogin = async () => {
     const data: ApiResponse = await response.json();
     handleResponse(data, response);
   } catch (error) {
-    notify({
-      type: 'error',
-      title: 'Erreur',
-      text: 'Erreur lors de la connexion. Veuillez réessayer.'
-    });
+    // notify({
+    //   type: 'error',
+    //   title: 'Erreur',
+    //   text: 'Erreur lors de la connexion. Veuillez réessayer.'
+    // });
   }
 };
 </script>

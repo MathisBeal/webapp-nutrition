@@ -30,7 +30,6 @@ const loadFavoris = async () => {
   try {
     const response = await fetch(`/api/favoris?userId=${userSession.value.userId}&fullData=true`);
     let data = await response.json();
-    console.log(data);
     data = data.filter((favData: any) => favData.type === 'plat');
     favoris.value = new Set(data.map((fav: any) => fav.ID));
   } catch (error) {

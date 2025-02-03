@@ -71,7 +71,7 @@
 
 <script lang="ts" setup>
 import {type User} from '@/types/User';
-import { NuxtNotifications } from '#components';
+//import { NuxtNotifications } from '#components';
 
 const props = defineProps({
   userData: {
@@ -85,7 +85,7 @@ interface ApiResponse {
   message?: string;
 }
 
-const { notify } = useNotification();
+//const { notify } = useNotification();
 const name = ref('');
 const lastName = ref('');
 const email = ref('');
@@ -95,35 +95,35 @@ const emit = defineEmits(['signupSuccess']);
 
 const validateFields = (): boolean => {
   if (!name.value || !lastName.value || !email.value || !password.value || !confirmPassword.value) {
-    notify({
-      type: 'error',
-      title: 'Erreur',
-      text: 'Veuillez remplir tous les champs.'
-    });
+    // notify({
+    //   type: 'error',
+    //   title: 'Erreur',
+    //   text: 'Veuillez remplir tous les champs.'
+    // });
     return false;
   }
   if (!validMail(email.value)) {
-    notify({
-      type: 'error',
-      title: 'Erreur',
-      text: 'Adresse e-mail invalide.'
-    });
+    // notify({
+    //   type: 'error',
+    //   title: 'Erreur',
+    //   text: 'Adresse e-mail invalide.'
+    // });
     return false;
   }
   if (password.value !== confirmPassword.value) {
-    notify({
-      type: 'error',
-      title: 'Erreur',
-      text: 'Les mots de passe ne correspondent pas.'
-    });
+    // notify({
+    //   type: 'error',
+    //   title: 'Erreur',
+    //   text: 'Les mots de passe ne correspondent pas.'
+    // });
     return false;
   }
   if (/\s/.test(password.value)) {
-    notify({
-      type: 'error',
-      title: 'Erreur',
-      text: 'Le mot de passe ne doit pas contenir d\'espaces.'
-    });
+    // notify({
+    //   type: 'error',
+    //   title: 'Erreur',
+    //   text: 'Le mot de passe ne doit pas contenir d\'espaces.'
+    // });
     return false;
   }
   return true;
@@ -143,19 +143,19 @@ const checkEmailExists = async (): Promise<ApiResponse> => {
 
 const handleResponse = (data: ApiResponse) => {
   if (data.exists) {
-    notify({
-      type: 'error',
-      title: 'Erreur',
-      text: data.message
-    });
+    // notify({
+    //   type: 'error',
+    //   title: 'Erreur',
+    //   text: data.message
+    // });
     return false;
   }
 
-  notify({
-    type: 'success',
-    title: 'Succès',
-    text: 'Compte créé avec succès !'
-  });
+  // notify({
+  //   type: 'success',
+  //   title: 'Succès',
+  //   text: 'Compte créé avec succès !'
+  // });
 
   props.userData.prenom = name.value!;
   props.userData.nom = lastName.value!;
@@ -176,15 +176,14 @@ const handleSignup = async () => {
     const data = await checkEmailExists();
     if (!handleResponse(data)) return;
   } catch (error) {
-    notify({
-      type: 'error',
-      title: 'Erreur',
-      text: 'Erreur lors de la vérification de l’e-mail.'
-    });
+    // notify({
+    //   type: 'error',
+    //   title: 'Erreur',
+    //   text: 'Erreur lors de la vérification de l’e-mail.'
+    // });
   }
 };
 </script>
-
 
 <style scoped>
 .signup-page {

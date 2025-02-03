@@ -1,80 +1,14 @@
-<template>
-  <div class="search-container">
-    <input
-      v-model="searchQuery"
-      class="search-bar"
-      placeholder="Rechercher..."
-      type="text"
-      @keyup.enter="onSearch"
-    />
-
-    <Pagination
-      :itemsPerPage="10"
-      :results="results"
-      @update:results="filteredResults = $event"
-    >
-      <template #default="{ results }">
-        <div v-for="item in results" :key="(item as SearchResult).ID" class="result-item">
-          <img alt="Image" class="result-image" src="/assets/img/plat.png"/>
-          <div class="result-text">
-            <template v-if="(item as SearchResult).type === 'plat'">
-              <h2>{{ (item as SearchResult).description || 'Description non disponible' }} -
-                  {{ (item as SearchResult).nom_categorie || 'Catégorie inconnue' }}
-              </h2>
-              <p>
-                <img alt="Icône d'horloge" class="icon-horloge" src="/assets/img/horloge.png"/>
-                Durée de préparation : {{ (item as SearchResult).duree || 'Non spécifiée' }}
-              </p>
-            </template>
-
-            <template v-else-if="(item as SearchResult).type === 'aliment'">
-              <h2>{{ (item as SearchResult).nom }}</h2>
-              <p>
-                Calories : {{ (item as SearchResult).calories }} kcal<br/>
-                Glucides : {{ (item as SearchResult).glucides }} g<br/>
-                Lipides : {{ (item as SearchResult).lipides }} g<br/>
-                Protéines : {{ (item as SearchResult).proteines }} g
-              </p>
-            </template>
-          </div>
-          <div class="favori-icon" @click.stop="toggleFavori(item)">
-            <IconStar v-if="favoris.has((item as SearchResult).ID)" class="star-icon filled"/>
-            <IconStarOff v-else class="star-icon empty"/>
-          </div>
-        </div>
-      </template>
-    </Pagination>
-
-    <!-- Aucun résultat trouvé -->
-    <div v-if="!filteredResults.length && searchQuery" class="no-results">
-      <img alt="Icône de loupe" class="no-results-icon" src="/assets/icons/icon_search.png"/>
-      <p class="no-results-text">Aucun résultat</p>
-    </div>
-  </div>
-</template>
-
 <script lang="ts" setup>
+
 import {getSession, userId} from '@/composables/useAuth';
 import Plat from '@/components/Plat.vue';
 import Aliment from '@/components/Aliment.vue';
+
 
 const searchQuery = ref<string>('');
 const results = ref<any[]>([]);
 const searchInput = ref<HTMLInputElement | null>(null);
 const favoris = ref<Set<number>>(new Set());
-
-interface SearchResult {
-  ID: number;
-  type: 'plat' | 'aliment';
-  description?: string;
-  nom_categorie?: string;
-  duree?: string;
-  nom?: string;
-  calories?: number;
-  glucides?: number;
-  lipides?: number;
-  proteines?: number;
-}
 
 const onSearch = async () => {
   if (!searchQuery.value.trim()) {
@@ -150,6 +84,26 @@ watch(userId, async (newUserId) => {
 });
 </script>
 
+<template>
+  <div class="search-container">
+    <input ref="searchInput" v-model="searchQuery" class="search-bar" placeholder="Rechercher..." type="text"
+           @keyup.enter="onSearch"/>
+    <div v-if="results.length" class="result-list">
+      <div v-for="item in results" :key="item.ID">
+        <Plat v-if="item.type === 'plat'" :favoris="favoris" :plat="item"
+              :toggleFavori="toggleFavori"/>
+
+        <Aliment v-else-if="item.type === 'aliment'" :aliment="item" :favoris="favoris"
+                 :toggleFavori="toggleFavori"/>
+      </div>
+    </div>
+    <div v-else class="no-results">
+      <img alt="Icône de loupe" class="no-results-icon" src="/assets/icons/icon_search.png"/>
+      <p class="no-results-text">Aucun résultat</p>
+    </div>
+  </div>
+</template>
+
 <style scoped>
 .search-container {
   display: flex;
@@ -167,7 +121,6 @@ watch(userId, async (newUserId) => {
   max-width: 62.5vw;
   padding: 1.5vh;
   font-size: 0.875rem;
-  margin-left: 10vw;
   border: 0.15em solid #ccc;
   border-radius: 2.5em;
   box-shadow: 0 0.4vh 1vh rgba(0, 0, 0, 0.1);
