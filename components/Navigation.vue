@@ -69,6 +69,15 @@ const checkAuthBeforeNavigation = (page: string) => {
         </a>
       </li>
       <li>
+        <a href="/alimentation" @click="checkAuthBeforeNavigation('Alimentation')">
+          <img
+            alt="Alimentation Icon"
+            class="nva-icon"
+            src="/assets/icons/icon_eat.svg"
+          />
+        </a>
+      </li>
+      <li>
         <a href="/stats">
           <img
             alt="Stats Icon"
