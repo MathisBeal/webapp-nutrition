@@ -65,6 +65,7 @@ const submitSelection = async () => {
   });
   selectedItem.value = null;
   selectedMoment.value = null;
+  quantity.value=1;
 };
 
 
