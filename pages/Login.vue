@@ -33,7 +33,7 @@
       Vous n'avez pas encore de compte ?
       <a href="/Signup">Créez-en un <span class="highlight">ici</span>.</a>
     </p>
-    <NuxtNotifications class="custom-notif"
+    <Notifications
     position="top center"
     :speed="500"/>
   </div>
