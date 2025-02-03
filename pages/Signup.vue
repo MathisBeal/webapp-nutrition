@@ -19,9 +19,9 @@
 
 <script lang="ts" setup>
 import {type User} from '@/types/User';
-//import { NuxtNotifications } from '#components';
+import { useNotification } from "@kyvg/vue3-notification";
 
-//const { notify } = useNotification();
+const { notify } = useNotification();
 const currentStep = ref('signUp');
 const userData = ref<User>({
   nom: '',
@@ -51,20 +51,20 @@ const submitQuestionnaire = async () => {
     });
 
     if (response) {
-      //   notify({
-      //   type: 'success',
-      //   title: 'Succès',
-      //   text: 'Questionnaire soumis avec succès !'
-      // });
+        notify({
+        type: 'success',
+        title: 'Succès',
+        text: 'Questionnaire soumis avec succès !'
+      });
       router.push('/login');
     }
   } catch (error) {
     console.error('Erreur lors de l\'envoi des données :', error);
-    // notify({
-    //   type: 'error',
-    //   title: 'Erreur',
-    //   text: 'Une erreur est survenue lors de la soumission du formulaire ou du questionnaire.'
-    // });
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: 'Une erreur est survenue lors de la soumission du formulaire ou du questionnaire.'
+    });
   }
 };
 </script>

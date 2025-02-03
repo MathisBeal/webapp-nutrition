@@ -114,7 +114,7 @@
         </button>
       </div>
     </div>
-    <NuxtNotifications class="custom-notif"
+    <Notifications class="custom-notif"
     position="top center"
     :speed="500"/>
   </div>
@@ -123,8 +123,7 @@
 
 <script lang="ts" setup>
 import questionsData from '~/content/questions.json';
-//import { NuxtNotifications } from '#components';
-
+import { useNotification } from "@kyvg/vue3-notification";
 const props = defineProps({
   userData: {
     type: Object,
@@ -132,7 +131,7 @@ const props = defineProps({
   },
 });
 
-//const { notify } = useNotification();
+const { notify } = useNotification();
 const emit = defineEmits(['submitQuestionnaire']);
 const questions = ref(questionsData);
 const selectedOption = ref<(string | null)[]>(questions.value.map(() => null));
@@ -166,27 +165,27 @@ const validateInputs = () => {
   if (isSubmitted.value) return true; // Ne pas valider si déjà soumis
 
   if (age.value !== null && (age.value <= 0 || age.value > 100)) {
-    // notify({
-    //   type: 'error',
-    //   title: 'Erreur',
-    //   text: 'Votre âge semble incorrect, veuillez vérifier votre saisie.'
-    // });
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: 'Votre âge semble incorrect, veuillez vérifier votre saisie.'
+    });
     return false;
   }
   if (weight.value !== null && (weight.value <= 20 || weight.value > 300)) {
-    // notify({
-    //   type: 'error',
-    //   title: 'Erreur',
-    //   text: 'Votre poids semble incorrect, veuillez vérifier votre saisie.'
-    // });
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: 'Votre poids semble incorrect, veuillez vérifier votre saisie.'
+    });
     return false;
   }
   if (height.value !== null && (height.value <= 50 || height.value > 250)) {
-    // notify({
-    //   type: 'error',
-    //   title: 'Erreur',
-    //   text: 'Votre taille semble incorrecte, veuillez vérifier votre saisie.'
-    // });
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: 'Votre taille semble incorrecte, veuillez vérifier votre saisie.'
+    });
     return false;
   }
   return true;
