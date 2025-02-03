@@ -17,8 +17,8 @@
           <th>{{ aliment.quantite_base }} {{ aliment.unite }}</th>
         </tr>
         <tr>
-          <th>kCalories</th>
-          <th>{{ aliment.calories }}</th>
+          <th>Calories</th>
+          <th>{{ aliment.calories }} kcal</th>
         </tr>
         <tr>
           <th>Glucides</th>
