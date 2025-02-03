@@ -55,10 +55,11 @@
 
 <script lang="ts" setup>
 import {getSession, userId} from '@/composables/useAuth';
+import Plat from '@/components/Plat.vue';
+import Aliment from '@/components/Aliment.vue';
 
 const searchQuery = ref<string>('');
 const results = ref<any[]>([]);
-const filteredResults = ref([]);
 const searchInput = ref<HTMLInputElement | null>(null);
 const favoris = ref<Set<number>>(new Set());
 
@@ -138,6 +139,7 @@ onMounted(async () => {
   searchInput.value?.focus();
 });
 
+
 watch(userId, async (newUserId) => {
   if (newUserId) {
     await loadFavoris();
@@ -147,7 +149,6 @@ watch(userId, async (newUserId) => {
   }
 });
 </script>
-
 
 <style scoped>
 .search-container {
@@ -178,21 +179,19 @@ watch(userId, async (newUserId) => {
   box-shadow: 0 0.4vh 2vh rgba(59, 130, 246, 0.3);
 }
 
-.result-item {
+.result-list {
+  height: 60vh;
+  overflow-y: hidden;
   display: flex;
-  align-items: flex-start;
-  gap: 1vw;
+  flex-direction: column;
+  width: 50vw;
+  gap: 2vh;
   padding: 2vh;
-  border-radius: 1em;
-  background-color: #fff;
-  box-shadow: 0 0.4vh 0.6vh rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  transition: overflow-y 0.3s ease;
 }
 
-.result-item:hover {
-  transform: scale(1.01);
-  box-shadow: 0 0.6vh 1vh rgba(0, 0, 0, 0.15);
-  background-color: #f9f9f9;
+.result-list:hover {
+  overflow-y: auto;
 }
 
 .result-item h2 {
@@ -205,20 +204,6 @@ watch(userId, async (newUserId) => {
   color: #555;
 }
 
-.result-image {
-  width: 7vw;
-  height: 7vw;
-  object-fit: cover;
-  border-radius: 0.5em;
-}
-
-.result-text {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.5vh;
-}
-
 .result-text h2,
 .result-text p {
   margin: 0;
@@ -229,13 +214,6 @@ watch(userId, async (newUserId) => {
 .result-text span {
   font-size: 0.9rem;
   color: #999;
-}
-
-.icon-horloge {
-  width: 1vw;
-  height: 1vw;
-  object-fit: cover;
-  border-radius: 0.5em;
 }
 
 .no-results {
@@ -257,25 +235,6 @@ watch(userId, async (newUserId) => {
   font-size: 1.2rem;
   color: #555;
   text-align: center;
-}
-
-.favori-icon {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: auto;
-}
-
-.star-icon {
-  width: 1.5vw;
-  height: 1.5vw;
-  transition: transform 0.2s;
-  color: #FFD700;
-}
-
-.star-icon.empty {
-  color: #ccc;
 }
 
 .favori-icon:hover .star-icon {

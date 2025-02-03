@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import lazyLoad from "~/utils/lazyLoadImg.ts";
+
 const props = defineProps({
   ingredient: {
     type: Object,
@@ -11,28 +13,14 @@ const nom = props.ingredient.Aliments.nom;
 const qty = Number.parseFloat(props.ingredient.Aliments.quantite_base) * Number.parseFloat(props.ingredient.multiplicateur_quantite);
 const unite = props.ingredient.Aliments.unite;
 
-let img: Blob;
-let url: string;
-let imageFetched: boolean = true;
-try {
-  // console.log(props.ingredient.Aliments.image);
-  // @ts-ignore
-  img = await $fetch(props.ingredient.Aliments.image);
-  url = URL.createObjectURL(img);
-} catch (e) {
-  console.error('Fetching image error: Address may point to nothing or a not image element\n', e);
-  imageFetched = false;
-}
+const imgSrc = lazyLoad("/img/placeholders/ingredient.jpg", props.ingredient.Aliments.image);
 
 </script>
 
 <template>
   <div class="ingredient">
     <NuxtLink :to="{name: 'aliments-id_aliment', params: {id_aliment: id_alim}}">
-      <img v-if="imageFetched" :alt="'Image de '+nom" :src="url" class="ingredient-img">
-      <img
-        v-else alt="Placeholder pour l'ingrédient" class="ingredient-img"
-        src="assets/img/ingredient-placeholder.jpg">
+      <img :alt="'Image de '+nom" :src="imgSrc" class="ingredient-img">
     </NuxtLink>
     <p class="ingredient-text"><strong>{{ nom }}</strong>: {{ qty }} {{ unite }}</p>
   </div>
@@ -50,7 +38,7 @@ try {
   --img-size: 50px;
   width: var(--img-size);
   height: var(--img-size);
-  border-radius: 50%;
+  border-radius: var(--img-size);
   object-fit: cover;
   border: 1px solid rgba(106, 106, 106, 0.7);
 }

@@ -6,16 +6,21 @@ export const setAuthenticationStatus = (status: boolean) => {
 };
 
 export const getSession = async () => {
+  const isDebug = useAppConfig().debug;
   try {
     const response = await fetch('/api/auth/session');
     const data = await response.json();
     if (data?.userId) {
       userId.value = data.userId;
       setAuthenticationStatus(true);
-      console.log('ID utilisateur récupéré :', userId.value);
+      if (isDebug) {
+        console.log('ID utilisateur récupéré :', userId.value);
+      }
       return true;  // connecté
     } else {
-      console.warn('Aucune session utilisateur trouvée.');
+      if (isDebug) {
+        console.warn('Aucune session utilisateur trouvée.');
+      }
       userId.value = null;
       setAuthenticationStatus(false);
       return false;  // non connecté
@@ -30,7 +35,7 @@ export const getSession = async () => {
 
 export const logout = async () => {
   try {
-    await fetch('/api/auth/logout', { method: 'POST' });
+    await fetch('/api/auth/logout', {method: 'POST'});
     userId.value = null;
     setAuthenticationStatus(false);
   } catch (error) {

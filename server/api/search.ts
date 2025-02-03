@@ -1,5 +1,5 @@
-import { defineEventHandler, getQuery } from 'h3';
-import { prisma } from '../db/connection';
+import {defineEventHandler, getQuery} from 'h3';
+import {prisma} from '../db/connection';
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);
@@ -9,17 +9,18 @@ export default defineEventHandler(async (event) => {
   const plats = await prisma.plats.findMany({
     where: search
       ? {
-          OR: [
-            { description: { contains: search } },
-            { Plats_Categories: { nom: { contains: search } } },
-          ],
-        }
+        OR: [
+          {description: {contains: search}},
+          {Plats_Categories: {nom: {contains: search}}},
+        ],
+      }
       : undefined,
     select: {
       ID_plat: true,
       duree: true,
       description: true,
       ID_categorie: true,
+      images: true,
       Plats_Categories: {
         select: {
           nom: true,
@@ -28,12 +29,11 @@ export default defineEventHandler(async (event) => {
     },
   });
 
-
   const aliments = await prisma.aliments.findMany({
     where: search
       ? {
-          nom: { contains: search },
-        }
+        nom: {contains: search},
+      }
       : undefined,
     select: {
       ID_aliment: true,
@@ -48,28 +48,29 @@ export default defineEventHandler(async (event) => {
   });
 
 
-
   const favoris = userId
-  ? await prisma.users_Favoris.findMany({
-      where: { ID_user: Number(userId) },
-      select: { ID_plat: true, ID_aliment: true },
-  })
-  : [];
+    ? await prisma.users_Favoris.findMany({
+      where: {ID_user: Number(userId)},
+      select: {ID_plat: true, ID_aliment: true},
+    })
+    : [];
 
-const favoriIds = new Set(favoris.map(fav => fav.ID_plat || fav.ID_aliment));
+  const favoriIds = new Set(favoris.map(fav => fav.ID_plat || fav.ID_aliment));
 
-const combinedResults = [
-  ...plats.map((plat) => ({
+  const combinedResults = [
+    ...plats.map((plat) => ({
       type: 'plat',
+      ID_plat: plat.ID_plat,
       ID: plat.ID_plat,
       description: plat.description || 'Description non disponible',
       nom_categorie: plat.Plats_Categories?.nom || 'Catégorie inconnue',
       duree: plat.duree || 'Non spécifiée',
-      image: '/assets/img/plat.png',
+      images: plat.images,
       isFavori: favoriIds.has(plat.ID_plat),
-  })),
-  ...aliments.map((aliment) => ({
+    })),
+    ...aliments.map((aliment) => ({
       type: 'aliment',
+      ID_aliment: aliment.ID_aliment,
       ID: aliment.ID_aliment,
       nom: aliment.nom,
       quantite_base: aliment.quantite_base,
@@ -79,9 +80,8 @@ const combinedResults = [
       proteines: aliment.proteines,
       image: aliment.image || '/assets/img/aliment.png',
       isFavori: favoriIds.has(aliment.ID_aliment),
-  })),
-];
-
+    })),
+  ];
 
 
   return combinedResults;
