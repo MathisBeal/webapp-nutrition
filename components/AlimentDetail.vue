@@ -8,9 +8,14 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  linkedRecipes: {
+    type: Array,
+    required: false,
+  }
 });
 
 const aliment = computed(() => props.alimentData || {});
+const recipes = computed(() => props.linkedRecipes || null);
 
 const imgSrc = lazyLoad("/img/placeholders/ingredient.jpg", aliment.value.image);
 
@@ -53,6 +58,9 @@ const imgSrc = lazyLoad("/img/placeholders/ingredient.jpg", aliment.value.image)
         </tbody>
       </table>
     </div>
+    <div v-if="recipes != null" class="linked_recipes">
+      <Plat v-for="(recipe, index) in recipes" :key="index" :plat="recipe" class="linked_recipe_item"/>
+    </div>
   </div>
 </template>
 
@@ -86,6 +94,14 @@ const imgSrc = lazyLoad("/img/placeholders/ingredient.jpg", aliment.value.image)
   max-height: 25vw;
   object-fit: cover;
   border-radius: 1vw;
+}
+
+.linked_recipes {
+}
+
+.linked_recipe_item {
+  max-width: 40vw;
+  margin: 0 auto 0.5em auto;
 }
 
 table {
