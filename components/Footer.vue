@@ -1,16 +1,18 @@
 <script lang="ts" setup>
-import icon_home from "assets/icons/icon_home.svg";
-import icon_search from "assets/icons/icon_white_search.svg";
-import icon_stats from "assets/icons/icon_stats.png";
-import icon_user from "assets/icons/icon_user.png";
+import {ChartColumnBig, House, Search} from 'lucide-vue-next'
+
+const router = useRouter();
+
+function goTo(address: string) {
+  router.push(address);
+}
 </script>
 
 <template>
   <footer>
-    <router-link to="/home"><img :src="icon_home" alt="Page d'accueil"></router-link>
-    <router-link to="/home"><img :src="icon_search" alt="Recherche"></router-link>
-    <router-link to="/home"><img :src="icon_stats" alt="Statistiques"></router-link>
-    <router-link to="/home"><img :src="icon_user" alt="Utilisateur"></router-link>
+    <House :size="32" color="#ffffff" @click="goTo('/home')"/>
+    <Search :size="32" color="#ffffff" @click="goTo('/search')"/>
+    <ChartColumnBig :size="32" color="#ffffff" @click="goTo('/stats')"/>
   </footer>
 </template>
 

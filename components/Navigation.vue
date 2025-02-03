@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import {getSession, isAuthenticated, logout, userId} from '@/composables/useAuth';
+import {ChartColumnBig, House, Menu, Search} from 'lucide-vue-next'
+import {useRouter} from "nuxt/app";
 
 
 const router = useRouter();
@@ -29,53 +31,24 @@ watch(isAuthenticated, async (newValue) => {
   }
 });
 
-const checkAuthBeforeNavigation = (page: string) => {
-  console.log(`Navigation vers ${page}...`);
-  console.log(`isAuthenticated:`, isAuthenticated.value);
-  if (!isAuthenticated.value) {
-    console.warn("Utilisateur déconnecté avant la navigation !");
-  } else {
-    console.log("Utilisateur toujours connecté.");
-  }
-};
+function goTo(address: string) {
+  router.push(address);
+}
 
 </script>
 
 <template>
   <nav v-if="isNavVisible">
-    <img
-      alt="Settings Button"
-      class="settings-button"
-      src="/assets/icons/icon_list-white.png"
-      @click="toggleNav"
-    />
+    <Menu :size="48" class="settings-button" color="#ffffff" @click="toggleNav"/>
     <ul>
-      <li>
-        <a href="/home">
-          <img
-            alt="Home Icon"
-            class="nav-icon"
-            src="/assets/icons/icon_home.svg"
-          />
-        </a>
+      <li @click="goTo('/home')">
+        <House :size="48" color="#ffffff"/>
       </li>
-      <li>
-        <a href="/search" @click="checkAuthBeforeNavigation('Search')">
-          <img
-            alt="Search Icon"
-            class="nva-icon"
-            src="/assets/icons/icon_white_search.svg"
-          />
-        </a>
+      <li @click="goTo('/search')">
+        <Search :size="48" color="#ffffff"/>
       </li>
-      <li>
-        <a href="/stats">
-          <img
-            alt="Stats Icon"
-            class="nva-icon"
-            src="/assets/icons/icon_stats.png"
-          />
-        </a>
+      <li @click="goTo('/stats')">
+        <ChartColumnBig :size="48" color="#ffffff"/>
       </li>
     </ul>
 
@@ -85,13 +58,7 @@ const checkAuthBeforeNavigation = (page: string) => {
     </div>
   </nav>
 
-  <img
-    v-else
-    alt="Settings Button"
-    class="settings-button-hidden"
-    src="/assets/icons/icon_list.png"
-    @click="toggleNav"
-  />
+  <Menu v-else :size="48" class="settings-button-hidden" color="#000000" @click="toggleNav"/>
 </template>
 
 <style scoped>
@@ -161,6 +128,4 @@ li:last-child {
   top: 20px;
   left: 20px;
 }
-
-
 </style>
