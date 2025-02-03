@@ -1,8 +1,3 @@
-<script setup lang="ts">
-defineProps<{ modelValue: number | null; options: any[]; label: string; valueKey: string }>();
-defineEmits(['update:modelValue']);
-</script>
-
 <template>
   <select
     class="w-full p-2 border rounded"
@@ -15,3 +10,9 @@ defineEmits(['update:modelValue']);
     </option>
   </select>
 </template>
+
+
+<script setup lang="ts">
+defineProps<{ modelValue: number | null; options: any[]; label: string; valueKey: string }>();
+defineEmits(['update:modelValue']);
+</script>

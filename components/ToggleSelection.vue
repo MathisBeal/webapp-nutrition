@@ -1,8 +1,3 @@
-<script setup lang="ts">
-defineProps<{ modelValue: 'plat' | 'aliment' }>();
-defineEmits(['update:modelValue']);
-</script>
-
 <template>
   <div class="flex justify-center gap-4 mb-4">
     <button
@@ -21,3 +16,10 @@ defineEmits(['update:modelValue']);
     </button>
   </div>
 </template>
+
+
+
+<script setup lang="ts">
+defineProps<{ modelValue: 'plat' | 'aliment' }>();
+defineEmits(['update:modelValue']);
+</script>
