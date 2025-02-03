@@ -41,8 +41,6 @@
 
 
 <script setup lang="ts">
-import { ref, watchEffect, onMounted } from 'vue';
-import { useFetch } from '#app';
 import { Notifications, useNotification } from '@kyvg/vue3-notification';
 
 const { notify } = useNotification();
@@ -57,7 +55,6 @@ const userSession = ref<{ userId: number } | null>(null);
 const quantity = ref(1);
 
 
-
 watchEffect(async () => {
   if (selectedType.value === 'plat') {
     const { data } = await useFetch('/api/plat');
@@ -68,11 +65,9 @@ watchEffect(async () => {
   }
 });
 
-
 watch(selectedType, () => {
   selectedItem.value = null; 
 });
-
 
 
 const fetchMoments = async () => {
@@ -90,7 +85,6 @@ const getSession = async () => {
     userSession.value = null;
   }
 };
-
 
 const submitSelection = async () => {
   if (!selectedItem.value || !selectedMoment.value || !userSession.value?.userId) {
@@ -112,7 +106,6 @@ const submitSelection = async () => {
   selectedMoment.value = null;
   quantity.value=1;
 };
-
 
 onMounted(async () => {
   await getSession();
