@@ -1,10 +1,10 @@
-const MAX_HEIGHT = 300;
-const MIN_HEIGHT = 0;
+const MAX_HEIGHT = 260;
+const MIN_HEIGHT = 50;
 
 const MAX_WEIGHT = 300;
-const MIN_WEIGHT = 0;
+const MIN_WEIGHT = 20;
 
-const MAX_AGE = 150;
+const MAX_AGE = 120;
 const MIN_AGE = 0;
 
 const MAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/

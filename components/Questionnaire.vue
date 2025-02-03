@@ -145,16 +145,18 @@ const heightInput = ref<HTMLInputElement | null>(null);
 const weightInput = ref<HTMLInputElement | null>(null);
 const isSubmitted = ref(false); // Ajoutez cet état
 
+import { validWeight, validHeight, validAge } from '@/utils/validProfilData';
+
 const isNextEnabled = computed(() => {
   const enabled = (() => {
     if (currentQuestionIndex.value === 0) {
-      return age.value !== null && age.value > 0 && age.value <= 100;
+      return age.value !== null && validAge(age.value);
     }
     if (currentQuestionIndex.value === 2) {
-      return height.value !== null && height.value > 50 && height.value <= 250;
+      return height.value !== null && validHeight(height.value);
     }
     if (currentQuestionIndex.value === 3) {
-      return weight.value !== null && weight.value > 20 && weight.value <= 300;
+      return weight.value !== null && validWeight(weight.value);
     }
     return selectedOption.value[currentQuestionIndex.value] !== null;
   })();
@@ -164,7 +166,7 @@ const isNextEnabled = computed(() => {
 const validateInputs = () => {
   if (isSubmitted.value) return true; // Ne pas valider si déjà soumis
 
-  if (age.value !== null && (age.value <= 0 || age.value > 100)) {
+  if (age.value !== null && !validAge(age.value)) {
     notify({
       type: 'error',
       title: 'Erreur',
@@ -172,15 +174,15 @@ const validateInputs = () => {
     });
     return false;
   }
-  if (weight.value !== null && (weight.value <= 20 || weight.value > 300)) {
+  if (weight.value !== null && !validWeight(weight.value)) {
     notify({
       type: 'error',
       title: 'Erreur',
-      text: 'Votre poids semble incorrect, veuillez vérifier votre saisie.'
+      text: 'Votre poids semble incorrect, il doit être compris entre .'
     });
     return false;
   }
-  if (height.value !== null && (height.value <= 50 || height.value > 250)) {
+  if (height.value !== null && !validHeight(height.value)) {
     notify({
       type: 'error',
       title: 'Erreur',
@@ -189,7 +191,7 @@ const validateInputs = () => {
     return false;
   }
   return true;
- }
+};
 
 const fetchRestrictionIds = async () => {
   console.log("Restrictions sélectionnées avant envoi:", selectedRestrictions.value);
