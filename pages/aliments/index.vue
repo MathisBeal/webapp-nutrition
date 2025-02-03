@@ -27,8 +27,8 @@ div {
   width: 40%;
   padding: 0.4em;
   margin: 0.4em auto;
-  border-radius: 10px;
-  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.7);
+  border-radius: 1vh;
+  box-shadow: 0.2vh 0.2vh 0.2vh rgba(0, 0, 0, 0.7);
   background: #f3f3f3;
   font-size: 1.5em;
   align-items: center;
@@ -38,7 +38,7 @@ div {
 }
 
 .aliment:hover {
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+  box-shadow: 0.2vh 0.2vh 0.2vh rgba(0, 0, 0, 0.9);
   background: #e6e6e6;
 }
 

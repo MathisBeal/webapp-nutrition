@@ -3,7 +3,6 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, ref} from 'vue';
 import {Chart, type ChartData, type ChartOptions, registerables,} from 'chart.js';
 
 Chart.register(...registerables);
@@ -43,6 +42,6 @@ export default defineComponent({
 
 <style scoped>
 canvas {
-  height: 100px;
+  height: 10vh;
 }
 </style>

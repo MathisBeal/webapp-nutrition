@@ -1,5 +1,3 @@
-import { ref } from 'vue';
-
 // Déclarez l'état en dehors de la fonction
 const userData = ref({
   nom: null as string | null,

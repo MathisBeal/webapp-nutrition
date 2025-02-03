@@ -2,9 +2,6 @@
   <div class="login-page">
     <h1 class="title">Connexion</h1>
     <form class="login-form" @submit.prevent="handleLogin">
-      <!-- Message d'erreur général -->
-      <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-
       <!-- Champ Email -->
       <div class="form-group">
         <label for="email">Email</label>
@@ -36,17 +33,21 @@
       Vous n'avez pas encore de compte ?
       <a href="/Signup">Créez-en un <span class="highlight">ici</span>.</a>
     </p>
+    <NuxtNotifications class="custom-notif"
+    position="top center"
+    :speed="500"/>
   </div>
 </template>
 
 <script lang="ts" setup>
 import {useRouter} from 'nuxt/app'
 import {setAuthenticationStatus} from '@/composables/useAuth'
+//import { NuxtNotifications } from '#components';
 
 // Variables et gestion de la logique
+//const { notify } = useNotification();
 const email = ref('')
 const password = ref('')
-const errorMessage = ref('')
 const router = useRouter()
 
 interface ApiResponse {
@@ -56,7 +57,11 @@ interface ApiResponse {
 
 const validateFields = (): boolean => {
   if (!email.value || !password.value) {
-    errorMessage.value = 'Veuillez remplir tous les champs.';
+    // notify({
+    //   type: 'error',
+    //   title: 'Erreur',
+    //   text: 'Veuillez remplir tous les champs.'
+    // });
     return false;
   }
   return true;
@@ -79,17 +84,24 @@ const loginUser = async (): Promise<Response> => {
 
 const handleResponse = (data: ApiResponse, response: Response): boolean => {
   if (response.status === 400 && data.message) {
-    errorMessage.value = data.message; // Erreur de validation renvoyée par le backend
+    // notify({
+    //   type: 'error',
+    //   title: 'Erreur',
+    //   text: data.message
+    // });
     return false;
   }
 
   if (data.success) {
-    errorMessage.value = '';
     setAuthenticationStatus(true);
-    router.push('/home');
+    router.push('/');
     return true;
   } else {
-    errorMessage.value = data.message || 'Email ou mot de passe incorrect.';
+    // notify({
+    //   type: 'error',
+    //   title: 'Erreur',
+    //   text: 'Email ou mot de passe incorrect.'
+    // });
     return false;
   }
 };
@@ -102,56 +114,62 @@ const handleLogin = async () => {
     const data: ApiResponse = await response.json();
     handleResponse(data, response);
   } catch (error) {
-    errorMessage.value = 'Erreur lors de la connexion. Veuillez réessayer.';
+    // notify({
+    //   type: 'error',
+    //   title: 'Erreur',
+    //   text: 'Erreur lors de la connexion. Veuillez réessayer.'
+    // });
   }
 };
 </script>
 
 <style scoped>
 .login-page {
-  max-width: 400px;
-  margin: 50px auto;
-  padding: 25px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 90vw;
+  width: 25%;
+  margin: 10vh;
+  margin-left: 40vw;
+  padding: 2em;
+  border: 0.1vh solid #ccc;
+  border-radius: 0.5em;
+  box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.1);
   font-family: Arial, sans-serif;
   background-color: #fff;
 }
 
 .title {
   text-align: center;
-  margin-bottom: 20px;
-  font-size: 24px;
+  margin-bottom: 2em;
+  font-size: 2.5em;
   color: #333;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 2em;
 }
 
 label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 0.5em;
   font-weight: bold;
 }
 
 .input {
   width: 95%;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 1em;
+  font-size: 1em;
+  border: 0.1em solid #ccc;
+  border-radius: 0.25em;
 }
 
 .btn {
   width: 100%;
-  padding: 10px;
-  font-size: 16px;
+  padding: 1em;
+  font-size: 1em;
   background-color: #007BFF;
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 0.25em;
   cursor: pointer;
 }
 
@@ -161,14 +179,14 @@ label {
 
 .error {
   color: red;
-  margin-bottom: 15px;
-  font-size: 14px;
+  margin-bottom: 1.5em;
+  font-size: 1em;
 }
 
 .signup-link {
-  margin-top: 20px;
+  margin-top: 2em;
   text-align: center;
-  font-size: 14px;
+  font-size: 1em;
   color: #333;
 }
 
@@ -185,4 +203,3 @@ label {
   font-weight: bold;
 }
 </style>
-
