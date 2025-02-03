@@ -7,8 +7,7 @@ const MIN_WEIGHT = 0;
 const MAX_AGE = 150;
 const MIN_AGE = 0;
 
-const MAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
+const MAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 
 /**
  * Validates if the given weight is within the acceptable range.
@@ -49,6 +48,5 @@ const validAge = (age: number) => {
 const validMail = (mail: string) => {
   return MAIL_REGEX.test(mail);
 }
-
 
 export { validWeight, validHeight, validAge, validMail };
