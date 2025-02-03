@@ -111,7 +111,7 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, nextTick, onMounted, ref, watch} from 'vue';
+import questionsData from '~/content/questions.json';
 
 const props = defineProps({
   userData: {
@@ -121,38 +121,12 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['submitQuestionnaire']);
-
-const questions = ref([
-  {question: 'Quel est votre âge ?', options: []},
-  {question: 'Quel est votre sexe ?', options: ['Homme', 'Femme', 'Autre']},
-  {question: 'Quelle est votre taille (en cm) ?', options: []},
-  {question: 'Quel est votre poids (en kg) ?', options: []},
-  {
-    question: 'Suivez-vous un régime alimentaire spécifique ?',
-    options: [],
-  },
-  {
-    question: 'Êtes-vous allergique à un de ces aliments ?',
-    options: ['Aucun'],
-  },
-  {
-    question:
-      'Êtes-vous intéressé par un plan de nutrition personnalisé pour perdre, maintenir ou gagner du poids ?',
-    options: [
-      'Perdre du poids',
-      'Maintenir mon poids',
-      'Gagner du poids',
-      'Je ne sais pas',
-    ],
-  },
-]);
-
+const questions = ref(questionsData);
 const selectedOption = ref<(string | null)[]>(questions.value.map(() => null));
 const currentQuestionIndex = ref(0);
 const height = ref<number | null>(null);
 const weight = ref<number | null>(null);
 const age = ref<number | null>(null);
-
 const ageInput = ref<HTMLInputElement | null>(null);
 const heightInput = ref<HTMLInputElement | null>(null);
 const weightInput = ref<HTMLInputElement | null>(null);
@@ -272,6 +246,7 @@ onMounted(() => {
 
 .questionnaire-container {
   margin: 50px auto;
+  padding-left: 500px;
   background-color: #ffffff;
 }
 

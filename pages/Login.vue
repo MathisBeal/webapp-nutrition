@@ -1,52 +1,3 @@
-<script lang="ts" setup>
-import {ref} from 'vue'
-import {useRouter} from 'nuxt/app'
-import {setAuthenticationStatus} from '@/composables/useAuth'
-
-// Variables et gestion de la logique
-const email = ref('')
-const password = ref('')
-const errorMessage = ref('')
-const router = useRouter()
-
-const handleLogin = async () => {
-  // Validation basique des champs
-  if (!email.value || !password.value) {
-    errorMessage.value = 'Veuillez remplir tous les champs.'
-    return
-  }
-
-  try {
-    // Appel API pour se connecter
-    const response = await fetch('/api/user/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: email.value,
-        password: password.value,
-      }),
-    });
-
-    const data = await response.json();
-
-    // Si connexion réussie
-    if (data.success) {
-      errorMessage.value = '';
-      setAuthenticationStatus(true);
-      router.push('/home');
-    } else {
-      errorMessage.value = data.message || 'Erreur lors de la connexion.';
-    }
-  } catch (error) {
-    // Gestion des erreurs (par exemple, mauvais email/mot de passe ou erreur serveur)
-    console.error('Erreur lors de la connexion :', error);
-    errorMessage.value = 'Erreur lors de la connexion. Veuillez réessayer.';
-  }
-}
-</script>
-
 <template>
   <div class="login-page">
     <h1 class="title">Connexion</h1>
@@ -87,6 +38,74 @@ const handleLogin = async () => {
     </p>
   </div>
 </template>
+
+<script lang="ts" setup>
+import {useRouter} from 'nuxt/app'
+import {setAuthenticationStatus} from '@/composables/useAuth'
+
+// Variables et gestion de la logique
+const email = ref('')
+const password = ref('')
+const errorMessage = ref('')
+const router = useRouter()
+
+interface ApiResponse {
+  success: boolean;
+  message?: string;
+}
+
+const validateFields = (): boolean => {
+  if (!email.value || !password.value) {
+    errorMessage.value = 'Veuillez remplir tous les champs.';
+    return false;
+  }
+  return true;
+};
+
+const loginUser = async (): Promise<Response> => {
+  const response = await fetch('/api/user/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email: email.value,
+      password: password.value,
+    }),
+  });
+
+  return response;
+};
+
+const handleResponse = (data: ApiResponse, response: Response): boolean => {
+  if (response.status === 400 && data.message) {
+    errorMessage.value = data.message; // Erreur de validation renvoyée par le backend
+    return false;
+  }
+
+  if (data.success) {
+    errorMessage.value = '';
+    setAuthenticationStatus(true);
+    router.push('/home');
+    return true;
+  } else {
+    errorMessage.value = data.message || 'Email ou mot de passe incorrect.';
+    return false;
+  }
+};
+
+const handleLogin = async () => {
+  if (!validateFields()) return;
+
+  try {
+    const response = await loginUser();
+    const data: ApiResponse = await response.json();
+    handleResponse(data, response);
+  } catch (error) {
+    errorMessage.value = 'Erreur lors de la connexion. Veuillez réessayer.';
+  }
+};
+</script>
 
 <style scoped>
 .login-page {

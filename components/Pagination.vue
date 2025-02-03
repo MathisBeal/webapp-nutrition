@@ -15,8 +15,6 @@
 </template>
 
 <script setup>
-import {computed, defineEmits, defineProps, onMounted, ref, watch} from 'vue';
-
 const props = defineProps({
   results: Array,
   itemsPerPage: {

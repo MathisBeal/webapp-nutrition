@@ -15,11 +15,11 @@ body {
 
 .accueil {
   padding: 20px;
-  transition: margin-left 0.3s ease; 
+  transition: margin-left 0.3s ease;
 }
 
 .accueil.with-nav {
-  margin-left: 145px; 
+  margin-left: 145px;
 }
 
 .navigation-buttons {
@@ -29,11 +29,11 @@ body {
 }
 
 .accueil.with-nav {
-  margin-left: 145px; 
+  margin-left: 145px;
 }
 
 .accueil.with-nav {
-  margin-left: 145px; 
+  margin-left: 145px;
 }
 
 .navigation-buttons {
@@ -44,9 +44,9 @@ body {
 
 .accueil {
   padding: 20px;
-  transition: margin-left 0.3s ease; 
+  transition: margin-left 0.3s ease;
 }
 
 .accueil.with-nav {
-  margin-left: 145px; 
+  margin-left: 145px;
 }
