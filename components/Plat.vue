@@ -6,8 +6,8 @@ const router = useRouter()
 
 const props = defineProps<{
   plat: any;
-  favoris: Set<number>;
-  toggleFavori: (item: any) => void;
+  favoris?: Set<number>;
+  toggleFavori?: (item: any) => void;
 }>();
 
 function navigate() {
@@ -15,7 +15,6 @@ function navigate() {
 }
 
 const imgSrc = lazyLoad("/img/placeholders/plat.png", props.plat.images);
-
 </script>
 
 <template>
@@ -30,7 +29,7 @@ const imgSrc = lazyLoad("/img/placeholders/plat.png", props.plat.images);
         Durée de préparation : {{ plat.duree || 'Non spécifiée' }}
       </p>
     </div>
-    <div class="favori-icon" @click.stop="toggleFavori(plat)">
+    <div v-if="toggleFavori" class="favori-icon" @click.stop="toggleFavori(plat)">
       <Star v-if="favoris.has(plat.ID)" class="star-icon filled"/>
       <StarOff v-else class="star-icon empty"/>
     </div>
@@ -38,7 +37,6 @@ const imgSrc = lazyLoad("/img/placeholders/plat.png", props.plat.images);
 </template>
 
 <style scoped>
-
 .result-item {
   display: flex;
   align-items: flex-start;

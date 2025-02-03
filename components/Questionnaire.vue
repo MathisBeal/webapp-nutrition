@@ -12,7 +12,7 @@
       <form @keydown.enter.prevent="handleEnterKey">
         <template v-if="currentQuestionIndex === 0">
           <div class="option">
-            <label for="age">Votre âge :</label>
+            <label for="age">Votre âge : </label>
             <input
               id="age"
               ref="ageInput"
@@ -20,16 +20,13 @@
               placeholder="Entrez votre âge"
               type="number"
             />
-            <p v-if="age !== null && (age <= 0 || age > 100)" class="error">
-              Votre âge semble incorrect, veuillez vérifier votre saisie.
-            </p>
           </div>
         </template>
 
         <!-- Question spécifique pour la taille -->
         <template v-if="currentQuestionIndex === 2">
           <div class="option">
-            <label for="height">Votre taille (cm) :</label>
+            <label for="height">Votre taille (cm) : </label>
             <input
               id="height"
               ref="heightInput"
@@ -37,16 +34,13 @@
               placeholder="Entrez votre taille en cm"
               type="number"
             />
-            <p v-if="height !== null && (height <= 50 || height > 250)" class="error">
-              Votre taille semble incorrecte, veuillez vérifier votre saisie.
-            </p>
           </div>
         </template>
 
         <!-- Question spécifique pour le poids -->
         <template v-else-if="currentQuestionIndex === 3">
           <div class="option">
-            <label for="weight">Votre poids (kg) :</label>
+            <label for="weight">Votre poids (kg) : </label>
             <input
               id="weight"
               ref="weightInput"
@@ -54,28 +48,41 @@
               placeholder="Entrez votre poids en kg"
               type="number"
             />
-            <p v-if="weight !== null && (weight <= 20 || weight > 300)" class="error">
-              Votre poids semble incorrect, veuillez vérifier votre saisie.
-            </p>
           </div>
         </template>
 
-        <!-- Options pour les autres questions -->
-        <template v-else>
+        <!-- Questions à choix unique (radio) pour Sexe et Plan Nutritionnel -->
+        <template v-else-if="questions[currentQuestionIndex].options.length > 0 && currentQuestionIndex !== 4 && currentQuestionIndex !== 5">
           <div
             v-for="(option, index) in questions[currentQuestionIndex].options"
             :key="index"
             class="option"
           >
             <input
-              :id="'option-' + index"
-              ref="optionInput"
+              :id="'option-' + currentQuestionIndex + '-' + index"
               v-model="selectedOption[currentQuestionIndex]"
               :value="option"
               name="question"
               type="radio"
             />
-            <label :for="'option-' + index">{{ option }}</label>
+            <label :for="'option-' + currentQuestionIndex + '-' + index">{{ option }}</label>
+          </div>
+        </template>
+
+        <!-- Questions à choix multiple (checkbox) pour Régimes et Allergies -->
+        <template v-else-if="currentQuestionIndex === 4 || currentQuestionIndex === 5">
+          <div
+            v-for="(option, index) in questions[currentQuestionIndex].options"
+            :key="index"
+            class="option"
+          >
+            <input
+              :id="'option-' + currentQuestionIndex + '-' + index"
+              v-model="selectedRestrictions"
+              :value="option"
+              type="checkbox"
+            />
+            <label :for="'option-' + currentQuestionIndex + '-' + index">{{ option }}</label>
           </div>
         </template>
       </form>
@@ -107,12 +114,16 @@
         </button>
       </div>
     </div>
+    <Notifications class="custom-notif"
+    position="top center"
+    :speed="500"/>
   </div>
 </template>
 
-<script lang="ts" setup>
-import {computed, nextTick, onMounted, ref, watch} from 'vue';
 
+<script lang="ts" setup>
+import questionsData from '~/content/questions.json';
+import { useNotification } from "@kyvg/vue3-notification";
 const props = defineProps({
   userData: {
     type: Object,
@@ -120,42 +131,19 @@ const props = defineProps({
   },
 });
 
+const { notify } = useNotification();
 const emit = defineEmits(['submitQuestionnaire']);
-
-const questions = ref([
-  {question: 'Quel est votre âge ?', options: []},
-  {question: 'Quel est votre sexe ?', options: ['Homme', 'Femme', 'Autre']},
-  {question: 'Quelle est votre taille (en cm) ?', options: []},
-  {question: 'Quel est votre poids (en kg) ?', options: []},
-  {
-    question: 'Suivez-vous un régime alimentaire spécifique ?',
-    options: [],
-  },
-  {
-    question: 'Êtes-vous allergique à un de ces aliments ?',
-    options: ['Aucun'],
-  },
-  {
-    question:
-      'Êtes-vous intéressé par un plan de nutrition personnalisé pour perdre, maintenir ou gagner du poids ?',
-    options: [
-      'Perdre du poids',
-      'Maintenir mon poids',
-      'Gagner du poids',
-      'Je ne sais pas',
-    ],
-  },
-]);
-
+const questions = ref(questionsData);
 const selectedOption = ref<(string | null)[]>(questions.value.map(() => null));
 const currentQuestionIndex = ref(0);
 const height = ref<number | null>(null);
 const weight = ref<number | null>(null);
 const age = ref<number | null>(null);
-
+const selectedRestrictions = ref<string[]>([]);
 const ageInput = ref<HTMLInputElement | null>(null);
 const heightInput = ref<HTMLInputElement | null>(null);
 const weightInput = ref<HTMLInputElement | null>(null);
+const isSubmitted = ref(false); // Ajoutez cet état
 
 const isNextEnabled = computed(() => {
   const enabled = (() => {
@@ -170,23 +158,87 @@ const isNextEnabled = computed(() => {
     }
     return selectedOption.value[currentQuestionIndex.value] !== null;
   })();
-  console.debug(`isNextEnabled: ${enabled}`);
   return enabled;
 });
 
-const submitAnswers = () => {
+const validateInputs = () => {
+  if (isSubmitted.value) return true; // Ne pas valider si déjà soumis
+
+  if (age.value !== null && (age.value <= 0 || age.value > 100)) {
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: 'Votre âge semble incorrect, veuillez vérifier votre saisie.'
+    });
+    return false;
+  }
+  if (weight.value !== null && (weight.value <= 20 || weight.value > 300)) {
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: 'Votre poids semble incorrect, veuillez vérifier votre saisie.'
+    });
+    return false;
+  }
+  if (height.value !== null && (height.value <= 50 || height.value > 250)) {
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: 'Votre taille semble incorrecte, veuillez vérifier votre saisie.'
+    });
+    return false;
+  }
+  return true;
+ }
+
+const fetchRestrictionIds = async () => {
+  console.log("Restrictions sélectionnées avant envoi:", selectedRestrictions.value);
+
+  try {
+    const response = await fetch('/api/user/restriction', {
+      method: 'POST',
+      body: JSON.stringify({ restrictions: selectedRestrictions.value }),
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    const data = await response.json();
+    console.log("Réponse de l'API restrictions:", data);
+
+    if (data.success) {
+      return data.data;
+    } else {
+      console.error('Erreur lors de la récupération des ID des restrictions :', data.message);
+      return [];
+    }
+  } catch (error) {
+    console.error('Erreur API restrictions:', error);
+    return [];
+  }
+};
+
+const updateUserData = async () => {
   props.userData.age = age.value;
   props.userData.sexe = selectedOption.value[1];
   props.userData.taille = height.value;
   props.userData.poids = weight.value;
-  props.userData.imc = 1; //calculé directement par la BDD
+  props.userData.imc = 1;
 
-  emit('submitQuestionnaire');
+  props.userData.restrictionsIds = await fetchRestrictionIds();
+  console.log("Mise à jour de userData avec les restrictions:", props.userData);
+};
+
+const submitAnswers = () => {
+  if (validateInputs()) {
+    updateUserData();
+    emit('submitQuestionnaire');
+  }
 };
 
 const nextQuestion = () => {
-  if (currentQuestionIndex.value < questions.value.length - 1) {
-    currentQuestionIndex.value++;
+  if (validateInputs()) {
+    if (currentQuestionIndex.value < questions.value.length - 1) {
+      currentQuestionIndex.value++;
+    }
   }
 };
 
@@ -225,16 +277,14 @@ const fetchOptions = async () => {
 };
 
 const handleEnterKey = () => {
-  console.debug('Enter key pressed');
   if (isNextEnabled.value) {
-    console.debug('isNextEnabled is true, moving to next question');
     if (currentQuestionIndex.value < questions.value.length - 1) {
       nextQuestion();
     } else {
       submitAnswers();
     }
   } else {
-    console.debug('isNextEnabled is false, cannot move to next question');
+    validateInputs();
   }
 };
 
@@ -249,7 +299,6 @@ watch(currentQuestionIndex, async (newIndex) => {
     weightInput.value?.focus();
   } else {
     selectedOption.value[newIndex] = questions.value[newIndex].options[0];
-    console.debug(`Default option selected for question ${newIndex}: ${questions.value[newIndex].options[0]}`);
   }
 });
 
@@ -263,37 +312,53 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.question-box {
+  background-color: white;
+  padding: 5vh;
+  margin-left: 28vw;
+  border-radius: 1vh;
+  box-shadow: 0 0 1vh 0.5vh rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 30vw;
+}
+
 .questionnaire-title {
   text-align: center;
-  font-size: 50px;
+  font-size: 4em;
   color: #333;
-  margin-bottom: 20px;
+  margin-bottom: 1em;
+  margin-left: 3em;
 }
 
 .questionnaire-container {
   margin: 50px auto;
   background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+
 .progress-info {
-  font-size: 16px;
+  font-size: 1em;
   color: #555;
-  margin-top: 10px;
 }
 
 .option {
-  margin: 10px 0;
+  margin: 0.5em 0;
 }
 
 .error {
   color: red;
-  font-size: 14px;
-  margin-top: 5px;
+  font-size: 1.5vh;
+  margin-top: 0.5vh;
 }
 
 .navigation-buttons {
   display: flex;
   justify-content: space-between;
+  width: 80%;
+  margin: 1em auto;
 }
 
 button:disabled {
@@ -301,7 +366,6 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* Bouton suivant aligné à droite */
 .align-right {
   margin-left: auto;
 }
@@ -309,9 +373,10 @@ button:disabled {
 .submit-button {
   background-color: #4CAF50;
   color: white;
-  padding: 10px 20px;
+  padding: 1.5vh 3vw;
   border: none;
-  border-radius: 5px;
+  border-radius: 1vw;
+  font-size: 1.5vh;
 }
 
 .submit-button:disabled {
@@ -323,8 +388,9 @@ button:disabled {
 .next-button {
   background-color: #007BFF;
   color: white;
-  padding: 10px 20px;
+  padding: 1.5vh 3vw;
   border: none;
-  border-radius: 5px;
+  border-radius: 1vw;
+  font-size: 0.8em;
 }
 </style>

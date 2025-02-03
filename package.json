@@ -5,6 +5,7 @@
   "scripts": {
     "check-type": "tsc --noEmit",
     "build": "nuxi build",
+    "start": "nuxt start",
     "clean": "rimraf .output",
     "dev": "nuxt dev",
     "dev:host": "nuxt dev --host",
@@ -24,7 +25,6 @@
     "@prisma/client": "^6.2.1",
     "bcrypt": "^5.1.1",
     "chart.js": "^4.4.7",
-    "dotenv": "^16.4.7",
     "lucide-vue-next": "^0.474.0",
     "nuxt": "^3.15.2",
     "nuxt-auth-utils": "^0.5.10",

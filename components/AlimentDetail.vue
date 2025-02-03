@@ -1,21 +1,3 @@
-<script lang="ts" setup>
-import {computed} from 'vue';
-import lazyLoad from "~/utils/lazyLoadImg.ts";
-
-// Define props for the component
-const props = defineProps({
-  alimentData: {
-    type: Object,
-    required: true,
-  },
-});
-
-const aliment = computed(() => props.alimentData || {});
-
-const imgSrc = lazyLoad("/img/placeholders/ingredient.jpg", aliment.value.image);
-
-</script>
-
 <template>
   <div class="container">
     <h1 class="aliment_name">{{ aliment?.nom || 'Aliment' }}</h1>
@@ -53,8 +35,31 @@ const imgSrc = lazyLoad("/img/placeholders/ingredient.jpg", aliment.value.image)
         </tbody>
       </table>
     </div>
+    <div v-if="recipes != null" class="linked_recipes">
+      <Plat v-for="(recipe, index) in recipes" :key="index" :plat="recipe" class="linked_recipe_item"/>
+    </div>
   </div>
 </template>
+
+<script lang="ts" setup>
+import lazyLoad from "~/utils/lazyLoadImg.ts";
+
+// Define props for the component
+const props = defineProps({
+  alimentData: {
+    type: Object,
+    required: true,
+  },
+  linkedRecipes: {
+    type: Array,
+    required: false,
+  }
+});
+
+const aliment = computed(() => props.alimentData || {});
+const recipes = computed(() => props.linkedRecipes || null);
+const imgSrc = lazyLoad("/img/placeholders/ingredient.jpg", aliment.value.image);
+</script>
 
 <style scoped>
 .container {
@@ -62,7 +67,7 @@ const imgSrc = lazyLoad("/img/placeholders/ingredient.jpg", aliment.value.image)
   min-height: 100vh;
   margin: 0 auto;
   background: #f8f9fa;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0.2vh 0.5vh rgba(0, 0, 0, 0.2);
   text-align: center;
 }
 
@@ -88,10 +93,15 @@ const imgSrc = lazyLoad("/img/placeholders/ingredient.jpg", aliment.value.image)
   border-radius: 1vw;
 }
 
+.linked_recipe_item {
+  max-width: 40vw;
+  margin: 0 auto 0.5em auto;
+}
+
 table {
   margin: auto;
   border-collapse: collapse;
-  border: 2px solid rgb(112, 112, 112);
+  border: 0.2vh solid rgb(112, 112, 112);
   font-size: 1em;
 }
 
@@ -106,7 +116,7 @@ tbody th {
 
 th {
   border-collapse: collapse;
-  border: 1px solid rgb(112, 112, 112);
+  border: 0.1vh solid rgb(112, 112, 112);
   padding: 0.2em 0.2em 0.3em 0.3em;
   width: 12vw;
   min-width: fit-content;

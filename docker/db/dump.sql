@@ -431,7 +431,7 @@ CREATE TABLE `Restriction_Types`
   `est_regime`     bool                                                          NOT NULL,
   PRIMARY KEY (`ID_restriction`)
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 17
+  AUTO_INCREMENT = 16
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -444,22 +444,21 @@ LOCK TABLES `Restriction_Types` WRITE;
 /*!40000 ALTER TABLE `Restriction_Types`
   DISABLE KEYS */;
 INSERT INTO `Restriction_Types`
-VALUES (1, 'Général', 1),
-       (2, 'Végétarisme', 1),
-       (3, 'Véganisme', 1),
-       (4, 'Pescétarisme', 1),
-       (5, 'Flexitarisme', 1),
-       (6, 'Frugivorisme', 1),
-       (7, 'Crudivorisme', 1),
-       (8, 'Sans gluten', 0),
-       (9, 'Sans lactose', 0),
-       (10, 'Hyperprotéiné', 0),
-       (11, 'Lactose', 0),
-       (12, 'Arachides', 0),
-       (13, 'Fruits à coque', 0),
-       (14, 'Poisson', 0),
-       (15, 'Fruit de mer', 0),
-       (16, 'Légumineuse', 0);
+VALUES (1, 'Végétarisme', 1),
+       (2, 'Véganisme', 1),
+       (3, 'Pescétarisme', 1),
+       (4, 'Flexitarisme', 1),
+       (5, 'Frugivorisme', 1),
+       (6, 'Crudivorisme', 1),
+       (7, 'Sans gluten', 0),
+       (8, 'Sans lactose', 0),
+       (9, 'Hyperprotéiné', 0),
+       (10, 'Lactose', 0),
+       (11, 'Arachides', 0),
+       (12, 'Fruits à coque', 0),
+       (13, 'Poisson', 0),
+       (14, 'Fruit de mer', 0),
+       (15, 'Légumineuse', 0);
 /*!40000 ALTER TABLE `Restriction_Types`
   ENABLE KEYS */;
 UNLOCK TABLES;

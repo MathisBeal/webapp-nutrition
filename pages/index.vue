@@ -2,11 +2,7 @@
   <Accueil/>
 </template>
 
-<script lang="ts" setup>
-
-</script>
-
-<style>
+<style scoped>
 div {
   text-align: center;
 }

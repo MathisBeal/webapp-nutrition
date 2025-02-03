@@ -2,9 +2,6 @@
   <div class="signup-page">
     <h1 class="title">Créer un compte</h1>
     <form class="signup-form" @submit.prevent="handleSignup">
-      <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-      <p v-if="successMessage" class="success">{{ successMessage }}</p>
-
       <div class="form-group">
         <label for="name">Nom</label>
         <input
@@ -66,11 +63,15 @@
       Vous avez déjà un compte ?
       <a href="/login">Connectez-vous <span class="highlight">ici</span>.</a>
     </p>
+    <Notifications class="custom-notif"
+    position="top center"
+    :speed="500"/>
   </div>
 </template>
 
 <script lang="ts" setup>
 import {type User} from '@/types/User';
+import { useNotification } from "@kyvg/vue3-notification";
 
 const props = defineProps({
   userData: {
@@ -79,122 +80,158 @@ const props = defineProps({
   },
 });
 
+interface ApiResponse {
+  exists: boolean;
+  message?: string;
+}
+
+const { notify } = useNotification();
 const name = ref('');
 const lastName = ref('');
 const email = ref('');
 const password = ref('');
 const confirmPassword = ref('');
-const errorMessage = ref('');
-const successMessage = ref('');
-
 const emit = defineEmits(['signupSuccess']);
 
-const handleSignup = async () => {
-  errorMessage.value = '';
-  successMessage.value = '';
-
+const validateFields = (): boolean => {
   if (!name.value || !lastName.value || !email.value || !password.value || !confirmPassword.value) {
-    errorMessage.value = 'Veuillez remplir tous les champs.';
-    return;
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: 'Veuillez remplir tous les champs.'
+    });
+    return false;
   }
   if (!validMail(email.value)) {
-    errorMessage.value = 'Adresse e-mail invalide.';
-    return;
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: 'Adresse e-mail invalide.'
+    });
+    return false;
   }
   if (password.value !== confirmPassword.value) {
-    errorMessage.value = 'Les mots de passe ne correspondent pas.';
-    return;
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: 'Les mots de passe ne correspondent pas.'
+    });
+    return false;
   }
   if (/\s/.test(password.value)) {
-    errorMessage.value = 'Le mot de passe ne doit pas contenir d\'espaces.';
-    return;
-  }
-
-  // Vérification de l'existence de l'e-mail
-  try {
-    const response = await fetch('/api/user/findByEmail', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({email: email.value}),
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: 'Le mot de passe ne doit pas contenir d\'espaces.'
     });
-
-    const data = await response.json();
-
-    if (response.ok && data.exists) {
-      errorMessage.value = data.message;
-      return;
-    } else if (!response.ok) {
-      errorMessage.value = 'Erreur lors de la communication avec le serveur.';
-      console.error('Erreur HTTP:', response.statusText);
-      return;
-    }
-
-  } catch (error) {
-    errorMessage.value = 'Erreur lors de la vérification de l’e-mail.';
-    console.error(error);
-    return;
+    return false;
   }
-  successMessage.value = 'Compte créé avec succès !';
+  return true;
+};
 
-  props.userData.prenom = name.value;
-  props.userData.nom = lastName.value;
-  props.userData.mail = email.value;
-  props.userData.password = password.value;
+const checkEmailExists = async (): Promise<ApiResponse> => {
+  const response = await fetch('/api/user/findByEmail', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email: email.value }),
+  });
+
+  return response.json();
+};
+
+const handleResponse = (data: ApiResponse) => {
+  if (data.exists) {
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: data.message
+    });
+    return false;
+  }
+
+  notify({
+    type: 'success',
+    title: 'Succès',
+    text: 'Compte créé avec succès !'
+  });
+
+  props.userData.prenom = name.value!;
+  props.userData.nom = lastName.value!;
+  props.userData.mail = email.value!;
+  props.userData.password = password.value!;
 
   setTimeout(() => {
     emit('signupSuccess');
   }, 500);
+
+  return true;
+};
+
+const handleSignup = async () => {
+  if (!validateFields()) return;
+
+  try {
+    const data = await checkEmailExists();
+    if (!handleResponse(data)) return;
+  } catch (error) {
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: 'Erreur lors de la vérification de l’e-mail.'
+    });
+  }
 };
 </script>
 
-
 <style scoped>
 .signup-page {
-  max-width: 400px;
-  margin: 50px auto;
-  padding: 25px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 30vw;
+  margin: 5vh 30vw;
+  margin-left: 40vw;
+  padding: 3vh;
+  border: 0.1vh solid #ccc;
+  border-radius: 1vw;
+  box-shadow: 0 0.2vh 0.4vh rgba(0, 0, 0, 0.1);
   font-family: Arial, sans-serif;
   background-color: #fff;
 }
 
 .title {
   text-align: center;
-  margin-bottom: 20px;
-  font-size: 24px;
+  margin-bottom: 0.7em;
+  font-size: 3em;
   color: #333;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 2vh;
 }
 
 label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 1vh;
   font-weight: bold;
 }
 
 .input {
   width: 95%;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 0.5em;
+  font-size: 1em;
+  border: 0.1vh solid #ccc;
+  border-radius: 0.5vw;
 }
 
 .btn {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
+  width: 95%;
+  padding: 0.5em;
+  margin-left: 0.6em;
+  font-size: 1em;
   background-color: #28a745;
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 0.5vw;
   cursor: pointer;
 }
 
@@ -202,22 +239,10 @@ label {
   background-color: #218838;
 }
 
-.error {
-  color: red;
-  margin-bottom: 15px;
-  font-size: 14px;
-}
-
-.success {
-  color: green;
-  margin-bottom: 15px;
-  font-size: 14px;
-}
-
 .login-link {
-  margin-top: 20px;
+  margin-top: 3vh;
   text-align: center;
-  font-size: 14px;
+  font-size: 0.85em;
   color: #333;
 }
 

@@ -1,3 +1,9 @@
+<template>
+  <div id="bottle-container">
+    <img src="assets/img/bottle_mask.png" alt="" :style="styleObject">
+  </div>
+</template>
+
 <script setup lang="ts">
 import {reactive, watch} from "#imports";
 
@@ -7,7 +13,6 @@ const props = defineProps({
     required: true,
   }
 });
-
 
 const styleObject = reactive({
   background: '',
@@ -29,20 +34,11 @@ watch(
     min_water = Math.max(min_water, 0);
     max_water = Math.max(min_water + offset, max_water);
 
-    console.log(min_water, max_water);
-
     styleObject.background = `linear-gradient(0deg, rgba(0,213,255,1) ${min_water}%, rgba(200,234,255,0) ${max_water}%)`;
   },
   { immediate: true }
 );
-
 </script>
-
-<template>
-  <div id="bottle-container">
-    <img src="assets/img/bottle_mask.png" alt="" :style="styleObject">
-  </div>
-</template>
 
 <style scoped>
 #bottle-container {

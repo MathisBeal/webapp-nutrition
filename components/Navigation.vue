@@ -42,6 +42,7 @@ const checkAuthBeforeNavigation = (page: string) => {
 
 </script>
 
+
 <template>
   <nav v-if="isNavVisible">
     <img
@@ -52,7 +53,7 @@ const checkAuthBeforeNavigation = (page: string) => {
     />
     <ul>
       <li>
-        <a href="/home">
+        <a href="/">
           <img
             alt="Home Icon"
             class="nav-icon"
@@ -61,7 +62,7 @@ const checkAuthBeforeNavigation = (page: string) => {
         </a>
       </li>
       <li>
-        <a href="/search" @click="checkAuthBeforeNavigation('Search')">
+        <a href="/search">
           <img
             alt="Search Icon"
             class="nav-icon"
@@ -85,7 +86,7 @@ const checkAuthBeforeNavigation = (page: string) => {
       </li>
     </ul>
 
-    <div v-if="isAuthenticated">
+    <div class="fix-bottom" v-if="isAuthenticated">
       <p>Utilisateur : {{ userId ? userId : 'ID non trouvé' }}</p>
       <button @click="logoutRedirection">Se déconnecter</button>
     </div>
@@ -100,13 +101,42 @@ const checkAuthBeforeNavigation = (page: string) => {
   />
 </template>
 
+<script lang="ts" setup>
+import {getSession, isAuthenticated, logout, userId} from '@/composables/useAuth';
+
+const router = useRouter();
+const isNavVisible = ref(true);
+
+const logoutRedirection = async () => {
+  await logout();
+  router.push('/login');
+};
+
+const toggleNav = () => {
+  isNavVisible.value = !isNavVisible.value;
+};
+
+onMounted(async () => {
+  await getSession();
+});
+
+// Surveiller changements d'état d'authentification
+watch(isAuthenticated, async (newValue) => {
+  if (newValue) {
+    await getSession();
+  } else {
+    userId.value = null;
+  }
+});
+</script>
+
 <style scoped>
 nav {
   position: fixed;
   top: 0;
   left: 0;
   height: 100%;
-  width: 145px;
+  width: 10vw;
   background-color: #333;
   color: white;
   padding: 1rem;
@@ -121,7 +151,7 @@ ul {
   padding: 0;
   width: 100%;
   text-align: center;
-  margin-top: 50px;
+  margin-top: 5vh;
 }
 
 li {
@@ -142,7 +172,7 @@ button {
 }
 
 .bouton {
-  padding-bottom: 20px;
+  padding-bottom: 2vh;
 }
 
 button:hover {
@@ -151,22 +181,31 @@ button:hover {
 
 li:last-child {
   margin-top: auto;
-  margin-bottom: 50px;
+  margin-bottom: 5vh;
 }
 
 .settings-button,
 .settings-button-hidden {
   cursor: pointer;
-  width: 50px;
+  width: 5vw;
   height: auto;
-  margin-bottom: 20px;
+  margin-bottom: 2vh;
 }
 
 .settings-button-hidden {
   position: fixed;
-  top: 20px;
-  left: 20px;
+  top: 2vh;
+  left: 2vw;
 }
 
-
+.fix-bottom
+{
+  position: fixed;
+  bottom: 0;
+  width: 10vw;
+  padding: 1rem;
+  background-color: #333;
+  color: white;
+  text-align: center;
+}
 </style>

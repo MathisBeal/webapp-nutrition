@@ -47,7 +47,6 @@ export default defineEventHandler(async (event) => {
     },
   });
 
-
   const favoris = userId
     ? await prisma.users_Favoris.findMany({
       where: {ID_user: Number(userId)},
@@ -80,9 +79,7 @@ export default defineEventHandler(async (event) => {
       proteines: aliment.proteines,
       image: aliment.image || '/assets/img/aliment.png',
       isFavori: favoriIds.has(aliment.ID_aliment),
-    })),
-  ];
-
-
+  })),
+];
   return combinedResults;
 });
