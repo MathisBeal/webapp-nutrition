@@ -42,7 +42,7 @@
     </ul>
 
     <div class="fix-bottom" v-if="isAuthenticated">
-      <p>Utilisateur : {{ userId ? userId : 'ID non trouvé' }}</p>
+      <p>Utilisateur : {{ userName ? userName : 'Prénom introuvable' }}</p>
       <button @click="logoutRedirection">Se déconnecter</button>
     </div>
   </nav>
@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts" setup>
-import {getSession, isAuthenticated, logout, userId} from '@/composables/useAuth';
+import {getSession, isAuthenticated, logout, userName} from '@/composables/useAuth';
 import { Utensils } from 'lucide-vue-next';
 
 
@@ -84,7 +84,7 @@ watch(isAuthenticated, async (newValue) => {
     await getSession();
   } else {
     console.log("Utilisateur déconnecté !");
-    userId.value = null;
+    userName.value = null;
   }
 });
 

@@ -29,6 +29,7 @@ export default defineEventHandler(async (event) => {
     const userSession = {
       userId: user.ID_user,
       email: user.mail,
+      name: user.prenom,
     };
 
     await setUserSession(event, userSession);
