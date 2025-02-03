@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-
 import {getSession, userId} from '@/composables/useAuth';
 import Plat from '@/components/Plat.vue';
 import Aliment from '@/components/Aliment.vue';
+import {Search} from 'lucide-vue-next';
 
 
 const searchQuery = ref<string>('');
@@ -98,7 +98,7 @@ watch(userId, async (newUserId) => {
       </div>
     </div>
     <div v-else class="no-results">
-      <img alt="Icône de loupe" class="no-results-icon" src="/assets/icons/icon_search.png"/>
+      <Search alt="Icône de loupe" class="no-results-icon" :size="24" color="grey"/>
       <p class="no-results-text">Aucun résultat</p>
     </div>
   </div>

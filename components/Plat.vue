@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { StarOff, Star } from 'lucide-vue-next';
+import {Clock, Star, StarOff} from 'lucide-vue-next';
 import lazyLoad from "~/utils/lazyLoadImg.ts";
 
 const router = useRouter()
@@ -24,10 +24,10 @@ const imgSrc = lazyLoad("/img/placeholders/plat.png", props.plat.images);
       <h2>
         {{ plat.description || 'Description non disponible' }} - {{ plat.nom_categorie || 'Catégorie inconnue' }}
       </h2>
-      <p>
-        <img alt="Icône d'horloge" class="icon-horloge" src="/assets/img/horloge.png"/>
-        Durée de préparation : {{ plat.duree || 'Non spécifiée' }}
-      </p>
+      <div class="duree">
+        <Clock/>
+        <p> Durée de préparation : {{ plat.duree || 'Non spécifiée' }} </p>
+      </div>
     </div>
     <div v-if="toggleFavori" class="favori-icon" @click.stop="toggleFavori(plat)">
       <Star v-if="favoris.has(plat.ID)" class="star-icon filled"/>
@@ -59,11 +59,6 @@ const imgSrc = lazyLoad("/img/placeholders/plat.png", props.plat.images);
   font-size: 1.2rem;
 }
 
-.result-item p {
-  margin: 0.5vh 0 0;
-  color: #555;
-}
-
 .result-image {
   width: 7vw;
   height: 7vw;
@@ -90,13 +85,6 @@ const imgSrc = lazyLoad("/img/placeholders/plat.png", props.plat.images);
   color: #999;
 }
 
-.icon-horloge {
-  width: 1vw;
-  height: 1vw;
-  object-fit: cover;
-  border-radius: 0.5em;
-}
-
 .favori-icon {
   cursor: pointer;
   display: flex;
@@ -118,5 +106,12 @@ const imgSrc = lazyLoad("/img/placeholders/plat.png", props.plat.images);
 
 .favori-icon:hover .star-icon {
   transform: scale(1.1);
+}
+
+.duree {
+  display: flex;
+  align-items: center;
+  margin: 0.5vh 0 0;
+  color: #555;
 }
 </style>

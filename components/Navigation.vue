@@ -1,64 +1,7 @@
-<template>
-  <nav v-if="isNavVisible">
-    <img
-      alt="Settings Button"
-      class="settings-button"
-      src="/assets/icons/icon_list-white.png"
-      @click="toggleNav"
-    />
-    <ul>
-      <li>
-        <a href="/">
-          <img
-            alt="Home Icon"
-            class="nav-icon"
-            src="/assets/icons/icon_home.svg"
-          />
-        </a>
-      </li>
-      <li>
-        <a href="/search">
-          <img
-            alt="Search Icon"
-            class="nav-icon"
-            src="/assets/icons/icon_white_search.svg"
-          />
-        </a>
-      </li>
-      <li>
-        <a href="/alimentation" @click="checkAuthBeforeNavigation('Alimentation')">
-          <Utensils :size="48" class="nav-icon" />
-        </a>
-      </li>
-      <li>
-        <a href="/stats">
-          <img
-            alt="Stats Icon"
-            class="nav-icon"
-            src="/assets/icons/icon_stats.png"
-          />
-        </a>
-      </li>
-    </ul>
-
-    <div class="fix-bottom" v-if="isAuthenticated">
-      <p>Utilisateur : {{ userName ? userName : 'Prénom introuvable' }}</p>
-      <button @click="logoutRedirection">Se déconnecter</button>
-    </div>
-  </nav>
-
-  <img
-    v-else
-    alt="Settings Button"
-    class="settings-button-hidden"
-    src="/assets/icons/icon_list.png"
-    @click="toggleNav"
-  />
-</template>
-
 <script lang="ts" setup>
 import {getSession, isAuthenticated, logout, userName} from '@/composables/useAuth';
-import { Utensils } from 'lucide-vue-next';
+import {ChartColumnBig, House, Menu, Search, Utensils} from 'lucide-vue-next'
+import {useRouter} from "nuxt/app";
 
 
 const router = useRouter();
@@ -88,16 +31,40 @@ watch(isAuthenticated, async (newValue) => {
   }
 });
 
-const checkAuthBeforeNavigation = (page: string) => {
-  console.log(`Navigation vers ${page}...`);
-  console.log(`isAuthenticated:`, isAuthenticated.value);
-  if (!isAuthenticated.value) {
-    console.warn("Utilisateur déconnecté avant la navigation !");
-  } else {
-    console.log("Utilisateur toujours connecté.");
-  }
-};
+function goTo(address: string) {
+  router.push(address);
+}
+
 </script>
+
+<template>
+  <nav v-if="isNavVisible">
+    <Menu :size="48" class="settings-button" color="#ffffff" @click="toggleNav"/>
+    <ul>
+      <li @click="goTo('/')">
+        <House :size="48" color="#ffffff"/>
+      </li>
+      <li @click="goTo('/search')">
+        <Search :size="48" color="#ffffff"/>
+      </li>
+      <li @click="goTo('/alimentation')">
+        <a href="/alimentation">
+          <Utensils :size="48" class="nav-icon" />
+        </a>
+      </li>
+      <li @click="goTo('/stats')">
+        <ChartColumnBig :size="48" color="#ffffff"/>
+      </li>
+    </ul>
+
+    <div class="fix-bottom" v-if="isAuthenticated">
+      <p>Utilisateur : {{ userId ? userId : 'ID non trouvé' }}</p>
+      <button @click="logoutRedirection">Se déconnecter</button>
+    </div>
+  </nav>
+
+  <Menu v-else :size="48" class="settings-button-hidden" color="#000000" @click="toggleNav"/>
+</template>
 
 <style scoped>
 nav {
@@ -138,10 +105,6 @@ button {
   border: none;
   padding: 0.5rem 1rem;
   cursor: pointer;
-}
-
-.bouton {
-  padding-bottom: 2vh;
 }
 
 button:hover {
