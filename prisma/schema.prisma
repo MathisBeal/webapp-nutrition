@@ -116,6 +116,7 @@ model Users_Alimentations {
   ID_user         Int
   ID_plat         Int?
   ID_aliment      Int?
+  Quantite        Int          @default(1)
   date            DateTime     @default(now())
   ID_moment       Int
   Aliments        Aliments?    @relation(fields: [ID_aliment], references: [ID_aliment], onDelete: NoAction, onUpdate: NoAction, map: "fk_alimentation_aliment")

@@ -765,6 +765,7 @@ CREATE TABLE `Users_Alimentations`
   `ID_user`         int         NOT NULL,
   `ID_plat`         int                  DEFAULT NULL,
   `ID_aliment`      int                  DEFAULT NULL,
+  `Quantite`        int         NOT NULL DEFAULT 1,
   `date`            datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   `ID_moment`       int         NOT NULL,
   PRIMARY KEY (`ID_alimentation`),
