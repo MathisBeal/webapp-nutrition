@@ -9,7 +9,7 @@
   },
   {
     "question": "Êtes-vous allergique à un de ces aliments ?",
-    "options": ["Aucun"]
+    "options": []
   },
   {
     "question": "Êtes-vous intéressé par un plan de nutrition personnalisé pour perdre, maintenir ou gagner du poids ?",

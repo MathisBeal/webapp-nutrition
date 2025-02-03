@@ -63,7 +63,7 @@
       Vous avez déjà un compte ?
       <a href="/login">Connectez-vous <span class="highlight">ici</span>.</a>
     </p>
-    <Notifications class="custom-notif"
+    <Notifications
     position="top center"
     :speed="500"/>
   </div>

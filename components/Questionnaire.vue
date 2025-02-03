@@ -114,7 +114,7 @@
         </button>
       </div>
     </div>
-    <Notifications class="custom-notif"
+    <Notifications
     position="top center"
     :speed="500"/>
   </div>
@@ -263,6 +263,12 @@ const fetchOptions = async () => {
         dietQuestion.options = dietOptions;
       }
 
+      const DietQuestion = questions.value.find(q => q.question === 'Suivez-vous un régime alimentaire spécifique ?');
+      if (DietQuestion) {
+        DietQuestion.options = dietOptions;
+        DietQuestion.options.unshift('Aucun');
+      }
+
       const allergyQuestion = questions.value.find(q => q.question === 'Êtes-vous allergique à un de ces aliments ?');
       if (allergyQuestion) {
         allergyQuestion.options = allergyOptions;
@@ -315,7 +321,7 @@ onMounted(() => {
 .question-box {
   background-color: white;
   padding: 5vh;
-  margin-left: 28vw;
+  margin-left: 15vw;
   border-radius: 1vh;
   box-shadow: 0 0 1vh 0.5vh rgba(0, 0, 0, 0.1);
   text-align: center;
@@ -337,7 +343,6 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
 }
-
 
 .progress-info {
   font-size: 1em;
@@ -376,7 +381,7 @@ button:disabled {
   padding: 1.5vh 3vw;
   border: none;
   border-radius: 1vw;
-  font-size: 1.5vh;
+  font-size: 0.8em;
 }
 
 .submit-button:disabled {
