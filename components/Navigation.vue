@@ -1,48 +1,3 @@
-<script lang="ts" setup>
-import {getSession, isAuthenticated, logout, userId} from '@/composables/useAuth';
-import { Utensils } from 'lucide-vue-next';
-
-
-const router = useRouter();
-const isNavVisible = ref(true);
-
-const logoutRedirection = async () => {
-  await logout();
-  router.push('/login');
-};
-
-const toggleNav = () => {
-  isNavVisible.value = !isNavVisible.value;
-};
-
-onMounted(async () => {
-  await getSession();
-});
-
-// Surveiller changements d'état d'authentification
-watch(isAuthenticated, async (newValue) => {
-  if (newValue) {
-    console.log("Utilisateur connecté, récupération de la session...");
-    await getSession();
-  } else {
-    console.log("Utilisateur déconnecté !");
-    userId.value = null;
-  }
-});
-
-const checkAuthBeforeNavigation = (page: string) => {
-  console.log(`Navigation vers ${page}...`);
-  console.log(`isAuthenticated:`, isAuthenticated.value);
-  if (!isAuthenticated.value) {
-    console.warn("Utilisateur déconnecté avant la navigation !");
-  } else {
-    console.log("Utilisateur toujours connecté.");
-  }
-};
-
-</script>
-
-
 <template>
   <nav v-if="isNavVisible">
     <img
@@ -103,6 +58,8 @@ const checkAuthBeforeNavigation = (page: string) => {
 
 <script lang="ts" setup>
 import {getSession, isAuthenticated, logout, userId} from '@/composables/useAuth';
+import { Utensils } from 'lucide-vue-next';
+
 
 const router = useRouter();
 const isNavVisible = ref(true);
@@ -123,11 +80,23 @@ onMounted(async () => {
 // Surveiller changements d'état d'authentification
 watch(isAuthenticated, async (newValue) => {
   if (newValue) {
+    console.log("Utilisateur connecté, récupération de la session...");
     await getSession();
   } else {
+    console.log("Utilisateur déconnecté !");
     userId.value = null;
   }
 });
+
+const checkAuthBeforeNavigation = (page: string) => {
+  console.log(`Navigation vers ${page}...`);
+  console.log(`isAuthenticated:`, isAuthenticated.value);
+  if (!isAuthenticated.value) {
+    console.warn("Utilisateur déconnecté avant la navigation !");
+  } else {
+    console.log("Utilisateur toujours connecté.");
+  }
+};
 </script>
 
 <style scoped>
