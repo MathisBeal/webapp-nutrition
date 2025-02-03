@@ -5,14 +5,14 @@ import { z } from 'zod';
 const validationSchema = z.object({
   ID_user: z.number(),
   ID_plat: z.number().nullable(),
-  ID_aliment: z.number(),
+  ID_aliment: z.number().nullable(),
   ID_moment: z.number(),
   Quantite: z.number().optional(),
 });
 
 export default defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, (data) => validationSchema.parse(data));
-  
+
   return await prisma.users_Alimentations.create({
     data: {
       ID_user: body.ID_user,

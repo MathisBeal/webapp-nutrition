@@ -41,7 +41,7 @@ function goTo(address: string) {
   <nav v-if="isNavVisible">
     <Menu :size="48" class="settings-button" color="#ffffff" @click="toggleNav"/>
     <ul>
-      <li @click="goTo('/home')">
+      <li @click="goTo('/')">
         <House :size="48" color="#ffffff"/>
       </li>
       <li @click="goTo('/search')">
@@ -105,10 +105,6 @@ button {
   border: none;
   padding: 0.5rem 1rem;
   cursor: pointer;
-}
-
-.bouton {
-  padding-bottom: 2vh;
 }
 
 button:hover {
