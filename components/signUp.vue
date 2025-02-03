@@ -201,8 +201,8 @@ const handleSignup = async () => {
 
 .title {
   text-align: center;
-  margin-bottom: 3vh;
-  font-size: 3vw;
+  margin-bottom: 0.7em;
+  font-size: 3em;
   color: #333;
 }
 
@@ -218,16 +218,17 @@ label {
 
 .input {
   width: 95%;
-  padding: 1.5vh;
-  font-size: 1.8vh;
+  padding: 0.5em;
+  font-size: 1em;
   border: 0.1vh solid #ccc;
   border-radius: 0.5vw;
 }
 
 .btn {
-  width: 100%;
-  padding: 1.5vh;
-  font-size: 1.8vh;
+  width: 95%;
+  padding: 0.5em;
+  margin-left: 0.6em;
+  font-size: 1em;
   background-color: #28a745;
   color: #fff;
   border: none;
@@ -239,22 +240,10 @@ label {
   background-color: #218838;
 }
 
-.error {
-  color: red;
-  margin-bottom: 1.5vh;
-  font-size: 1.6vh;
-}
-
-.success {
-  color: green;
-  margin-bottom: 1.5vh;
-  font-size: 1.6vh;
-}
-
 .login-link {
   margin-top: 3vh;
   text-align: center;
-  font-size: 1.6vh;
+  font-size: 0.85em;
   color: #333;
 }
 

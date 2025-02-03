@@ -127,7 +127,7 @@ const handleLogin = async () => {
 .login-page {
   max-width: 90vw;
   width: 25%;
-  margin: 20vh;
+  margin: 10vh;
   margin-left: 40vw;
   padding: 2em;
   border: 0.1vh solid #ccc;
@@ -158,7 +158,7 @@ label {
   width: 95%;
   padding: 1em;
   font-size: 1em;
-  border: 0.1vh solid #ccc;
+  border: 0.1em solid #ccc;
   border-radius: 0.25em;
 }
 

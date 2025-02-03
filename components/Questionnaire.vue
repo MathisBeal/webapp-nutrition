@@ -20,9 +20,6 @@
               placeholder="Entrez votre âge"
               type="number"
             />
-            <p v-if="age !== null && (age <= 0 || age > 100)" class="error">
-              Votre âge semble incorrect, veuillez vérifier votre saisie.
-            </p>
           </div>
         </template>
 
@@ -37,9 +34,6 @@
               placeholder="Entrez votre taille en cm"
               type="number"
             />
-            <p v-if="height !== null && (height <= 50 || height > 250)" class="error">
-              Votre taille semble incorrecte, veuillez vérifier votre saisie.
-            </p>
           </div>
         </template>
 
@@ -54,9 +48,6 @@
               placeholder="Entrez votre poids en kg"
               type="number"
             />
-            <p v-if="weight !== null && (weight <= 20 || weight > 300)" class="error">
-              Votre poids semble incorrect, veuillez vérifier votre saisie.
-            </p>
           </div>
         </template>
 
@@ -107,11 +98,15 @@
         </button>
       </div>
     </div>
+    <NuxtNotifications class="custom-notif"
+    position="top center"
+    :speed="500"/>
   </div>
 </template>
 
 <script lang="ts" setup>
 import questionsData from '~/content/questions.json';
+import { NuxtNotifications } from '#components';
 
 const props = defineProps({
   userData: {
@@ -120,6 +115,7 @@ const props = defineProps({
   },
 });
 
+const { notify } = useNotification();
 const emit = defineEmits(['submitQuestionnaire']);
 const questions = ref(questionsData);
 const selectedOption = ref<(string | null)[]>(questions.value.map(() => null));
@@ -130,7 +126,7 @@ const age = ref<number | null>(null);
 const ageInput = ref<HTMLInputElement | null>(null);
 const heightInput = ref<HTMLInputElement | null>(null);
 const weightInput = ref<HTMLInputElement | null>(null);
-
+const isSubmitted = ref(false); // Ajoutez cet état
 
 const isNextEnabled = computed(() => {
   const enabled = (() => {
@@ -148,19 +144,54 @@ const isNextEnabled = computed(() => {
   return enabled;
 });
 
-const submitAnswers = () => {
-  props.userData.age = age.value;
-  props.userData.sexe = selectedOption.value[1];
-  props.userData.taille = height.value;
-  props.userData.poids = weight.value;
-  props.userData.imc = 1; //calculé directement par la BDD
+const validateInputs = () => {
+  if (isSubmitted.value) return true; // Ne pas valider si déjà soumis
 
-  emit('submitQuestionnaire');
+  if (age.value !== null && (age.value <= 0 || age.value > 100)) {
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: 'Votre âge semble incorrect, veuillez vérifier votre saisie.'
+    });
+    return false;
+  }
+  if (weight.value !== null && (weight.value <= 20 || weight.value > 300)) {
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: 'Votre poids semble incorrect, veuillez vérifier votre saisie.'
+    });
+    return false;
+  }
+  if (height.value !== null && (height.value <= 50 || height.value > 250)) {
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: 'Votre taille semble incorrecte, veuillez vérifier votre saisie.'
+    });
+    return false;
+  }
+  return true;
 };
 
 const nextQuestion = () => {
-  if (currentQuestionIndex.value < questions.value.length - 1) {
-    currentQuestionIndex.value++;
+  if (validateInputs()) {
+    if (currentQuestionIndex.value < questions.value.length - 1) {
+      currentQuestionIndex.value++;
+    }
+  }
+};
+
+const submitAnswers = () => {
+  if (validateInputs()) {
+    isSubmitted.value = true; // Marquer comme soumis
+    props.userData.age = age.value;
+    props.userData.sexe = selectedOption.value[1];
+    props.userData.taille = height.value;
+    props.userData.poids = weight.value;
+    props.userData.imc = 1; //calculé directement par la BDD
+
+    emit('submitQuestionnaire');
   }
 };
 
@@ -206,7 +237,7 @@ const handleEnterKey = () => {
       submitAnswers();
     }
   } else {
-    console.debug('isNextEnabled is false, cannot move to next question');
+    validateInputs();
   }
 };
 
@@ -237,7 +268,7 @@ onMounted(() => {
 .question-box {
   background-color: white;
   padding: 5vh;
-  margin-left: 25vw;
+  margin-left: 28vw;
   border-radius: 1vh;
   box-shadow: 0 0 1vh 0.5vh rgba(0, 0, 0, 0.1);
   text-align: center;
@@ -246,10 +277,10 @@ onMounted(() => {
 
 .questionnaire-title {
   text-align: center;
-  font-size: 4vw;
+  font-size: 4em;
   color: #333;
-  margin-bottom: 10vh;
-  margin-left: 15vw;
+  margin-bottom: 1em;
+  margin-left: 3em;
 }
 
 .questionnaire-container {
@@ -259,13 +290,12 @@ onMounted(() => {
 }
 
 .progress-info {
-  font-size: 1.8vh;
+  font-size: 1em;
   color: #555;
-  margin-top: 1vh;
 }
 
 .option {
-  margin: 2vh 0;
+  margin: 0.5em 0;
 }
 
 .error {
@@ -278,7 +308,7 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   width: 80%;
-  margin: 0 auto;
+  margin: 1em auto;
 }
 
 button:disabled {
@@ -311,6 +341,6 @@ button:disabled {
   padding: 1.5vh 3vw;
   border: none;
   border-radius: 1vw;
-  font-size: 1.5vh;
+  font-size: 0.8em;
 }
 </style>

@@ -50,9 +50,9 @@ const submitQuestionnaire = async () => {
     });
 
     if (response) {
-      notify({
-        type: 'error',
-        title: 'Erreur',
+        notify({
+        type: 'success',
+        title: 'Succès',
         text: 'Questionnaire soumis avec succès !'
       });
       router.push('/login');
