@@ -1,3 +1,15 @@
+<template>
+  <div>
+    <RecipeDetail v-if="recipe_data" :recipeData="recipe_data"/>
+    <div v-else-if="error">
+      Could not fetch recipe from database.
+    </div>
+    <div v-else>
+      Loading...
+    </div>
+  </div>
+</template>
+
 <script lang="ts" setup>
 import {useRoute} from 'vue-router';
 
@@ -19,15 +31,3 @@ onMounted(async () => {
   }
 });
 </script>
-
-<template>
-  <div>
-    <RecipeDetail v-if="recipe_data" :recipeData="recipe_data"/>
-    <div v-else-if="error">
-      Could not fetch recipe from database.
-    </div>
-    <div v-else>
-      Loading...
-    </div>
-  </div>
-</template>
