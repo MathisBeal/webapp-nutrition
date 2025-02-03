@@ -15,8 +15,6 @@ function navigate() {
 }
 
 const imgSrc = lazyLoad("/img/placeholders/plat.png", props.plat.images);
-
-
 </script>
 
 <template>
@@ -39,7 +37,6 @@ const imgSrc = lazyLoad("/img/placeholders/plat.png", props.plat.images);
 </template>
 
 <style scoped>
-
 .result-item {
   display: flex;
   align-items: flex-start;

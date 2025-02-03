@@ -20,9 +20,6 @@
               placeholder="Entrez votre âge"
               type="number"
             />
-            <p v-if="age !== null && (age <= 0 || age > 100)" class="error">
-              Votre âge semble incorrect, veuillez vérifier votre saisie.
-            </p>
           </div>
         </template>
 
@@ -37,9 +34,6 @@
               placeholder="Entrez votre taille en cm"
               type="number"
             />
-            <p v-if="height !== null && (height <= 50 || height > 250)" class="error">
-              Votre taille semble incorrecte, veuillez vérifier votre saisie.
-            </p>
           </div>
         </template>
 
@@ -54,9 +48,6 @@
               placeholder="Entrez votre poids en kg"
               type="number"
             />
-            <p v-if="weight !== null && (weight <= 20 || weight > 300)" class="error">
-              Votre poids semble incorrect, veuillez vérifier votre saisie.
-            </p>
           </div>
         </template>
 
@@ -123,12 +114,16 @@
         </button>
       </div>
     </div>
+    <NuxtNotifications class="custom-notif"
+    position="top center"
+    :speed="500"/>
   </div>
 </template>
 
 
 <script lang="ts" setup>
 import questionsData from '~/content/questions.json';
+//import { NuxtNotifications } from '#components';
 
 const props = defineProps({
   userData: {
@@ -137,6 +132,7 @@ const props = defineProps({
   },
 });
 
+//const { notify } = useNotification();
 const emit = defineEmits(['submitQuestionnaire']);
 const questions = ref(questionsData);
 const selectedOption = ref<(string | null)[]>(questions.value.map(() => null));
@@ -144,12 +140,11 @@ const currentQuestionIndex = ref(0);
 const height = ref<number | null>(null);
 const weight = ref<number | null>(null);
 const age = ref<number | null>(null);
-
 const selectedRestrictions = ref<string[]>([]);
-
 const ageInput = ref<HTMLInputElement | null>(null);
 const heightInput = ref<HTMLInputElement | null>(null);
 const weightInput = ref<HTMLInputElement | null>(null);
+const isSubmitted = ref(false); // Ajoutez cet état
 
 const isNextEnabled = computed(() => {
   const enabled = (() => {
@@ -164,12 +159,38 @@ const isNextEnabled = computed(() => {
     }
     return selectedOption.value[currentQuestionIndex.value] !== null;
   })();
-  console.debug(`isNextEnabled: ${enabled}`);
   return enabled;
 });
 
+const validateInputs = () => {
+  if (isSubmitted.value) return true; // Ne pas valider si déjà soumis
 
-
+  if (age.value !== null && (age.value <= 0 || age.value > 100)) {
+    // notify({
+    //   type: 'error',
+    //   title: 'Erreur',
+    //   text: 'Votre âge semble incorrect, veuillez vérifier votre saisie.'
+    // });
+    return false;
+  }
+  if (weight.value !== null && (weight.value <= 20 || weight.value > 300)) {
+    // notify({
+    //   type: 'error',
+    //   title: 'Erreur',
+    //   text: 'Votre poids semble incorrect, veuillez vérifier votre saisie.'
+    // });
+    return false;
+  }
+  if (height.value !== null && (height.value <= 50 || height.value > 250)) {
+    // notify({
+    //   type: 'error',
+    //   title: 'Erreur',
+    //   text: 'Votre taille semble incorrecte, veuillez vérifier votre saisie.'
+    // });
+    return false;
+  }
+  return true;
+ }
 
 const fetchRestrictionIds = async () => {
   console.log("Restrictions sélectionnées avant envoi:", selectedRestrictions.value);
@@ -207,18 +228,18 @@ const updateUserData = async () => {
   console.log("Mise à jour de userData avec les restrictions:", props.userData);
 };
 
-const submitAnswers = async () => {
-  await updateUserData();
-  emit('submitQuestionnaire');
+const submitAnswers = () => {
+  if (validateInputs()) {
+    await updateUserData();
+    emit('submitQuestionnaire');
+  }
 };
 
-
-
-
-
 const nextQuestion = () => {
-  if (currentQuestionIndex.value < questions.value.length - 1) {
-    currentQuestionIndex.value++;
+  if (validateInputs()) {
+    if (currentQuestionIndex.value < questions.value.length - 1) {
+      currentQuestionIndex.value++;
+    }
   }
 };
 
@@ -257,16 +278,14 @@ const fetchOptions = async () => {
 };
 
 const handleEnterKey = () => {
-  console.debug('Enter key pressed');
   if (isNextEnabled.value) {
-    console.debug('isNextEnabled is true, moving to next question');
     if (currentQuestionIndex.value < questions.value.length - 1) {
       nextQuestion();
     } else {
       submitAnswers();
     }
   } else {
-    console.debug('isNextEnabled is false, cannot move to next question');
+    validateInputs();
   }
 };
 
@@ -281,7 +300,6 @@ watch(currentQuestionIndex, async (newIndex) => {
     weightInput.value?.focus();
   } else {
     selectedOption.value[newIndex] = questions.value[newIndex].options[0];
-    console.debug(`Default option selected for question ${newIndex}: ${questions.value[newIndex].options[0]}`);
   }
 });
 
@@ -295,16 +313,27 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.question-box {
+  background-color: white;
+  padding: 5vh;
+  margin-left: 28vw;
+  border-radius: 1vh;
+  box-shadow: 0 0 1vh 0.5vh rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 30vw;
+}
+
 .questionnaire-title {
   text-align: center;
-  font-size: 50px;
+  font-size: 4em;
   color: #333;
-  margin-bottom: 20px;
+  margin-bottom: 1em;
+  margin-left: 3em;
 }
 
 .questionnaire-container {
-  margin: 50px auto;
-  padding-left: 500px;
+  margin: 5vh auto;
+  padding-left: 10vw;
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
@@ -312,24 +341,25 @@ onMounted(() => {
 }
 
 .progress-info {
-  font-size: 16px;
+  font-size: 1em;
   color: #555;
-  margin-top: 10px;
 }
 
 .option {
-  margin: 10px 0;
+  margin: 0.5em 0;
 }
 
 .error {
   color: red;
-  font-size: 14px;
-  margin-top: 5px;
+  font-size: 1.5vh;
+  margin-top: 0.5vh;
 }
 
 .navigation-buttons {
   display: flex;
   justify-content: space-between;
+  width: 80%;
+  margin: 1em auto;
 }
 
 button:disabled {
@@ -337,7 +367,6 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* Bouton suivant aligné à droite */
 .align-right {
   margin-left: auto;
 }
@@ -345,9 +374,10 @@ button:disabled {
 .submit-button {
   background-color: #4CAF50;
   color: white;
-  padding: 10px 20px;
+  padding: 1.5vh 3vw;
   border: none;
-  border-radius: 5px;
+  border-radius: 1vw;
+  font-size: 1.5vh;
 }
 
 .submit-button:disabled {
@@ -359,8 +389,9 @@ button:disabled {
 .next-button {
   background-color: #007BFF;
   color: white;
-  padding: 10px 20px;
+  padding: 1.5vh 3vw;
   border: none;
-  border-radius: 5px;
+  border-radius: 1vw;
+  font-size: 0.8em;
 }
 </style>

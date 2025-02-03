@@ -72,12 +72,13 @@ onMounted(scrollToTop);
 .result-list {
   display: flex;
   flex-direction: column;
-  max-height: 540px;
+  max-height: 75vh;
+  margin-left: 11vw;
   overflow-y: auto;
-  width: 1200px;
-  gap: 20px;
-  padding: 10px;
-  border-radius: 5px;
+  width: 80vw;
+  gap: 2vh;
+  padding: 1vh;
+  border-radius: 1vw;
   scroll-behavior: smooth;
 }
 
@@ -85,18 +86,19 @@ onMounted(scrollToTop);
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
-  margin-top: 15px;
+  gap: 1vw;
+  margin-top: 5vh;
+  margin-left: 10vw;
 }
 
 .pagination button {
-  padding: 10px 15px;
+  padding: 1vh 2vw;
   border: none;
-  border-radius: 5px;
+  border-radius: 1vw;
   cursor: pointer;
   background-color: #3b82f6;
   color: white;
-  font-size: 14px;
+  font-size: 1rem;
 }
 
 .pagination button:disabled {
@@ -105,7 +107,7 @@ onMounted(scrollToTop);
 }
 
 .pagination span {
-  font-size: 16px;
+  font-size: 1.2rem;
   color: #333;
   font-weight: bold;
 }

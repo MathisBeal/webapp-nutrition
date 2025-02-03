@@ -1,6 +1,5 @@
-import type {H3Event} from 'h3';
-import {defineEventHandler, getQuery} from 'h3';
-import {prisma} from '../db/connection';
+import { H3Event, defineEventHandler, getQuery } from 'h3';
+import { prisma } from '../db/connection';
 
 export default defineEventHandler(async (event: H3Event) => {
   const {userId, fullData} = getQuery(event);
