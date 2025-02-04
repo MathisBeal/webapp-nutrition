@@ -121,6 +121,10 @@ const handleLogin = async () => {
     });
   }
 };
+
+onMounted(() => {
+  setAuthenticationStatus(false);
+});
 </script>
 
 <style scoped>
