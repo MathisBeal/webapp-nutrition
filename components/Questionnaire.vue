@@ -229,9 +229,9 @@ const updateUserData = async () => {
   console.log("Mise à jour de userData avec les restrictions:", props.userData);
 };
 
-const submitAnswers = () => {
+const submitAnswers =  async () => {
   if (validateInputs()) {
-    updateUserData();
+    await updateUserData();
     emit('submitQuestionnaire');
   }
 };
