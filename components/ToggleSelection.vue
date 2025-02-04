@@ -23,3 +23,27 @@
 defineProps<{ modelValue: 'plat' | 'aliment' }>();
 defineEmits(['update:modelValue']);
 </script>
+
+
+
+
+<style scoped>
+button {
+  padding: 0.5em 1em;
+  border-radius: 0.5em;
+  font-size: 1rem;
+  font-weight: bold;
+  border: 0.1em solid transparent;
+  cursor: pointer;
+  transition: border-color 0.3s, transform 0.1s;
+}
+
+button:hover {
+  border-color: currentColor;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+</style>
