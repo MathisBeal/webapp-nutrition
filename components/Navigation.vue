@@ -20,7 +20,7 @@
       </ul>
 
       <div class="fix-bottom" v-if="isAuthenticated">
-        <p>Utilisateur : {{ userName ? userName : 'Prénom introuvable' }}</p>
+        <p>{{ capitalizeFirstLetter(userName) }}</p>
         <button @click="logoutRedirection">Se déconnecter</button>
       </div>
     </nav>
@@ -43,6 +43,11 @@ const logoutRedirection = async () => {
 
 const toggleNav = () => {
   isNavVisible.value = !isNavVisible.value;
+};
+
+const capitalizeFirstLetter = (string: string | null) => {
+  if (!string) return 'Prénom introuvable';
+  return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
 onMounted(async () => {
