@@ -12,12 +12,9 @@ const pageSize = 5;
 let currentPage = 1;
 
 const getSession = async () => {
+  const config = useRuntimeConfig();
+  const baseUrl = config.public.apiBase;
   try {
-    const isClient = typeof window !== "undefined";
-    const baseUrl = isClient
-      ? window.location.origin
-      //et quand en prod : process.env.NUXT_PUBLIC_API_BASE || 'http://webapp:3000';
-      : process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:3000';
 
     const response = await fetch(`${baseUrl}/api/auth/session`);
 
