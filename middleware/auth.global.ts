@@ -4,7 +4,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const router = useRouter();
 
   const { notify } = useNotification();
-  const publicRoutes = ['/login', '/signup'];
+  const publicRoutes = ['/login', '/Signup'];
 
   if (publicRoutes.includes(to.path)) {
     return;
