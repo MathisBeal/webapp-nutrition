@@ -38,35 +38,57 @@
   </div>
 </template>
 
-
-
 <script setup lang="ts">
 import { Notifications, useNotification } from '@kyvg/vue3-notification';
 
 const { notify } = useNotification();
-
 const selectedType = ref<'plat' | 'aliment'>('plat');
 const selectedItem = ref<number | null>(null);
 const selectedMoment = ref<number | null>(null);
-const plats = ref([]);
-const aliments = ref([]);
-const moments = ref([]);
-const userSession = ref<{ userId: number } | null>(null); 
+const plats = ref<Plat[]>([]);
+const aliments = ref<Aliment[]>([]);
+const moments = ref<Moment[]>([]);
+const userSession = ref<{ userId: number } | null>(null);
 const quantity = ref(1);
 
+interface Plat {
+  ID_plat: number;
+  duree: string;
+  description: string;
+  etapes: string;
+  images: string | null;
+  ID_categorie: number;
+  nom_categorie: string | null;
+}
+
+interface Aliment {
+  image: string | null;
+  nom: string;
+  ID_aliment: number;
+  quantite_base: number;
+  calories: number;
+  glucides: number;
+  lipides: number;
+  proteines: number;
+}
+
+interface Moment {
+  nom: string;
+  ID_moments: number;
+}
 
 watchEffect(async () => {
   if (selectedType.value === 'plat') {
-    const { data } = await useFetch('/api/plat');
+    const { data } = await useFetch<Plat[]>('/api/plat');
     plats.value = data.value || [];
   } else {
-    const { data } = await useFetch('/api/aliment');
+    const { data } = await useFetch<Aliment[]>('/api/aliment');
     aliments.value = data.value || [];
   }
 });
 
 watch(selectedType, () => {
-  selectedItem.value = null; 
+  selectedItem.value = null;
 });
 
 
@@ -95,7 +117,7 @@ const submitSelection = async () => {
   await useFetch('/api/alimentations', {
     method: 'POST',
     body: JSON.stringify({
-      ID_user: userSession.value.userId, 
+      ID_user: userSession.value.userId,
       ID_plat: selectedType.value === 'plat' ? selectedItem.value : null,
       ID_aliment: selectedType.value === 'aliment' ? selectedItem.value : null,
       ID_moment: selectedMoment.value,
