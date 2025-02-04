@@ -318,15 +318,12 @@ onMounted(() => {
   });
 });
 
-
-
 </script>
 
 <style scoped>
 .question-box {
   background-color: white;
   padding: 5vh;
-  margin-left: 15vw;
   border-radius: 1vh;
   box-shadow: 0 0 1vh 0.5vh rgba(0, 0, 0, 0.1);
   text-align: center;
