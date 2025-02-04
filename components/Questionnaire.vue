@@ -319,7 +319,6 @@ onMounted(() => {
 });
 
 
-export { submitAnswers };
 
 </script>
 
