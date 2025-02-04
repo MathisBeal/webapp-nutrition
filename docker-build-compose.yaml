@@ -17,14 +17,16 @@ services:
   db-nutrition:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
-      # MYSQL_USER: ${DB_USER}
-      # MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
       TZ: Europe/Paris
       LANG: en_US.UTF-8
+    ports:
+      - "3306:3306"
     volumes:
-      - ./docker/db/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+      - ./docker/db/:/docker-entrypoint-initdb.d/
       - ./docker/db/volume:/var/lib/mysql
     env_file:
       - .env

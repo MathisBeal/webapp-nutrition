@@ -5,7 +5,7 @@ WORKDIR /app
 
 # Copier uniquement les fichiers nécessaires pour l'installation des dépendances
 COPY package*.json ./
-RUN npm i
+RUN npm ci
 
 COPY . .
 RUN npx prisma generate \

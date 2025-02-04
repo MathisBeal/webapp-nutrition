@@ -8,8 +8,7 @@ coverage
 
 # Fichiers de Docker
 docker-*.yaml
-docker/Dockerfile
-docker/volume
+docker
 
 # Fichiers de configuration
 .editorconfig
