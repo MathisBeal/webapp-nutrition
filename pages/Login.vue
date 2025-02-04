@@ -131,8 +131,8 @@ onMounted(() => {
 .login-page {
   max-width: 90vw;
   width: 25%;
-  margin: 10vh;
-  margin-left: 40vw;
+  margin: 0 auto;
+  margin-top: 10vh;
   padding: 2em;
   border: 0.1vh solid #ccc;
   border-radius: 0.5em;
