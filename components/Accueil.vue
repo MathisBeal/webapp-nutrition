@@ -13,7 +13,14 @@ let currentPage = 1;
 
 const getSession = async () => {
   try {
-    const response = await fetch('/api/auth/session');
+    const isClient = typeof window !== "undefined";
+    const baseUrl = isClient
+      ? window.location.origin
+      //et quand en prod : process.env.NUXT_PUBLIC_API_BASE || 'http://webapp:3000';
+      : process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:3000';
+
+    const response = await fetch(`${baseUrl}/api/auth/session`);
+
     const data = await response.json();
     userSession.value = data?.userId ? data : null;
     if (userSession.value) {

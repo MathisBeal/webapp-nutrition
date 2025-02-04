@@ -9,7 +9,15 @@ export const setAuthenticationStatus = (status: boolean) => {
 export const getSession = async () => {
   const isDebug = useAppConfig().debug;
   try {
-    const response = await fetch(`${window.location.origin}/api/auth/session`);
+    const isClient = typeof window !== "undefined";
+    const baseUrl = isClient
+      ? window.location.origin
+      //et quand en prod : process.env.NUXT_PUBLIC_API_BASE || 'http://webapp:3000';
+      : process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:3000'; // Utilise localhost en dev
+    
+    const response = await fetch(`${baseUrl}/api/auth/session`);
+    
+
     const data = await response.json();
     if (data?.userId) {
       userId.value = data.userId;
