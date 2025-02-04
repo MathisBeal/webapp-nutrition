@@ -317,6 +317,10 @@ onMounted(() => {
     ageInput.value?.focus();
   });
 });
+
+
+export { submitAnswers };
+
 </script>
 
 <style scoped>
