@@ -3,11 +3,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "check-type": "tsc --noEmit",
+    "check-type": "nuxi check-type",
     "build": "nuxi build",
     "start": "nuxt start",
-    "clean": "rimraf .output",
-    "dev": "nuxt dev",
+    "clean": "nuxi cleanup",
+    "dev": "nuxi dev --dotenv .env.local",
     "dev:host": "nuxt dev --host",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -18,7 +18,9 @@
     "lint:build": "npm run lint --max-warnings=0",
     "format": "pretty-quick --no-restage",
     "format-check": "pretty-quick --check",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "prisma:generate": "npx prisma generate",
+    "prisma:db-pull": "npx prisma db pull"
   },
   "dependencies": {
     "@kyvg/vue3-notification": "^3.4.1",

@@ -7,12 +7,10 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: mysql://${DB_USER}:${DB_PASSWORD}@db-nutrition:3306/${DB_NAME}
+      DATABASE_URL: ${DATABASE_URL}
       NODE_ENV: production
     depends_on:
       - db-nutrition
-    env_file:
-      - .env
 
   db-nutrition:
     image: mysql:8.0
@@ -28,5 +26,3 @@ services:
     volumes:
       - ./docker/db/:/docker-entrypoint-initdb.d/
       - ./docker/db/volume:/var/lib/mysql
-    env_file:
-      - .env
