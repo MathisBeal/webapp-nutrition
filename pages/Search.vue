@@ -2,12 +2,18 @@
 import {getSession, userId} from '@/composables/useAuth';
 import Plat from '@/components/Plat.vue';
 import Aliment from '@/components/Aliment.vue';
+import Pagination from '@/components/Pagination.vue';
 import {Search} from 'lucide-vue-next';
 
 
 const searchQuery = ref<string>('');
 const results = ref<any[]>([]);
 const searchInput = ref<HTMLInputElement | null>(null);
+const paginatedResults = ref<any[]>([]);
+const resultListContainer = ref<HTMLElement | null>(null);
+
+const itemsPerPage = ref<number>(10); 
+
 const favoris = ref<Set<number>>(new Set());
 
 const onSearch = async () => {
@@ -82,25 +88,42 @@ watch(userId, async (newUserId) => {
     favoris.value.clear();
   }
 });
+
+
+watch(results, (newResults) => {
+  paginatedResults.value = newResults.slice(0, itemsPerPage.value);
+});
+
+
+watch(paginatedResults, () => {
+  if (resultListContainer.value) {
+    resultListContainer.value.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }
+});
+
+
 </script>
 
 <template>
   <div class="search-container">
     <input ref="searchInput" v-model="searchQuery" class="search-bar" placeholder="Rechercher..." type="text"
            @keyup.enter="onSearch"/>
-    <div v-if="results.length" class="result-list">
-      <div v-for="item in results" :key="item.ID">
-        <Plat v-if="item.type === 'plat'" :favoris="favoris" :plat="item"
-              :toggleFavori="toggleFavori"/>
 
-        <Aliment v-else-if="item.type === 'aliment'" :aliment="item" :favoris="favoris"
-                 :toggleFavori="toggleFavori"/>
-      </div>
-    </div>
+
+<div v-if="paginatedResults.length" ref="resultListContainer" class="result-list">
+  <div v-for="item in paginatedResults" :key="item.ID">
+    <Plat v-if="item.type === 'plat'" :favoris="favoris" :plat="item" :toggleFavori="toggleFavori"/>
+    <Aliment v-else-if="item.type === 'aliment'" :aliment="item" :favoris="favoris" :toggleFavori="toggleFavori"/>
+  </div>
+</div>
     <div v-else class="no-results">
       <Search alt="Icône de loupe" class="no-results-icon" :size="24" color="grey"/>
       <p class="no-results-text">Aucun résultat</p>
     </div>
+    <Pagination :results="results" :itemsPerPage="itemsPerPage" @update:results="paginatedResults = $event" />
   </div>
 </template>
 

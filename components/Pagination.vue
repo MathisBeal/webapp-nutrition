@@ -88,7 +88,6 @@ onMounted(scrollToTop);
   align-items: center;
   gap: 1vw;
   margin-top: 5vh;
-  margin-left: 10vw;
 }
 
 .pagination button {
