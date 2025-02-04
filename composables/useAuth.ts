@@ -9,7 +9,7 @@ export const setAuthenticationStatus = (status: boolean) => {
 export const getSession = async () => {
   const isDebug = useAppConfig().debug;
   try {
-    const response = await fetch('/api/auth/session');
+    const response = await fetch(`${window.location.origin}/api/auth/session`);
     const data = await response.json();
     if (data?.userId) {
       userId.value = data.userId;
