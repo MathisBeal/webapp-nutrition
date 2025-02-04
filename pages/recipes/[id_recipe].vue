@@ -12,15 +12,16 @@
 
 <script lang="ts" setup>
 import {useRoute} from 'vue-router';
+import type {Recipe} from "~/types/Recipes.ts";
 
 const params = useRoute().params;
-const recipe_data = ref(null);
+const recipe_data = ref<Recipe>();
 const error = ref(false);
 
 onMounted(async () => {
   if (params && params.id_recipe) {
     try {
-      recipe_data.value = await $fetch(`/api/recipes/${params.id_recipe}`);
+      recipe_data.value = await $fetch<Recipe>(`/api/recipes/${params.id_recipe}`);
     } catch (err) {
       console.error("Error fetching recipe:", err);
       error.value = true; // Set error to true if fetch fails

@@ -10,4 +10,4 @@ type User = {
   imc: number | null;
 };
 
-export type { User };
+export type {User};
