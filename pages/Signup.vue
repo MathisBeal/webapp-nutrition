@@ -11,7 +11,7 @@
       :userData="userData"
       @submitQuestionnaire="submitQuestionnaire"
     />
-    <NuxtNotifications class="custom-notif"
+    <Notifications
     position="top center"
     :speed="500"/>
   </div>
