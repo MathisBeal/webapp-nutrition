@@ -3,10 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "check-type": "tsc --noEmit",
+    "check-type": "nuxi typecheck",
     "build": "nuxi build",
     "start": "nuxt start",
-    "clean": "rimraf .output",
+    "clean-up": "nuxi cleanup",
     "dev": "nuxt dev",
     "dev:host": "nuxt dev --host",
     "test": "vitest run",
@@ -45,6 +45,6 @@
     "vue-tsc": "^2.1.10"
   },
   "optionalDependencies": {
-        "@rollup/rollup-linux-x64-gnu": "*"
+    "@rollup/rollup-linux-x64-gnu": "*"
   }
 }
