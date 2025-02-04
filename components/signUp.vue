@@ -14,12 +14,12 @@
       </div>
 
       <div class="form-group">
-        <label for="name">prenom</label>
+        <label for="name">Prénom</label>
         <input
           id="name"
           v-model="name"
           class="input"
-          placeholder="Entrez votre prenom"
+          placeholder="Entrez votre prénom"
           type="text"
         />
       </div>
