@@ -10,10 +10,11 @@ export const getSession = async () => {
   const isDebug = useAppConfig().debug;
   const config = useRuntimeConfig();
   const baseUrl = config.public.apiBase;
-    
+
   try {
+    console.log(`${baseUrl}/api/auth/session`);
     const response = await fetch(`${baseUrl}/api/auth/session`);
-    
+
     const data = await response.json();
     if (data?.userId) {
       userId.value = data.userId;

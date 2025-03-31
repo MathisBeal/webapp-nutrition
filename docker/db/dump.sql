@@ -715,7 +715,7 @@ UNLOCK TABLES;
 DELIMITER ;;
 /*!50003 CREATE */ /*!50017 DEFINER =`root`@`%`*/ /*!50003 TRIGGER `update_imc_trigger_insert`
   BEFORE INSERT
-  ON `users`
+  ON `Users`
   FOR EACH ROW
 BEGIN
   -- Appeler la procédure pour calculer l'IMC
@@ -739,7 +739,7 @@ DELIMITER ;
 DELIMITER ;;
 /*!50003 CREATE */ /*!50017 DEFINER =`root`@`%`*/ /*!50003 TRIGGER `update_imc_trigger_update`
   BEFORE UPDATE
-  ON `users`
+  ON `Users`
   FOR EACH ROW
 BEGIN
   -- Appeler la procédure pour recalculer l'IMC

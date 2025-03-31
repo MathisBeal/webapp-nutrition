@@ -1,37 +1,36 @@
 <template>
-  <nav v-if="isAuthenticated">
-    <nav v-if="isNavVisible">
-      <Menu :size="48" class="settings-button" color="#ffffff" @click="toggleNav"/>
-      <ul>
-        <li @click="goTo('/')">
-          <House :size="48" color="#ffffff"/>
-        </li>
-        <li @click="goTo('/search')">
-          <Search :size="48" color="#ffffff"/>
-        </li>
-        <li @click="goTo('/alimentation')">
-          <a href="/alimentation">
-            <Utensils :size="48" class="nav-icon" />
-          </a>
-        </li>
-        <li @click="goTo('/stats')">
-          <ChartColumnBig :size="48" color="#ffffff"/>
-        </li>
-      </ul>
+  <!-- Bouton pour afficher la nav quand elle est cachée -->
+  <Menu v-if="!isNavVisible" :size="48" class="settings-button-hidden" color="#333333" @click="toggleNav"/>
 
-      <div class="fix-bottom" v-if="isAuthenticated">
-        <p>{{ capitalizeFirstLetter(userName) }}</p>
-        <button @click="logoutRedirection">Se déconnecter</button>
-      </div>
-    </nav>
-    <Menu v-else :size="48" class="settings-button-hidden" color="#000000" @click="toggleNav"/>
+  <!-- Menu principal -->
+  <nav v-if="isAuthenticated && isNavVisible">
+    <Menu :size="48" class="settings-button" color="#ffffff" @click="toggleNav"/>
+    <ul>
+      <li @click="goTo('/')">
+        <House :size="48" color="#ffffff"/>
+      </li>
+      <li @click="goTo('/search')">
+        <Search :size="48" color="#ffffff"/>
+      </li>
+      <li @click="goTo('/alimentation')">
+        <a href="/alimentation">
+          <Utensils :size="48" class="nav-icon" />
+        </a>
+      </li>
+    </ul>
+
+    <div class="fix-bottom" v-if="isAuthenticated">
+      <p>{{ capitalizeFirstLetter(userName) }}</p>
+      <button @click="logoutRedirection">Se déconnecter</button>
+    </div>
   </nav>
 </template>
 
 <script lang="ts" setup>
-import {getSession, isAuthenticated, logout, userName} from '@/composables/useAuth';
-import {ChartColumnBig, House, Menu, Search, Utensils} from 'lucide-vue-next'
-import {useRouter} from "nuxt/app";
+import { getSession, isAuthenticated, logout, userName } from '@/composables/useAuth';
+import { ChartColumnBig, House, Menu, Search, Utensils } from 'lucide-vue-next'
+import { useRouter } from "nuxt/app";
+import { ref, onMounted, watch } from "vue";
 
 const router = useRouter();
 const isNavVisible = ref(true);
@@ -54,7 +53,6 @@ onMounted(async () => {
   await getSession();
 });
 
-// Surveiller changements d'état d'authentification
 watch(isAuthenticated, async (newValue) => {
   if (newValue) {
     console.log("Utilisateur connecté, récupération de la session...");
@@ -84,6 +82,7 @@ nav {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  transition: transform 0.3s ease-in-out;
 }
 
 ul {
@@ -120,8 +119,7 @@ li:last-child {
   margin-bottom: 5vh;
 }
 
-.settings-button,
-.settings-button-hidden {
+.settings-button {
   cursor: pointer;
   width: 5vw;
   height: auto;
@@ -132,10 +130,15 @@ li:last-child {
   position: fixed;
   top: 2vh;
   left: 2vw;
+  cursor: pointer;
+  width: 5vw;
+  height: auto;
+  /*
+  background-color: black;
+  */
 }
 
-.fix-bottom
-{
+.fix-bottom {
   position: fixed;
   bottom: 0;
   width: 10vw;
