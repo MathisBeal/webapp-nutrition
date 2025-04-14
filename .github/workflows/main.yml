@@ -1,0 +1,69 @@
+name: CI - Nuxt SSR
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    services:
+      db:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: nutrition_webapp
+          TZ: Europe/Paris
+          LANG: en_US.UTF-8
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Wait for MySQL to be ready
+        run: |
+          for i in {1..30}; do
+            if mysqladmin ping -h 127.0.0.1 --silent; then
+              echo "MySQL is ready!"
+              break
+            fi
+            echo "Waiting for MySQL..."
+            sleep 2
+          done
+
+      - name: Import SQL dump
+        run: |
+          sudo apt-get update && sudo apt-get install -y mysql-client
+          mysql -h 127.0.0.1 -u root -proot nutrition_webapp < ./docker/db/dump.sql
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Run tests
+        env:
+          DATABASE_URL: "mysql://root:root@127.0.0.1:3306/nutrition_webapp"
+        run: npm test
+
+      - name: Build Nuxt SSR app
+        run: npm run build
