@@ -9,6 +9,7 @@ dist
 
 # Database
 docker/db/volume
+docker-dev-compose.yaml
 
 # Node dependencies
 node_modules
