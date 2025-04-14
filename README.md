@@ -83,49 +83,38 @@ Surtout pour le GitFlow (celui de base)
 
 ## Explication des scripts npm
 
-Voici une description rapide de chaque script npm :
+📜 Voici une description rapide de chaque script npm :
 
-- **`check-type`** :
-  Vérifie les types avec TypeScript sans générer de fichiers (`tsc --noEmit`).
+Voici les principaux scripts utilisables avec npm pour gérer et exécuter votre application Nuxt :
+🚀 Développement et exécution
 
-- **`build`** :
-  Compile l'application pour la production en générant les fichiers dans le dossier `.output` (`nuxi build`).
+    dev : Lance le serveur de développement avec rechargement automatique.
+    start : Permet de démarer l’application après un build (plus intéréssant si app déployé mais fonctionne en local) (il faut faire au préalable un npm run build).
+    preview : Permet de tester localement l’application générée avant mise en production (il faut faire au préalable un npm run build).
 
-- **`clean`** :
-  Supprime le dossier `.output` pour nettoyer les fichiers générés (`rimraf .output`).
+🏗 Build et génération
 
-- **`dev`** :
-  Lance le serveur de développement pour travailler sur l'application (`nuxt dev`).
+    build : Compile l’application pour la production (nuxi build).
+    generate : Génère un site statique basé sur l’application Nuxt.
+    clean : Supprime le dossier .output pour nettoyer les fichiers générés.
 
-- **`test`** :
-  Exécute les tests définis avec Vitest une seule fois (`vitest run`).
+🔎 Vérification et qualité du code
 
-- **`test:watch`** :
-  Lance les tests avec Vitest en mode "watch" pour une exécution continue lors de modifications (`vitest`).
+    check-type : Vérifie les types avec TypeScript sans générer de fichiers.
+    lint:dev : Analyse le code avec ESLint pour détecter les erreurs.
+    lint:fix : Corrige automatiquement les erreurs de style détectées par ESLint.
+    lint:build : Vérifie le code sans tolérer d'avertissements (max-warnings=0).
+    format : Formate automatiquement le code avec Prettier.
+    format-check : Vérifie si le code est bien formaté sans le modifier.
 
-- **`generate`** :
-  Génère un site statique basé sur l'application Nuxt (`nuxt generate`).
+🧪 Tests
 
-- **`preview`** :
-  Lance un serveur local pour prévisualiser l'application générée en production (`nuxt preview`).
+    test : Exécute les tests définis avec Vitest une seule fois.
+    test:watch : Lance les tests en mode continu pour une exécution automatique après chaque modification.
 
-- **`lint:dev`** :
-  Analyse le code pour détecter les erreurs ou problèmes de style avec ESLint (`eslint`).
+⚙️ Autres
 
-- **`lint:fix`** :
-  Corrige automatiquement les erreurs ou problèmes détectés par ESLint (`eslint --fix`).
-
-- **`lint:build`** :
-  Exécute ESLint sans tolérer d'avertissements (`npm run lint:dev --max-warnings=0`).
-
-- **`format`** :
-  Formate automatiquement le code avec `pretty-quick` sans restager les fichiers (`pretty-quick --no-restage`).
-
-- **`format-check`** :
-  Vérifie si le code est bien formaté sans le modifier (`pretty-quick --check`).
-
-- **`postinstall`** :
-  Prépare les fichiers nécessaires après l'installation des dépendances Nuxt (`nuxt prepare`).
+    postinstall : Prépare les fichiers nécessaires après l’installation des dépendances (nuxt prepare).
 
 ## 📂 **Alias et leurs chemins correspondants**
 
@@ -145,3 +134,125 @@ Voici une description rapide de chaque script npm :
 | `public/*` | `./public/*`                                   | Tous les sous-dossiers et fichiers dans `public`.                                     |
 
 Pour ajouter de nouveaux alias ou modifier ceux existants, éditez le fichier `.nuxt/tsconfig.json` en respectant la structure actuelle.
+
+## Connexion à la base de données
+
+Pour se connecter à la base de données, vous devez créer un fichier `.env` à la racine du projet avec les paramètres de connexion appropriés. Voici un exemple de fichier `.env` :
+
+```properties
+DATABASE_URL="mysql://root:root@localhost:3306/nutrition_webapp"
+```
+
+Une fois que vous avez ce fichier, vous devez :
+
+1. Lancer le container MySQL
+2. Faire cette commande pour générer le client Prisma (permet d'intéragir avec la base de données):
+
+```sh
+npx prisma generate
+```
+
+3. Lancer un `npm run test` pour vérifier que la connexion à la DB fonctionne
+
+## Modification de la base de données
+
+En cas de modification de la base de données. Faites ces étapes :
+
+1. Update la db avec mysql workbench (de préférence)
+2. Executer cette commande pour mettre à jour `schema.prisma`:
+
+```sh
+npx prisma db pull
+```
+
+3. Exporter un fichier `dump.sql` de la nouvelle version de la db et remplacer l'ancien fichier dans le dossier **docker/db**
+4. Commit les changements
+
+## Utilisation de Docker Compose
+
+Pour gérer votre projet avec Docker Compose, utilisez le fichier `docker-dev-compose.yaml` pour la version de développement. Voici les commandes principales et leur utilité :
+
+### Build
+
+```sh
+docker-compose -f docker-dev-compose.yaml build
+```
+
+Cette commande construit les images Docker définies dans le fichier `docker-dev-compose.yaml`. Utilisez-la lorsque vous modifiez le `Dockerfile` ou les dépendances de votre projet.
+
+### Up
+
+```sh
+docker-compose -f docker-dev-compose.yaml up
+```
+
+Lance les conteneurs définis dans le fichier `docker-dev-compose.yaml`. Utilisez cette commande pour démarrer l'application et ses services associés.
+
+### Down
+
+```sh
+docker-compose -f docker-dev-compose.yaml down
+```
+
+Arrête et supprime les conteneurs, réseaux et volumes créés par `docker-compose up`. Utilisez cette commande si vous devez réinitialiser l'état des conteneurs, par exemple, après avoir modifié le dump de la base de données. Pensez également à supprimer le dossier `docker/db/volume` pour une réinitialisation complète.
+
+### Start
+
+```sh
+docker-compose -f docker-dev-compose.yaml start
+```
+
+Démarre les conteneurs existants sans les recréer. Utilisez cette commande pour redémarrer rapidement les services après un arrêt.
+
+### Stop
+
+```sh
+docker-compose -f docker-dev-compose.yaml stop
+```
+
+Arrête les conteneurs sans les supprimer. Utilisez cette commande pour arrêter temporairement les services sans perdre leur état.
+
+### Exemple de workflow
+
+1. **Modification du Dockerfile** :
+
+```sh
+docker-compose -f docker-dev-compose.yaml build
+docker-compose -f docker-dev-compose.yaml up
+```
+
+2. **Changement du dump de la base de données** :
+
+```sh
+docker-compose -f docker-dev-compose.yaml down
+rm -rf docker/db/volume
+docker-compose -f docker-dev-compose.yaml up
+```
+
+3. **Démarrage rapide des services** :
+
+```sh
+docker-compose -f docker-dev-compose.yaml start
+```
+
+4. **Arrêt temporaire des services** :
+
+```sh
+docker-compose -f docker-dev-compose.yaml stop
+```
+
+## Point sur la base de données avec Docker Compose
+
+Quand le containeur importe la base de données il peut être très long (15min). Pour s'assurer que la base de données est prête, regardez les logs du container MySql.
+
+1. **Début de l'importation** :
+
+```sh
+[Note] [Entrypoint]: /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/dump.sql
+```
+
+2. **Confirmation du statut "prêt"** :
+
+```sh
+0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '9.1.0'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server - GPL.
+```

@@ -1,0 +1,5 @@
+CREATE DATABASE IF NOT EXISTS nutrition_webapp;
+
+CREATE USER IF NOT EXISTS 'user'@'%' IDENTIFIED BY 'user';
+GRANT ALL PRIVILEGES ON nutrition_webapp.* TO 'user'@'%';
+FLUSH PRIVILEGES;

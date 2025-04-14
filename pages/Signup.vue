@@ -1,0 +1,70 @@
+<template>
+  <div>
+    <!-- Affichage conditionnel basé sur l'état -->
+    <signUp
+      v-if="currentStep === 'signUp'"
+      :userData="userData"
+      @signupSuccess="goToQuestionnaire"
+    />
+    <Questionnaire
+      v-else-if="currentStep === 'Questionnaire'"
+      :userData="userData"
+      @submitQuestionnaire="submitQuestionnaire"
+    />
+    <Notifications
+    position="top center"
+    :speed="500"/>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import {type User} from '@/types/User';
+import { useNotification } from "@kyvg/vue3-notification";
+
+const { notify } = useNotification();
+const currentStep = ref('signUp');
+const userData = ref<User>({
+  nom: '',
+  prenom: '',
+  mail: '',
+  password: '',
+  age: 0,
+  sexe: '',
+  taille: 0,
+  poids: 0,
+  imc: 0,
+});
+const router = useRouter()
+
+// Fonction pour changer de step après une inscription réussie
+const goToQuestionnaire = () => {
+  currentStep.value = 'Questionnaire';
+};
+
+// Fonction pour soumettre les réponses du questionnaire
+const submitQuestionnaire = async () => {
+  console.log("Envoi des données utilisateur:", userData.value);
+  try {
+    const {data: response} = await useFetch('/api/user/', {
+      method: 'POST',
+      body: userData.value,
+    });
+
+    if (response) {
+        notify({
+        type: 'success',
+        title: 'Succès',
+        text: 'Questionnaire soumis avec succès !'
+      });
+      router.push('/login');
+    }
+  } catch (error) {
+    console.error('Erreur lors de l\'envoi des données :', error);
+    notify({
+      type: 'error',
+      title: 'Erreur',
+      text: 'Une erreur est survenue lors de la soumission du formulaire ou du questionnaire.'
+    });
+  }
+};
+</script>

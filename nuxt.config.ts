@@ -1,17 +1,26 @@
-import { defineNuxtConfig } from 'nuxt/config';
+import {defineNuxtConfig} from 'nuxt/config';
 
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
-  devtools: { enabled: true },
+  devtools: {enabled: true},
 
-  // Environment Variables
-  runtimeConfig: {
-    DB_HOST: process.env.DB_HOST,
-    DB_PORT: process.env.DB_PORT,
-    DB_NAME: process.env.DB_NAME,
-    DB_USER: process.env.DB_USER,
-    DB_PASSWORD: process.env.DB_PASSWORD,
+  typescript: {
+    typeCheck: true,
   },
 
-  modules: ["@nuxt/test-utils/module", "@nuxt/eslint"],
+  plugins: ['~/plugins/vue-notification.ts'],
+
+  modules: [
+    "@nuxt/test-utils/module",
+    "@nuxt/eslint",
+    "nuxt-auth-utils",  // Docs : https://nuxt.com/modules/auth-utils
+  ],
+
+  css: ['@/assets/styles/global.css'],
+
+  runtimeConfig: {
+    public: {
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || "http://localhost:3000"
+    }
+  }
 });

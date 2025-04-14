@@ -1,0 +1,21 @@
+body {
+  margin: 0;
+  font-family: Roboto, Arial, sans-serif;
+}
+
+.accueil {
+  padding: 2vh;
+  transition: margin-left 0.3s ease;
+}
+
+.accueil.with-nav {
+  margin-left: 15vw;
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10vh;
+}
+
+

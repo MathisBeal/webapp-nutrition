@@ -1,10 +1,5 @@
-<script lang="ts" setup>
-const appConfig = useAppConfig()
-const device = ref(appConfig.theme.device)
-</script>
-
 <template>
-  <!--Navigation entre les menus-->
+  <!-- Navigation entre les menus -->
   <Navigation />
 
   <!-- Contenu principal -->
@@ -12,10 +7,21 @@ const device = ref(appConfig.theme.device)
     <slot />
   </main>
 
-  <!-- Footer (disponible sur ordinateur) -->
+  <!-- Footer (disponible sur ordinateur uniquement) -->
   <Footer v-if="device !== 'mobile'" />
 </template>
 
-<style>
+<script lang="ts" setup>
+import { useRouter } from 'nuxt/app'
+const appConfig = useAppConfig()
+const device = ref(appConfig.theme.device)
 
-</style>
+// Redirection vers la page de login par défaut
+// Ce composant ne redirige que si l'utilisateur est sur "/".
+const router = useRouter()
+onMounted(() => {
+  if (router.currentRoute.value.path === '/') {
+    router.push('/login') // Redirige vers la page de connexion
+  }
+})
+</script>
