@@ -64,7 +64,6 @@ jobs:
           npm run lint
 
       - name: Run tests
-        continue-on-error: true
         env:
           DATABASE_URL: "mysql://root:root@127.0.0.1:3306/nutrition_webapp"
         run: |
@@ -72,7 +71,6 @@ jobs:
           npm test
 
       - name: Build Nuxt SSR app
-        continue-on-error: true
         run: |
           echo "Building app..."
           npm run build
