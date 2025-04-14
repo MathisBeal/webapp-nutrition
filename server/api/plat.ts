@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const userRestrictions = await prisma.users_restrictions.findMany({
-    where: { ID_user: session.userId },
+    where: { ID_user: session.userId as any },
     select: { ID_restriction: true },
   });
   const restrictionIds = userRestrictions.map((r) => r.ID_restriction);
