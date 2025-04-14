@@ -44,7 +44,7 @@
     </div>
 
     <SubmitButton @click="submitSelection" />
-    <Notifications />
+    <Notifications position="top center" />
   </div>
 </template>
 
@@ -130,19 +130,30 @@ const submitSelection = async () => {
     return;
   }
 
-  await useFetch("/api/alimentations", {
-    method: "POST",
-    body: JSON.stringify({
-      ID_user: userSession.value.userId,
-      ID_plat: selectedType.value === "plat" ? selectedItem.value : null,
-      ID_aliment: selectedType.value === "aliment" ? selectedItem.value : null,
-      ID_moment: selectedMoment.value,
-      Quantite: quantity.value,
-    }),
-  });
-  selectedItem.value = null;
-  selectedMoment.value = null;
-  quantity.value = 1;
+  try {
+    await useFetch("/api/alimentations", {
+      method: "POST",
+      body: JSON.stringify({
+        ID_user: userSession.value.userId,
+        ID_plat: selectedType.value === "plat" ? selectedItem.value : null,
+        ID_aliment:
+          selectedType.value === "aliment" ? selectedItem.value : null,
+        ID_moment: selectedMoment.value,
+        Quantite: quantity.value,
+      }),
+    });
+
+    // Notification de succès
+    notify({ type: "success", text: "Ajout réussi dans la base de données !" });
+
+    // Réinitialisation des champs
+    selectedItem.value = null;
+    selectedMoment.value = null;
+    quantity.value = 1;
+  } catch (error) {
+    notify({ type: "error", text: "Une erreur est survenue lors de l'ajout." });
+    console.error("Erreur lors de l'ajout :", error);
+  }
 };
 
 onMounted(async () => {
