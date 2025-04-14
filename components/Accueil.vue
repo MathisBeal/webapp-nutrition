@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import {useAsyncData} from '#app';
-import {isNavVisible} from '@/composables/useNavState';
-import Plat from '@/components/Plat.vue';
+import { useAsyncData } from "#app";
+import { isNavVisible } from "@/composables/useNavState";
+import Plat from "@/components/Plat.vue";
 
-const {data: plats} = await useAsyncData('plats', () => $fetch('/api/plat'));
+const { data: plats } = await useAsyncData("plats", () => $fetch("/api/plat"));
 
 const displayedPlats = ref<any[]>([]);
 const favoris = ref<Set<number>>(new Set());
@@ -15,7 +15,6 @@ const getSession = async () => {
   const config = useRuntimeConfig();
   const baseUrl = config.public.apiBase;
   try {
-
     const response = await fetch(`${baseUrl}/api/auth/session`);
 
     const data = await response.json();
@@ -32,9 +31,11 @@ const loadFavoris = async () => {
   if (!userSession.value) return;
 
   try {
-    const response = await fetch(`/api/favoris?userId=${userSession.value.userId}&fullData=true`);
+    const response = await fetch(
+      `/api/favoris?userId=${userSession.value.userId}&fullData=true`,
+    );
     let data = await response.json();
-    data = data.filter((favData: any) => favData.type === 'plat');
+    data = data.filter((favData: any) => favData.type === "plat");
     favoris.value = new Set(data.map((fav: any) => fav.ID));
   } catch (error) {
     console.error("Erreur lors du chargement des favoris", error);
@@ -50,14 +51,14 @@ const toggleFavori = async (plat: any) => {
   const action = isFavori ? "remove" : "add";
 
   try {
-    const response = await fetch('/api/favoris', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+    const response = await fetch("/api/favoris", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ID_user: userSession.value.userId,
         ID_item: plat.ID_plat,
-        type: 'plat',
-        action: action
+        type: "plat",
+        action: action,
       }),
     });
 
@@ -78,7 +79,7 @@ const loadPlats = () => {
   const start = (currentPage - 1) * pageSize;
   const end = currentPage * pageSize;
 
-  const newPlats = plats.value.slice(start, end).map(plat => ({
+  const newPlats = plats.value.slice(start, end).map((plat) => ({
     ...plat,
     ID: plat.ID_plat,
   }));
@@ -100,12 +101,11 @@ onMounted(async () => {
   await getSession();
   loadPlats();
 });
-
 </script>
 
 <template>
   <div :class="['accueil', { 'with-nav': isNavVisible }]">
-    <h1>Plats</h1>
+    <h1>Platssssssss</h1>
     <div ref="platList" class="plat-list" @scroll="handleScroll">
       <Plat
         v-for="plat in displayedPlats"
@@ -121,6 +121,7 @@ onMounted(async () => {
 <style>
 .plat-list {
   display: flex;
+  
   flex-direction: column;
   margin-right: 3vw;
   gap: 2vh;
@@ -168,7 +169,10 @@ onMounted(async () => {
   border-radius: 1em;
   background-color: #fff;
   box-shadow: 0 0.4vh 0.6vh rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    background-color 0.3s ease;
 }
 
 .plat-item:hover {
@@ -189,7 +193,7 @@ onMounted(async () => {
   width: 1.5vw;
   height: 1.5vw;
   transition: transform 0.2s;
-  color: #FFD700;
+  color: #ffd700;
 }
 
 .star-icon.empty {
@@ -200,4 +204,3 @@ onMounted(async () => {
   transform: scale(1.1);
 }
 </style>
-
